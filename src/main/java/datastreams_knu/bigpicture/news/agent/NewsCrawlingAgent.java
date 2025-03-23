@@ -109,57 +109,6 @@ public class NewsCrawlingAgent {
         return NewsCrawlingResultDto.of(true, "성공");
     }
 
-    public String summarizeNews(String content, String keyword) {
-        try {
-            String promptText = keyword.equals("keyword")
-                ? SUMMARIZE_NEWS_BY_KEYWORD_PROMPT : SUMMARIZE_GENERAL_NEWS_PROMPT;
-
-            List<String> vars = List.of(content, keyword);
-
-            UserMessage prompt = createPrompt(promptText, vars);
-
-            String response = model.chat(prompt).aiMessage().text();
-
-            StringSummaryDto result = objectMapper.readValue(response, StringSummaryDto.class);
-
-            return result.getSummary();
-        } catch (JsonProcessingException e) {
-            log.info("Json 파싱 중 예외가 발생했습니다.={}", e.getMessage());
-            return "";
-        }
-    }
-
-    private News updateNews(String keyword, SummarizedMultipleNewsDto result) {
-        News findNews = newsRepository.findByKeyword(keyword)
-            .orElse(News.of(keyword));
-
-        findNews.setContent(result.getSummary());
-
-        List<NewsInfo> newsInfos = result.getSources().stream()
-            .map(info -> NewsInfo.of(info.getUrl(), info.getDate()))
-            .collect(Collectors.toList());
-        findNews.setNewsInfos(newsInfos);
-
-        return findNews;
-    }
-
-    private String createVar(List<SummarizedNewsDto> newsList) throws JsonProcessingException {
-        StringBuilder vars = new StringBuilder();
-        vars.append("[");
-        for (SummarizedNewsDto news : newsList) {
-            vars.append(objectMapper.writeValueAsString(news) + ",");
-        }
-        vars.deleteCharAt(vars.length() - 1);
-        vars.append("]");
-        return vars.toString();
-    }
-
-    private UserMessage createPrompt(String promptText, String var) {
-        String prompt = promptText.formatted(var);
-        UserMessage userMessage = new UserMessage(prompt);
-        return userMessage;
-    }
-
     private static String createUrl(Map<String, String> params) {
         // 뉴스 기사 최대 20개 크롤링 (연합뉴스)
         String baseUrl = "https://ars.yna.co.kr/api/v2/search.basic"
@@ -243,9 +192,60 @@ public class NewsCrawlingAgent {
         }
     }
 
+    public String summarizeNews(String content, String keyword) {
+        try {
+            String promptText = keyword.equals("keyword")
+                ? SUMMARIZE_NEWS_BY_KEYWORD_PROMPT : SUMMARIZE_GENERAL_NEWS_PROMPT;
+
+            List<String> vars = List.of(content, keyword);
+
+            UserMessage prompt = createPrompt(promptText, vars);
+
+            String response = model.chat(prompt).aiMessage().text();
+
+            StringSummaryDto result = objectMapper.readValue(response, StringSummaryDto.class);
+
+            return result.getSummary();
+        } catch (JsonProcessingException e) {
+            log.info("Json 파싱 중 예외가 발생했습니다.={}", e.getMessage());
+            return "";
+        }
+    }
+
+    private String createVar(List<SummarizedNewsDto> newsList) throws JsonProcessingException {
+        StringBuilder vars = new StringBuilder();
+        vars.append("[");
+        for (SummarizedNewsDto news : newsList) {
+            vars.append(objectMapper.writeValueAsString(news) + ",");
+        }
+        vars.deleteCharAt(vars.length() - 1);
+        vars.append("]");
+        return vars.toString();
+    }
+
+    private UserMessage createPrompt(String promptText, String var) {
+        String prompt = promptText.formatted(var);
+        UserMessage userMessage = new UserMessage(prompt);
+        return userMessage;
+    }
+
     private UserMessage createPrompt(String promptText, List<String> var) {
         String prompt = promptText.formatted(var.toArray());
         UserMessage userMessage = new UserMessage(prompt);
         return userMessage;
+    }
+
+    private News updateNews(String keyword, SummarizedMultipleNewsDto result) {
+        News findNews = newsRepository.findByKeyword(keyword)
+            .orElse(News.of(keyword));
+
+        findNews.setContent(result.getSummary());
+
+        List<NewsInfo> newsInfos = result.getSources().stream()
+            .map(info -> NewsInfo.of(info.getUrl(), info.getDate()))
+            .collect(Collectors.toList());
+        findNews.setNewsInfos(newsInfos);
+
+        return findNews;
     }
 }
