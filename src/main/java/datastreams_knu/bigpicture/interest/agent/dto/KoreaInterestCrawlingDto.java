@@ -2,7 +2,6 @@ package datastreams_knu.bigpicture.interest.agent.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.util.List;
 
@@ -17,7 +16,6 @@ public class KoreaInterestCrawlingDto {
         private List<StatisticRow> row;
     }
 
-    @ToString
     @Getter
     public static class StatisticRow {
         @JsonProperty("TIME")
