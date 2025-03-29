@@ -1,28 +1,25 @@
 package datastreams_knu.bigpicture.news.service;
 
 import datastreams_knu.bigpicture.news.agent.NewsCrawlingAssistant;
+import datastreams_knu.bigpicture.news.agent.dto.NewsCrawlingResultDto;
 import datastreams_knu.bigpicture.news.config.NewsCrawlingConfig;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
 @Service
 public class NewsCrawlingService {
 
     private final NewsCrawlingConfig newsCrawlingConfig;
+    private final NewsCrawlingAssistant newsCrawlingAssistant;
 
-    private NewsCrawlingAssistant assistant;
-
-    @PostConstruct
-    public void setup() {
-        this.assistant = newsCrawlingConfig.assistant();
+    public NewsCrawlingService(NewsCrawlingConfig newsCrawlingConfig,
+                               NewsCrawlingAssistant newsCrawlingAssistant) {
+        this.newsCrawlingConfig = newsCrawlingConfig;
+        this.newsCrawlingAssistant = newsCrawlingConfig.newsCrawlingAssistant();
     }
 
-    @Transactional
-    public void crawling(String type, String keyword) {
-        assistant.execute(type, keyword);
+    public NewsCrawlingResultDto crawling(String type, String keyword) {
+        return newsCrawlingAssistant.execute(type, keyword);
     }
 }

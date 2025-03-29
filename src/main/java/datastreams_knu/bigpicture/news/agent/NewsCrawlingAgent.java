@@ -13,13 +13,14 @@ import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.IOException;
 import java.time.DayOfWeek;
@@ -32,7 +33,6 @@ import java.util.stream.Collectors;
 import static datastreams_knu.bigpicture.news.agent.AgentPrompt.*;
 import static datastreams_knu.bigpicture.news.agent.dto.CrawledNewsDto.YibKrA;
 
-@RequiredArgsConstructor
 @Slf4j
 @Component
 public class NewsCrawlingAgent {
@@ -40,8 +40,17 @@ public class NewsCrawlingAgent {
     private final WebClientUtil webClientUtil;
     private final AiModelConfig aiModelConfig;
     private final ObjectMapper objectMapper;
-
     private final NewsRepository newsRepository;
+    private final TransactionTemplate txTemplate;
+
+    public NewsCrawlingAgent(WebClientUtil webClientUtil, AiModelConfig aiModelConfig, ObjectMapper objectMapper, NewsRepository newsRepository, PlatformTransactionManager transactionManager) {
+        this.webClientUtil = webClientUtil;
+        this.aiModelConfig = aiModelConfig;
+        this.objectMapper = objectMapper;
+        this.newsRepository = newsRepository;
+        this.txTemplate = new TransactionTemplate(transactionManager);
+    }
+
 
     private ChatLanguageModel model;
 
@@ -103,10 +112,16 @@ public class NewsCrawlingAgent {
     }
 
     @Tool("생성된 기사 요약과 기사 출처 URL들 그리고 해당 기사의 날짜들을 DB에 저장하고 처리 성공 여부를 반환합니다.")
-    public NewsCrawlingResultDto saveSummarizedNewsWithUrls(String keyword, SummarizedMultipleNewsDto summarizedMultipleNews) {
-        News news = updateNews(keyword, summarizedMultipleNews);
-        newsRepository.save(news);
-        return NewsCrawlingResultDto.of(true, "성공");
+    public NewsCrawlingResultDto saveSummarizedNewsWithUrls(String keyword, SummarizedMultipleNewsDto summarizedMultipleNews) throws Exception {
+        return txTemplate.execute((status) -> {
+            try {
+                News news = updateNews(keyword, summarizedMultipleNews);
+                newsRepository.save(news);
+                return NewsCrawlingResultDto.of(true, "성공");
+            } catch (Exception e) {
+                return NewsCrawlingResultDto.of(false, "실패");
+            }
+        });
     }
 
     private static String createUrl(Map<String, String> params) {
