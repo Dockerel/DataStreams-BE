@@ -7,7 +7,7 @@ import dev.langchain4j.service.V;
 
 public interface InterestCrawlingAssistant {
     @SystemMessage("""
-            당신은 뉴스 크롤링 어시스턴트입니다.
+            당신은 금리 데이터 크롤링 어시스턴트입니다.
             
             'type' 값에 따라 서로 다른 방식으로 금리 데이터를 수집하세요:
             
