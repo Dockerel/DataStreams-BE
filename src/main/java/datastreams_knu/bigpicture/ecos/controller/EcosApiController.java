@@ -1,7 +1,7 @@
 package datastreams_knu.bigpicture.ecos.controller;
 
 import datastreams_knu.bigpicture.common.domain.ApiResponse;
-import datastreams_knu.bigpicture.ecos.dto.KeyStatisticDto;
+import datastreams_knu.bigpicture.ecos.domain.EcosKeyStatisticResponse;
 import datastreams_knu.bigpicture.ecos.service.EcosApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,7 @@ public class EcosApiController {
     private final EcosApiService ecosService;
 
     @GetMapping("/key-statistics")
-    public ApiResponse<List<KeyStatisticDto>> getKeyStatistics() {
+    public ApiResponse<List<EcosKeyStatisticResponse.KeyStatistic>> getKeyStatistics() {
         return ecosService.getKeyStatistics();
     }
 }

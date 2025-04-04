@@ -1,10 +1,7 @@
 package datastreams_knu.bigpicture.ecos.domain;
 
 import datastreams_knu.bigpicture.common.domain.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 
@@ -14,26 +11,28 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-//@Table(name = "key_statistic")
 public class KeyStatisticEntity extends BaseEntity {
 
     @Id
-    @Column(name = "code", nullable = false)
-    private String code;  // KEYSTAT_CODE
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "stat_code")
+    private String stat_code;
+
+    @Column(name = "stat_name", nullable = false)
+    private String stat_name;
 
     @Column(name = "stat_value")
-    private String value;
+    private String stat_value;
 
-    @Column(name = "cycle")
-    private String cycle;
+    @Column(name = "stat_cycle")
+    private String stat_cycle;
 
-    @Column(name = "unit")
-    private String unit;
+    @Column(name = "stat_unit")
+    private String stat_unit;
 
     @Column(name = "stat_date")
-    private LocalDate date;
+    private String stat_date;
 
 }

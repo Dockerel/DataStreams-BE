@@ -44,7 +44,6 @@ public class FredApiService {
                 .queryParam("search_text", searchText)
                 .queryParam("api_key", apiKey)
                 .queryParam("file_type", "json")
-                .queryParam("exclude_notes", "True")
                 .build()
                 .toUriString();
 
