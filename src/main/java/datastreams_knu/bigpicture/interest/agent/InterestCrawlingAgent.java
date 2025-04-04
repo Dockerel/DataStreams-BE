@@ -13,6 +13,7 @@ import datastreams_knu.bigpicture.interest.repository.USInterestRepository;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -26,6 +27,7 @@ import java.util.List;
 import static datastreams_knu.bigpicture.interest.agent.dto.KoreaInterestCrawlingDto.StatisticRow;
 import static datastreams_knu.bigpicture.interest.agent.dto.USInterestCrawlingDto.ObservationsRow;
 
+@RequiredArgsConstructor
 @Component
 public class InterestCrawlingAgent {
 
@@ -33,13 +35,12 @@ public class InterestCrawlingAgent {
     private final AiModelConfig aiModelConfig;
     private final KoreaInterestRepository koreaInterestRepository;
     private final USInterestRepository usInterestRepository;
-    private final TransactionTemplate txTemplate;
+    private final PlatformTransactionManager transactionManager;
 
-    public InterestCrawlingAgent(AiModelConfig aiModelConfig, WebClientUtil webClientUtil, KoreaInterestRepository koreaInterestRepository, USInterestRepository usInterestRepository, PlatformTransactionManager transactionManager) {
-        this.aiModelConfig = aiModelConfig;
-        this.webClientUtil = webClientUtil;
-        this.koreaInterestRepository = koreaInterestRepository;
-        this.usInterestRepository = usInterestRepository;
+    private TransactionTemplate txTemplate;
+
+    @PostConstruct
+    public void init() {
         this.txTemplate = new TransactionTemplate(transactionManager);
     }
 
@@ -67,7 +68,7 @@ public class InterestCrawlingAgent {
         return webClientUtil.get(url, KoreaInterestCrawlingDto.class);
     }
 
-    @Tool("크롤링 된 지난 5년 동안의 한국 금리를 DB에 저장하고 처리 성공 여부를 반환합니다.")
+    @Tool("크롤링 된 지난 n년 동안의 한국 금리를 DB에 저장하고 처리 성공 여부를 반환합니다.")
     public InterestCrawlingResultDto saveKoreaInterest(KoreaInterestCrawlingDto koreaInterestCrawlingDto) {
         return txTemplate.execute((status) -> {
             try {
@@ -78,9 +79,9 @@ public class InterestCrawlingAgent {
                     KoreaInterest koreaInterest = KoreaInterest.of(interestDate, interestRate);
                     koreaInterestRepository.save(koreaInterest);
                 }
-                return InterestCrawlingResultDto.of(true, "성공");
+                return InterestCrawlingResultDto.of(true, "성공적으로 금리를 크롤링하였습니다.");
             } catch (Exception e) {
-                return InterestCrawlingResultDto.of(false, "실패");
+                return InterestCrawlingResultDto.of(false, "금리 크롤링을 실패하였습니다.");
             }
         });
     }
@@ -92,7 +93,7 @@ public class InterestCrawlingAgent {
         return webClientUtil.get(url, USInterestCrawlingDto.class);
     }
 
-    @Tool("크롤링 된 지난 5년 동안의 미국 금리를 DB에 저장하고 처리 성공 여부를 반환합니다.")
+    @Tool("크롤링 된 지난 n년 동안의 미국 금리를 DB에 저장하고 처리 성공 여부를 반환합니다.")
     public InterestCrawlingResultDto saveUSInterest(USInterestCrawlingDto usInterestCrawlingDto) {
         return txTemplate.execute((status) -> {
             try {
@@ -103,9 +104,9 @@ public class InterestCrawlingAgent {
                     USInterest usInterest = USInterest.of(interestDate, interestRate);
                     usInterestRepository.save(usInterest);
                 }
-                return InterestCrawlingResultDto.of(true, "성공");
+                return InterestCrawlingResultDto.of(true, "성공적으로 금리를 크롤링하였습니다.");
             } catch (Exception e) {
-                return InterestCrawlingResultDto.of(false, "실패");
+                return InterestCrawlingResultDto.of(false, "금리 크롤링을 실패하였습니다.");
             }
         });
     }
