@@ -1,7 +1,7 @@
 package datastreams_knu.bigpicture.stock.service;
 
+import datastreams_knu.bigpicture.common.dto.CrawlingResultDto;
 import datastreams_knu.bigpicture.stock.agent.StockCrawlingAssistant;
-import datastreams_knu.bigpicture.stock.agent.dto.StockCrawlingResultDto;
 import datastreams_knu.bigpicture.stock.config.StockCrawlingConfig;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class StockCrawlingService {
         stockCrawlingAssistant = stockCrawlingConfig.stockCrawlingAssistant();
     }
 
-    public StockCrawlingResultDto crawling(String type, String stockName) {
+    public CrawlingResultDto crawling(String type, String stockName) {
         return stockCrawlingAssistant.execute(type, stockName);
     }
 }

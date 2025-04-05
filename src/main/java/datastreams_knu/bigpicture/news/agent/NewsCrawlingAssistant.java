@@ -1,6 +1,6 @@
 package datastreams_knu.bigpicture.news.agent;
 
-import datastreams_knu.bigpicture.news.agent.dto.NewsCrawlingResultDto;
+import datastreams_knu.bigpicture.common.dto.CrawlingResultDto;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
@@ -29,5 +29,5 @@ public interface NewsCrawlingAssistant {
             정확하고 유용한 뉴스만 제공하세요.
         """)
     @UserMessage("type: {{type}}, keyword: {{keyword}}")
-    NewsCrawlingResultDto execute(@V("type") String type, @V("keyword") String keyword); // type: keyword, general
+    CrawlingResultDto execute(@V("type") String type, @V("keyword") String keyword); // type: keyword, general
 }

@@ -1,6 +1,6 @@
 package datastreams_knu.bigpicture.news.repository;
 
-import datastreams_knu.bigpicture.news.domain.News;
+import datastreams_knu.bigpicture.news.entity.News;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

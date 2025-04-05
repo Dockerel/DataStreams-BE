@@ -1,7 +1,7 @@
 package datastreams_knu.bigpicture.news.service;
 
+import datastreams_knu.bigpicture.common.dto.CrawlingResultDto;
 import datastreams_knu.bigpicture.news.agent.NewsCrawlingAssistant;
-import datastreams_knu.bigpicture.news.agent.dto.NewsCrawlingResultDto;
 import datastreams_knu.bigpicture.news.config.NewsCrawlingConfig;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class NewsCrawlingService {
         newsCrawlingAssistant = newsCrawlingConfig.newsCrawlingAssistant();
     }
 
-    public NewsCrawlingResultDto crawling(String type, String keyword) {
+    public CrawlingResultDto crawling(String type, String keyword) {
         return newsCrawlingAssistant.execute(type, keyword);
     }
 }

@@ -1,6 +1,6 @@
 package datastreams_knu.bigpicture.stock.agent;
 
-import datastreams_knu.bigpicture.stock.agent.dto.StockCrawlingResultDto;
+import datastreams_knu.bigpicture.common.dto.CrawlingResultDto;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
@@ -26,5 +26,5 @@ public interface StockCrawlingAssistant {
             정확하고 유용한 데이터만 제공하세요.
         """)
     @UserMessage("type: {{type}}, stockName: {{stockName}}")
-    StockCrawlingResultDto execute(@V("type") String type, @V("stockName") String stockName);
+    CrawlingResultDto execute(@V("type") String type, @V("stockName") String stockName);
 }

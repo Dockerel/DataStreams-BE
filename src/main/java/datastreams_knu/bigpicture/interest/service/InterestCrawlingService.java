@@ -1,7 +1,7 @@
 package datastreams_knu.bigpicture.interest.service;
 
+import datastreams_knu.bigpicture.common.dto.CrawlingResultDto;
 import datastreams_knu.bigpicture.interest.agent.InterestCrawlingAssistant;
-import datastreams_knu.bigpicture.interest.agent.dto.InterestCrawlingResultDto;
 import datastreams_knu.bigpicture.interest.config.InterestCrawlingConfig;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class InterestCrawlingService {
         interestCrawlingAssistant = interestCrawlingConfig.interestCrawlingAssistant();
     }
 
-    public InterestCrawlingResultDto crawling(String type, int n) {
+    public CrawlingResultDto crawling(String type, int n) {
         return interestCrawlingAssistant.execute(type, n);
     }
 }
