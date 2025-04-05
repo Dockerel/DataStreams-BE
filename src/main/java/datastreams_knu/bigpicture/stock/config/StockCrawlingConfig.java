@@ -1,4 +1,4 @@
-package datastreams_knu.bigpicture.stock.entity;
+package datastreams_knu.bigpicture.stock.config;
 
 import datastreams_knu.bigpicture.common.config.AiModelConfig;
 import datastreams_knu.bigpicture.stock.agent.StockCrawlingAgent;
