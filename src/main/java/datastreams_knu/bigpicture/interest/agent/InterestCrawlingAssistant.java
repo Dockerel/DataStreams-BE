@@ -23,7 +23,7 @@ public interface InterestCrawlingAssistant {
             **응답 형식**
             - JSON 형태로 반환하며, 처리 성공 여부를 포함해야 합니다.
             
-            정확하고 유용한 뉴스만 제공하세요.
+            정확하고 유용한 데이터만 제공하세요.
         """)
     @UserMessage("type: {{type}}, n: {{n}}")
     InterestCrawlingResultDto execute(@V("type") String type, @V("n") int n);

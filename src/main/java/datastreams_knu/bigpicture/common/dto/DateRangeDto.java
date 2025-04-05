@@ -1,4 +1,4 @@
-package datastreams_knu.bigpicture.news.agent.dto;
+package datastreams_knu.bigpicture.common.dto;
 
 import lombok.Builder;
 import lombok.Getter;

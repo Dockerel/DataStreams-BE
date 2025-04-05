@@ -3,6 +3,7 @@ package datastreams_knu.bigpicture.news.agent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import datastreams_knu.bigpicture.common.config.AiModelConfig;
+import datastreams_knu.bigpicture.common.dto.DateRangeDto;
 import datastreams_knu.bigpicture.common.util.WebClientUtil;
 import datastreams_knu.bigpicture.news.agent.dto.*;
 import datastreams_knu.bigpicture.news.domain.News;
@@ -13,6 +14,7 @@ import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,6 +25,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -34,6 +38,7 @@ import static datastreams_knu.bigpicture.news.agent.AgentPrompt.*;
 import static datastreams_knu.bigpicture.news.agent.dto.CrawledNewsDto.YibKrA;
 
 @Slf4j
+@RequiredArgsConstructor
 @Component
 public class NewsCrawlingAgent {
 
@@ -41,16 +46,14 @@ public class NewsCrawlingAgent {
     private final AiModelConfig aiModelConfig;
     private final ObjectMapper objectMapper;
     private final NewsRepository newsRepository;
-    private final TransactionTemplate txTemplate;
+    private final PlatformTransactionManager transactionManager;
 
-    public NewsCrawlingAgent(WebClientUtil webClientUtil, AiModelConfig aiModelConfig, ObjectMapper objectMapper, NewsRepository newsRepository, PlatformTransactionManager transactionManager) {
-        this.webClientUtil = webClientUtil;
-        this.aiModelConfig = aiModelConfig;
-        this.objectMapper = objectMapper;
-        this.newsRepository = newsRepository;
+    private TransactionTemplate txTemplate;
+
+    @PostConstruct
+    public void init() {
         this.txTemplate = new TransactionTemplate(transactionManager);
     }
-
 
     private ChatLanguageModel model;
 
@@ -61,7 +64,7 @@ public class NewsCrawlingAgent {
 
     @Tool("keyword를 기반으로 지난 7일 동안의 관련 뉴스 기사를 검색합니다.")
     public List<SummarizedNewsDto> crawlingNewsByKeyword(String keyword) {
-        Map<String, String> params = Map.of("&query=", keyword);
+        Map<String, String> params = Map.of("&query=", URLEncoder.encode(keyword, StandardCharsets.UTF_8));
         String url = createUrl(params);
 
         CrawledNewsDto response = webClientUtil.get(url, CrawledNewsDto.class);
@@ -117,9 +120,9 @@ public class NewsCrawlingAgent {
             try {
                 News news = updateNews(keyword, summarizedMultipleNews);
                 newsRepository.save(news);
-                return NewsCrawlingResultDto.of(true, "성공");
+                return NewsCrawlingResultDto.of(true, "성공적으로 기사를 크롤링하였습니다.");
             } catch (Exception e) {
-                return NewsCrawlingResultDto.of(false, "실패");
+                return NewsCrawlingResultDto.of(false, "기사 크롤링을 실패하였습니다.");
             }
         });
     }
