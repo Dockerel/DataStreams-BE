@@ -1,8 +1,6 @@
-package datastreams_knu.bigpicture.stock.config;
+package datastreams_knu.bigpicture.stock.entity;
 
 import datastreams_knu.bigpicture.common.config.AiModelConfig;
-import datastreams_knu.bigpicture.interest.agent.InterestCrawlingAgent;
-import datastreams_knu.bigpicture.interest.agent.InterestCrawlingAssistant;
 import datastreams_knu.bigpicture.stock.agent.StockCrawlingAgent;
 import datastreams_knu.bigpicture.stock.agent.StockCrawlingAssistant;
 import dev.langchain4j.service.AiServices;
