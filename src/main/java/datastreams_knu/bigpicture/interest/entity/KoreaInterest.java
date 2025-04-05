@@ -1,4 +1,4 @@
-package datastreams_knu.bigpicture.interest.domain;
+package datastreams_knu.bigpicture.interest.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

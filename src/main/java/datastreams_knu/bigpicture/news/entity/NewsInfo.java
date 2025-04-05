@@ -1,4 +1,4 @@
-package datastreams_knu.bigpicture.news.domain;
+package datastreams_knu.bigpicture.news.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
