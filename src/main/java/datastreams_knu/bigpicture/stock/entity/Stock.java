@@ -1,4 +1,4 @@
-package datastreams_knu.bigpicture.stock.domain;
+package datastreams_knu.bigpicture.stock.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

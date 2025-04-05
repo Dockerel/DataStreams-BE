@@ -3,7 +3,6 @@ package datastreams_knu.bigpicture.stock.agent.dto;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.Instant;
 import java.time.LocalDate;
 
 @Getter

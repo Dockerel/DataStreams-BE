@@ -1,9 +1,6 @@
-package datastreams_knu.bigpicture.interest.domain;
+package datastreams_knu.bigpicture.interest.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +8,8 @@ import java.time.LocalDate;
 
 @NoArgsConstructor
 @Entity
-public class KoreaInterest {
+@Table(name = "US_INTEREST")
+public class USInterest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,13 +20,13 @@ public class KoreaInterest {
     private Float interestRate;
 
     @Builder
-    public KoreaInterest(LocalDate interestDate, Float interestRate) {
+    public USInterest(LocalDate interestDate, Float interestRate) {
         this.interestDate = interestDate;
         this.interestRate = interestRate;
     }
 
-    public static KoreaInterest of(LocalDate interestDate, Float interestRate) {
-        return KoreaInterest.builder()
+    public static USInterest of(LocalDate interestDate, Float interestRate) {
+        return USInterest.builder()
             .interestDate(interestDate)
             .interestRate(interestRate)
             .build();

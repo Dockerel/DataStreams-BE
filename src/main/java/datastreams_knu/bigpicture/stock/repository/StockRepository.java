@@ -1,6 +1,6 @@
 package datastreams_knu.bigpicture.stock.repository;
 
-import datastreams_knu.bigpicture.stock.domain.Stock;
+import datastreams_knu.bigpicture.stock.entity.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
