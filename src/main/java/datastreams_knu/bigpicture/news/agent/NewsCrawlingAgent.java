@@ -48,18 +48,13 @@ public class NewsCrawlingAgent {
     private final NewsRepository newsRepository;
     private final PlatformTransactionManager transactionManager;
 
+    private ChatLanguageModel model;
     private TransactionTemplate txTemplate;
 
     @PostConstruct
     public void init() {
-        this.txTemplate = new TransactionTemplate(transactionManager);
-    }
-
-    private ChatLanguageModel model;
-
-    @PostConstruct
-    private void setup() {
         this.model = aiModelConfig.openAiChatModel();
+        this.txTemplate = new TransactionTemplate(transactionManager);
     }
 
     @Tool("keyword를 기반으로 지난 7일 동안의 관련 뉴스 기사를 검색합니다.")

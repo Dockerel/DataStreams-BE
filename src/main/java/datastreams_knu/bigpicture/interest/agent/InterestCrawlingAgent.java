@@ -32,19 +32,11 @@ import static datastreams_knu.bigpicture.interest.agent.dto.USInterestCrawlingDt
 public class InterestCrawlingAgent {
 
     private final WebClientUtil webClientUtil;
-    private final AiModelConfig aiModelConfig;
     private final KoreaInterestRepository koreaInterestRepository;
     private final USInterestRepository usInterestRepository;
     private final PlatformTransactionManager transactionManager;
 
     private TransactionTemplate txTemplate;
-
-    @PostConstruct
-    public void init() {
-        this.txTemplate = new TransactionTemplate(transactionManager);
-    }
-
-    private ChatLanguageModel model;
 
     @Value("${ecos.api.base-url}")
     private String ecosBaseUrl;
@@ -57,9 +49,10 @@ public class InterestCrawlingAgent {
     private String fredApiKey;
 
     @PostConstruct
-    private void setup() {
-        this.model = aiModelConfig.openAiChatModel();
+    private void init() {
+        this.txTemplate = new TransactionTemplate(transactionManager);
     }
+
 
     @Tool("지난 n년 동안의 한국 금리를 크롤링합니다.")
     public KoreaInterestCrawlingDto crawlingInterestsOfKorea(int n) {
