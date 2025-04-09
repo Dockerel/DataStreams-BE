@@ -21,6 +21,7 @@ public class StockCrawlingService {
         stockCrawlingAssistant = stockCrawlingConfig.stockCrawlingAssistant();
     }
 
+    @Transactional
     public CrawlingResultDto crawling(String type, String stockName) {
         return stockCrawlingAssistant.execute(type, stockName);
     }

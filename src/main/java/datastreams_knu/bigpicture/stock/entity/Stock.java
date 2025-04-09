@@ -20,10 +20,14 @@ public class Stock {
 
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Enumerated(EnumType.STRING)
+    private StockType stockType;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "stock")
     private List<StockInfo> stockInfos = new ArrayList<>();
 
     public void addStockInfo(StockInfo stockInfo) {
+        stockInfo.setStock(this);
         stockInfos.add(stockInfo);
     }
 
@@ -32,13 +36,15 @@ public class Stock {
     }
 
     @Builder
-    public Stock(String name) {
+    public Stock(String name, StockType stockType) {
         this.name = name;
+        this.stockType = stockType;
     }
 
-    public static Stock of(String name) {
+    public static Stock of(String name, StockType stockType) {
         return Stock.builder()
             .name(name)
+            .stockType(stockType)
             .build();
     }
 }

@@ -8,12 +8,13 @@ import datastreams_knu.bigpicture.stock.agent.dto.StockInfoDto;
 import datastreams_knu.bigpicture.stock.agent.dto.USStockCrawlingDto;
 import datastreams_knu.bigpicture.stock.entity.Stock;
 import datastreams_knu.bigpicture.stock.entity.StockInfo;
+import datastreams_knu.bigpicture.stock.entity.StockType;
+import datastreams_knu.bigpicture.stock.repository.StockInfoRepository;
 import datastreams_knu.bigpicture.stock.repository.StockRepository;
 import dev.langchain4j.agent.tool.Tool;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -31,6 +32,7 @@ public class StockCrawlingAgent {
 
     private final WebClientUtil webClientUtil;
     private final StockRepository stockRepository;
+    private final StockInfoRepository stockInfoRepository;
 
     @Value("${korea-stock.api.base-url}")
     private String koreaStockBaseUrl;
@@ -77,25 +79,24 @@ public class StockCrawlingAgent {
             .collect(Collectors.toList());
     }
 
-    @Transactional
-    @Tool("크롤링 된 주가 데이터를 DB에 저장하고 처리 성공 여부를 반환합니다.")
-    public CrawlingResultDto saveStock(String stockName, List<StockInfoDto> stockInfos) {
-        try {
-            Stock stock = stockRepository.findByName(stockName)
-                .orElse(Stock.of(stockName));
+    @Tool("크롤링 된 주가 데이터를 주식의 'type'과 'stockName'과 함께 DB에 저장하고 처리 성공 여부를 반환합니다.")
+    public CrawlingResultDto saveStock(String type, String stockName, List<StockInfoDto> stockInfos) {
+        Stock stock = stockRepository.findByName(stockName)
+            .orElse(Stock.of(stockName, getStockType(type)));
 
-            stock.clearStockInfos();
+        stockInfoRepository.deleteAllByStockId(stock.getId());
 
-            stockInfos.stream()
-                .map(info -> StockInfo.of(info.getStockPrice(), info.getStockDate()))
-                .forEach(stock::addStockInfo);
+        stockInfos.stream()
+            .map(info -> StockInfo.of(info.getStockPrice(), info.getStockDate()))
+            .forEach(stock::addStockInfo);
 
-            stockRepository.save(stock);
+        stockRepository.save(stock);
 
-            return CrawlingResultDto.of(true, "성공적으로 주식을 크롤링하였습니다.");
-        } catch (Exception e) {
-            return CrawlingResultDto.of(false, "주식 크롤링을 실패하였습니다.");
-        }
+        return CrawlingResultDto.of(true, "주가 크롤링 성공");
+    }
+
+    private StockType getStockType(String type) {
+        return type.equals("korea") ? StockType.KOREA : StockType.US;
     }
 
     private String createKoreaStockUrl(String stockName, DateRangeDto dateRange) {

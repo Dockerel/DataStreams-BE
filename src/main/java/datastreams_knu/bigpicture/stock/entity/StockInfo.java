@@ -1,9 +1,6 @@
 package datastreams_knu.bigpicture.stock.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +20,14 @@ public class StockInfo {
     private LocalDate stockDate;
 
     private double stockPrice;
+
+    @ManyToOne
+    @JoinColumn(name = "STOCK_ID")
+    private Stock stock;
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
+    }
 
     @Builder
     public StockInfo(double stockPrice, LocalDate stockDate) {
