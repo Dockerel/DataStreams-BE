@@ -13,7 +13,6 @@ import dev.langchain4j.agent.tool.Tool;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -48,21 +47,18 @@ public class InterestCrawlingAgent {
         return webClientUtil.get(url, KoreaInterestCrawlingDto.class);
     }
 
-    @Transactional
     @Tool("크롤링 된 지난 n년 동안의 한국 금리를 DB에 저장하고 처리 성공 여부를 반환합니다.")
     public CrawlingResultDto saveKoreaInterest(KoreaInterestCrawlingDto koreaInterestCrawlingDto) {
-        try {
-            List<StatisticRow> interestDataRows = koreaInterestCrawlingDto.getStatisticSearch().getRow();
-            for (StatisticRow row : interestDataRows) {
-                LocalDate interestDate = parseStringToLocalDate(row.getTime());
-                Float interestRate = Float.parseFloat(row.getDataValue());
-                KoreaInterest koreaInterest = KoreaInterest.of(interestDate, interestRate);
-                koreaInterestRepository.save(koreaInterest);
-            }
-            return CrawlingResultDto.of(true, "성공적으로 금리를 크롤링하였습니다.");
-        } catch (Exception e) {
-            return CrawlingResultDto.of(false, "금리 크롤링을 실패하였습니다.");
+        koreaInterestRepository.deleteAll();
+
+        List<StatisticRow> interestDataRows = koreaInterestCrawlingDto.getStatisticSearch().getRow();
+        for (StatisticRow row : interestDataRows) {
+            LocalDate interestDate = parseStringToLocalDate(row.getTime());
+            double interestRate = Double.parseDouble(row.getDataValue());
+            KoreaInterest koreaInterest = KoreaInterest.of(interestDate, interestRate);
+            koreaInterestRepository.save(koreaInterest);
         }
+        return CrawlingResultDto.of(true, "한국 금리 크롤링 성공");
     }
 
     @Tool("지난 n년 동안의 미국 금리를 크롤링합니다.")
@@ -72,21 +68,18 @@ public class InterestCrawlingAgent {
         return webClientUtil.get(url, USInterestCrawlingDto.class);
     }
 
-    @Transactional
     @Tool("크롤링 된 지난 n년 동안의 미국 금리를 DB에 저장하고 처리 성공 여부를 반환합니다.")
     public CrawlingResultDto saveUSInterest(USInterestCrawlingDto usInterestCrawlingDto) {
-        try {
-            List<ObservationsRow> rows = usInterestCrawlingDto.getObservations();
-            for (ObservationsRow row : rows) {
-                LocalDate interestDate = parseStringToLocalDate(row.getTime());
-                Float interestRate = Float.parseFloat(row.getDataValue());
-                USInterest usInterest = USInterest.of(interestDate, interestRate);
-                usInterestRepository.save(usInterest);
-            }
-            return CrawlingResultDto.of(true, "성공적으로 금리를 크롤링하였습니다.");
-        } catch (Exception e) {
-            return CrawlingResultDto.of(false, "금리 크롤링을 실패하였습니다.");
+        usInterestRepository.deleteAll();
+
+        List<ObservationsRow> rows = usInterestCrawlingDto.getObservations();
+        for (ObservationsRow row : rows) {
+            LocalDate interestDate = parseStringToLocalDate(row.getTime());
+            double interestRate = Double.parseDouble(row.getDataValue());
+            USInterest usInterest = USInterest.of(interestDate, interestRate);
+            usInterestRepository.save(usInterest);
         }
+        return CrawlingResultDto.of(true, "미국 금리 크롤링 성공");
     }
 
     private static LocalDate parseStringToLocalDate(String dateString) {

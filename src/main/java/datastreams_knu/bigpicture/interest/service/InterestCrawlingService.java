@@ -21,6 +21,7 @@ public class InterestCrawlingService {
         interestCrawlingAssistant = interestCrawlingConfig.interestCrawlingAssistant();
     }
 
+    @Transactional
     public CrawlingResultDto crawling(String type, int n) {
         return interestCrawlingAssistant.execute(type, n);
     }

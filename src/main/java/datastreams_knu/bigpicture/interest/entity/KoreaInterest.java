@@ -5,10 +5,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@Getter
 @NoArgsConstructor
 @Entity
 public class KoreaInterest {
@@ -19,15 +21,15 @@ public class KoreaInterest {
 
     private LocalDate interestDate;
 
-    private Float interestRate;
+    private double interestRate;
 
     @Builder
-    public KoreaInterest(LocalDate interestDate, Float interestRate) {
+    public KoreaInterest(LocalDate interestDate, double interestRate) {
         this.interestDate = interestDate;
         this.interestRate = interestRate;
     }
 
-    public static KoreaInterest of(LocalDate interestDate, Float interestRate) {
+    public static KoreaInterest of(LocalDate interestDate, double interestRate) {
         return KoreaInterest.builder()
             .interestDate(interestDate)
             .interestRate(interestRate)
