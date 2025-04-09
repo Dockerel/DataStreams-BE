@@ -1,5 +1,6 @@
 package datastreams_knu.bigpicture.news.entity;
 
+import datastreams_knu.bigpicture.common.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-public class NewsInfo {
+public class NewsInfo extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
