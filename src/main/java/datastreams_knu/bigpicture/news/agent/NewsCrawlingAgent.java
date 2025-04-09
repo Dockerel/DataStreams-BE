@@ -11,9 +11,10 @@ import datastreams_knu.bigpicture.news.agent.dto.StringSummaryDto;
 import datastreams_knu.bigpicture.news.agent.dto.SummarizedMultipleNewsDto;
 import datastreams_knu.bigpicture.news.agent.dto.SummarizedNewsDto;
 import datastreams_knu.bigpicture.news.entity.News;
-import datastreams_knu.bigpicture.news.entity.NewsInfo;
+import datastreams_knu.bigpicture.news.entity.Reference;
 import datastreams_knu.bigpicture.news.exception.NewsCrawlingException;
 import datastreams_knu.bigpicture.news.repository.NewsRepository;
+import datastreams_knu.bigpicture.news.repository.ReferenceRepository;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -25,7 +26,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -49,6 +49,7 @@ public class NewsCrawlingAgent {
     private final AiModelConfig aiModelConfig;
     private final ObjectMapper objectMapper;
     private final NewsRepository newsRepository;
+    private final ReferenceRepository referenceRepository;
 
     private ChatLanguageModel model;
 
@@ -91,34 +92,23 @@ public class NewsCrawlingAgent {
     }
 
     @Tool("수집된 기사들을 바탕으로 기사 요약 정보와 기사 출처 URL을 생성합니다")
-    public SummarizedMultipleNewsDto summarizeMultipleNews(List<SummarizedNewsDto> newsList) {
-        try {
-            String promptText = SUMMARIZE_MULTIPLE_NEWS_PROMPT;
+    public SummarizedMultipleNewsDto summarizeMultipleNews(List<SummarizedNewsDto> newsList) throws JsonProcessingException {
+        String promptText = SUMMARIZE_MULTIPLE_NEWS_PROMPT;
 
-            String var = createVar(newsList);
+        String var = createVar(newsList);
 
-            UserMessage prompt = createPrompt(promptText, var);
+        UserMessage prompt = createPrompt(promptText, var);
 
-            String response = model.chat(prompt).aiMessage().text();
+        String response = model.chat(prompt).aiMessage().text();
 
-            SummarizedMultipleNewsDto result = objectMapper.readValue(response, SummarizedMultipleNewsDto.class);
-
-            return result;
-        } catch (Exception e) {
-            throw new NewsCrawlingException("뉴스들의 요약본 생성 중 오류가 발생하였습니다: " + e.getMessage());
-        }
+        return objectMapper.readValue(response, SummarizedMultipleNewsDto.class);
     }
 
-    @Transactional
-    @Tool("생성된 기사 요약과 기사 출처 URL들 그리고 해당 기사의 날짜들을 DB에 저장하고 처리 성공 여부를 반환합니다.")
+    @Tool("keyword, 생성된 기사 요약과 기사 출처 URL들 그리고 해당 기사의 날짜들을 DB에 저장하고 처리 성공 여부를 반환합니다.")
     public CrawlingResultDto saveSummarizedNewsWithUrls(String keyword, SummarizedMultipleNewsDto summarizedMultipleNews) {
-        try {
-            News news = updateNews(keyword, summarizedMultipleNews);
-            newsRepository.save(news);
-            return CrawlingResultDto.of(true, "성공적으로 기사를 크롤링하였습니다.");
-        } catch (Exception e) {
-            return CrawlingResultDto.of(false, "기사 크롤링을 실패하였습니다.");
-        }
+        News news = updateNews(keyword, summarizedMultipleNews);
+        newsRepository.save(news);
+        return CrawlingResultDto.of(true, "뉴스 크롤링 성공");
     }
 
     private static String createUrl(Map<String, String> params) {
@@ -174,14 +164,14 @@ public class NewsCrawlingAgent {
             .collect(Collectors.toList());
     }
 
-    private SummarizedNewsDto getSummarizedNews(String keyword, String id) {
-        SummarizedNewsDto news = getNewsInfo(id);
+    protected SummarizedNewsDto getSummarizedNews(String keyword, String id) {
+        SummarizedNewsDto news = getReference(id);
         String summarizeNewsContent = summarizeNews(news.getContent(), keyword);
         news.setContent(summarizeNewsContent);
         return news;
     }
 
-    private SummarizedNewsDto getNewsInfo(String id) {
+    protected SummarizedNewsDto getReference(String id) {
         try {
             String baseUrl = "https://www.yna.co.kr/view/";
             String url = baseUrl + id;
@@ -251,12 +241,14 @@ public class NewsCrawlingAgent {
         News findNews = newsRepository.findByKeyword(keyword)
             .orElse(News.of(keyword));
 
-        findNews.setContent(result.getSummary());
+        referenceRepository.deleteAllByNewsId(findNews.getId());
 
-        List<NewsInfo> newsInfos = result.getSources().stream()
-            .map(info -> NewsInfo.of(info.getUrl(), info.getDate()))
-            .collect(Collectors.toList());
-        findNews.setNewsInfos(newsInfos);
+        String newSummary = result.getSummary();
+        findNews.setContent(newSummary);
+
+        result.getSources().stream()
+            .map(info -> Reference.of(info.getUrl(), info.getDate()))
+            .forEach(findNews::addReference);
 
         return findNews;
     }

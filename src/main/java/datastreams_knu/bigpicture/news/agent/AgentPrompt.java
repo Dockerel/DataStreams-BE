@@ -2,7 +2,7 @@ package datastreams_knu.bigpicture.news.agent;
 
 public abstract class AgentPrompt {
     public static String SUMMARIZE_MULTIPLE_NEWS_PROMPT = """
-        당신은 경제 뉴스 요약 전문가입니다.
+        당신은 금융 전문가입니다.
 
         다음 뉴스 기사들을 읽고, 핵심 내용을 요약해 주세요.
         1. **전체 기사 내용을 종합하여 600~1200단어 이내로 요약**하세요.
@@ -57,7 +57,7 @@ public abstract class AgentPrompt {
         """;
 
     public static String SUMMARIZE_GENERAL_NEWS_PROMPT = """
-        당신은 금융 분야의 요약 전문가입니다.
+        당신은 금융 전문가입니다.
                 
         아래의 금융 관련 텍스트를 읽고, **핵심 내용을 요약**해 주세요.
                 
@@ -80,7 +80,7 @@ public abstract class AgentPrompt {
         """;
 
     public static String SUMMARIZE_NEWS_BY_KEYWORD_PROMPT = """
-        당신은 금융 분야의 요약 전문가입니다.
+        당신은 금융 전문가입니다.
             
         아래의 금융 관련 텍스트를 읽고, 반드시 주어진 'keyword'와 **직접적으로 관련된 내용만** 요약해 주세요.
                 
