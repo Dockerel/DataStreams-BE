@@ -2,6 +2,7 @@ package datastreams_knu.bigpicture.exchange.agent;
 
 import datastreams_knu.bigpicture.common.dto.CrawlingResultDto;
 import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.UserMessage;
 
 public interface ExchangeCrawlingAssistant {
     @SystemMessage("""
@@ -17,5 +18,6 @@ public interface ExchangeCrawlingAssistant {
             
             정확하고 유용한 데이터만 제공하세요.
         """)
+    @UserMessage("환율 데이터를 수집하고 저장해 주세요.")
     CrawlingResultDto execute();
 }
