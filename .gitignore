@@ -36,5 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 
-######## SECRET KEY INFO
-application.properties
+src/main/resources/application-dev.properties
