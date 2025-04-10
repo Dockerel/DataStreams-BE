@@ -10,7 +10,6 @@ import dev.langchain4j.agent.tool.Tool;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -41,18 +40,14 @@ public class ExchangeCrawlingAgent {
             .collect(Collectors.toList());
     }
 
-    @Transactional
     @Tool("수집된 결과를 DB에 저장합니다.")
     public CrawlingResultDto saveExchange(List<ExchangeInfoDto> infos) {
-        try {
-            infos.stream()
-                .forEach(info -> {
-                    Exchange exchange = Exchange.of(info.getDate(), info.getRate());
-                    exchangeRepository.save(exchange);
-                });
-            return CrawlingResultDto.of(true, "성공적으로 환율을 크롤링하였습니다.");
-        } catch (Exception e) {
-            return CrawlingResultDto.of(false, "환율 크롤링을 실패하였습니다.");
-        }
+        exchangeRepository.deleteAll();
+        infos.stream()
+            .forEach(info -> {
+                Exchange exchange = Exchange.of(info.getDate(), info.getRate());
+                exchangeRepository.save(exchange);
+            });
+        return CrawlingResultDto.of(true, "환율 크롤링 성공");
     }
 }

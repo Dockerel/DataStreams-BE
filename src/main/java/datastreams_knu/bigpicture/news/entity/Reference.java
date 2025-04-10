@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-public class NewsInfo {
+public class Reference {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,13 +22,13 @@ public class NewsInfo {
     private News news;
 
     @Builder
-    public NewsInfo(String url, String date) {
+    public Reference(String url, String date) {
         this.url = url;
         this.date = date;
     }
 
-    public static NewsInfo of(String url, String date) {
-        return NewsInfo.builder()
+    public static Reference of(String url, String date) {
+        return Reference.builder()
             .url(url)
             .date(date)
             .build();

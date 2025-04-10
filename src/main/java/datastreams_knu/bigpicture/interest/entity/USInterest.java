@@ -17,15 +17,15 @@ public class USInterest {
 
     private LocalDate interestDate;
 
-    private Float interestRate;
+    private double interestRate;
 
     @Builder
-    public USInterest(LocalDate interestDate, Float interestRate) {
+    public USInterest(LocalDate interestDate, double interestRate) {
         this.interestDate = interestDate;
         this.interestRate = interestRate;
     }
 
-    public static USInterest of(LocalDate interestDate, Float interestRate) {
+    public static USInterest of(LocalDate interestDate, double interestRate) {
         return USInterest.builder()
             .interestDate(interestDate)
             .interestRate(interestRate)

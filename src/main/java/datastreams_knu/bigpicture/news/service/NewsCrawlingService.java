@@ -21,6 +21,7 @@ public class NewsCrawlingService {
         newsCrawlingAssistant = newsCrawlingConfig.newsCrawlingAssistant();
     }
 
+    @Transactional
     public CrawlingResultDto crawling(String type, String keyword) {
         return newsCrawlingAssistant.execute(type, keyword);
     }

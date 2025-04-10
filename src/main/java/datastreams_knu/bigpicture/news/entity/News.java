@@ -23,15 +23,12 @@ public class News extends BaseEntity {
     @Lob
     private String content;
 
-    @OneToMany(mappedBy = "news", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NewsInfo> newsInfos = new ArrayList<>();
+    @OneToMany(mappedBy = "news", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Reference> references = new ArrayList<>();
 
-    public void setNewsInfos(List<NewsInfo> infos) {
-        newsInfos.clear();
-        for (NewsInfo info : infos) {
-            info.setNews(this);
-            newsInfos.add(info);
-        }
+    public void addReference(Reference reference) {
+        references.add(reference);
+        reference.setNews(this);
     }
 
     @Builder
