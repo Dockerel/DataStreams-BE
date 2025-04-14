@@ -6,10 +6,7 @@ import datastreams_knu.bigpicture.schedule.controller.dto.RegisterCrawlingDataRe
 import datastreams_knu.bigpicture.schedule.service.SchedulerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/schedule")
@@ -17,6 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ScheduleController {
 
     private final SchedulerService schedulerService;
+
+    @GetMapping
+    public ApiResponse<String> getTest() {
+        return ApiResponse.ok("test ok");
+    }
 
     @PostMapping("/register")
     public ApiResponse<RegisterCrawlingDataResponse> registerCrawlingData(@Valid @RequestBody RegisterCrawlingDataRequest request) {
