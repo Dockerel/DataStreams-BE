@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bigpicture
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bigpicture
+  template:
+    metadata:
+      labels:
+        app: bigpicture
+    spec:
+      containers:
+        - name: bigpicture
+          image: ${DOCKER_USERNAME}/bigpicture:latest
+          ports:
+            - containerPort: 8080
+              hostPort: 8080
+          env:
+            - name: JAVA_OPTS
+              value: "-Xmx512m"
