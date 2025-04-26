@@ -82,4 +82,5 @@ jobs:
         run: |
           export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
           envsubst < ./k3s/deployment.yaml.template > deployment.yaml
+          cat deployment.yaml
           kubectl apply -f deployment.yaml --kubeconfig ~/.kube/config --insecure-skip-tls-verify
