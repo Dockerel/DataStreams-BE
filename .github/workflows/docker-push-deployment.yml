@@ -85,7 +85,6 @@ jobs:
           envsubst < ./k3s/deployment.yaml.template > deployment.yaml
           kubectl apply -f deployment.yaml --kubeconfig ~/.kube/config --insecure-skip-tls-verify
       
-      - name: 🔃 Restart Kubernetes deployment
-        run: kubectl rollout restart deployment bigpicture
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+      - name: 🔄 Restart Deployment
+        run: |
+          kubectl rollout restart deployment bigpicture --kubeconfig ~/.kube/config --insecure-skip-tls-verify
