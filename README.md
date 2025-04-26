@@ -2,7 +2,7 @@
 
 # 2025 경북대학교 x 데이터스트림즈 산학협력프로젝트1
 
-![로고](./images/bigpicture_logo.png)
+![로고](./images/bigpicture_logo.svg)
 
 # 거시경제 인사이트 리포트 서비스 “BigPicture”
 
@@ -15,5 +15,5 @@
 </div>
 <br>
 
-## 웹 서버 아키텍쳐
-![웹서버 아키텍쳐](./images/architecture.svg)
+## 웹 서버 아키텍처
+![웹서버 아키텍처](./images/architecture.png)
