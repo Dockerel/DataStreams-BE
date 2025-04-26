@@ -65,6 +65,7 @@ jobs:
           platforms: linux/arm64
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/bigpicture:latest
+          no-cache: true
 
       - name: 🛠️ Set up kubectl
         uses: azure/setup-kubectl@v3

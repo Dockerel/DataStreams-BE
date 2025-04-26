@@ -15,6 +15,7 @@ spec:
       containers:
         - name: bigpicture
           image: ${DOCKER_USERNAME}/bigpicture:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
               hostPort: 8080
