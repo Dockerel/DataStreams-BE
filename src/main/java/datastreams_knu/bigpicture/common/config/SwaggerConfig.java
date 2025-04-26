@@ -13,7 +13,6 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI openAPI() {
-        log.info("Loading Swagger features...");
         return new OpenAPI()
             .components(new Components())
             .info(apiInfo());
