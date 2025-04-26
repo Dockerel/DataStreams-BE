@@ -78,9 +78,8 @@ jobs:
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
-      - name: 🚀 Deploy to Kubernetes (Apply & Set Image)
+      - name: 🚀 Deploy to Kubernetes
         run: |
           export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
           envsubst < ./k3s/deployment.yaml.template > deployment.yaml
           kubectl apply -f deployment.yaml --kubeconfig ~/.kube/config --insecure-skip-tls-verify
-          kubectl set image deployment/bigpicture bigpicture=${{ secrets.DOCKER_USERNAME }}/bigpicture:latest --kubeconfig ~/.kube/config --insecure-skip-tls-verify
