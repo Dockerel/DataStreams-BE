@@ -19,7 +19,7 @@ public class SwaggerConfig {
     private Info apiInfo() {
         return new Info()
             .title("2025 산학협력프로젝트1 - 경북대 5팀 - BigPicture Service 명세서")
-            .description("[Team GitHub 바로가기](https://github.com/knu-datastreams/BE)")
+            .description("[Team GitHub 바로가기](https://github.com/knu-datastreams)")
             .version("1.0.0");
     }
 }
