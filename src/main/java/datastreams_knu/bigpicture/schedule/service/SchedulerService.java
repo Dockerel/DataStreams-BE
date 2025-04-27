@@ -1,5 +1,7 @@
 package datastreams_knu.bigpicture.schedule.service;
 
+import datastreams_knu.bigpicture.common.dto.DeleteResultDto;
+import datastreams_knu.bigpicture.exchange.repository.ExchangeRepository;
 import datastreams_knu.bigpicture.exchange.service.ExchangeCrawlingService;
 import datastreams_knu.bigpicture.interest.service.InterestCrawlingService;
 import datastreams_knu.bigpicture.news.service.NewsCrawlingService;
@@ -11,24 +13,28 @@ import datastreams_knu.bigpicture.schedule.service.dto.RegisterCrawlingDataServi
 import datastreams_knu.bigpicture.schedule.util.RetryExecutor;
 import datastreams_knu.bigpicture.stock.service.StockCrawlingService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class SchedulerService {
+
+    public static final int EXCHANGE_DATA_EXPIRE_MONTH = 3;
 
     private final ExchangeCrawlingService exchangeCrawlingService;
     private final InterestCrawlingService interestCrawlingService;
     private final StockCrawlingService stockCrawlingService;
     private final NewsCrawlingService newsCrawlingService;
+
     private final CrawlingInfoRepository crawlingInfoRepository;
     private final TickerParser tickerParser;
+
+    private final ExchangeRepository exchangeRepository;
 
     public void exchangeCrawling() {
         RetryExecutor.execute(() -> exchangeCrawlingService.crawling(), "ExchangeCrawlingService");
@@ -78,5 +84,11 @@ public class SchedulerService {
         RecommendedKeywordDto response = tickerParser.parseTicker(request.getStockName());
         CrawlingInfo crawlingInfo = CrawlingInfo.of(request.getStockType(), request.getStockName(), response.getKeyword());
         return RegisterCrawlingDataResponse.of(crawlingInfoRepository.save(crawlingInfo));
+    }
+
+    @Transactional
+    public DeleteResultDto deleteExpireExchangeData() {
+        int deleteCount = exchangeRepository.deleteAllByExchangeDateBefore(LocalDate.now().minusMonths(EXCHANGE_DATA_EXPIRE_MONTH));
+        return DeleteResultDto.of(deleteCount, "환율 데이터 삭제 성공");
     }
 }
