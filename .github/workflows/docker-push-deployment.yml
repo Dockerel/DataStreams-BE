@@ -35,6 +35,22 @@ jobs:
           us-stock.api.key=${{ secrets.US_STOCK_API_KEY }}
           EOF
 
+      - name: 📄 Generate application-test.properties
+        run: |
+          mkdir -p src/main/resources
+          cat <<EOF > src/main/resources/application-secret.properties
+          MYSQL_HOST=${{ secrets.MYSQL_HOST }}
+          MYSQL_PORT=${{ secrets.MYSQL_PORT }}
+          MYSQL_USER=${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}
+          openai.api.key=${{ secrets.OPENAI_API_KEY }}
+          ecos.api.key=${{ secrets.ECOS_API_KEY }}
+          fred.api.key=${{ secrets.FRED_API_KEY }}
+          korea-stock.api.key=${{ secrets.KOREA_STOCK_API_KEY }}
+          us-stock.api.key=${{ secrets.US_STOCK_API_KEY }}
+          EOF
+
       - name: 🛠️ Set up Gradle
         uses: gradle/wrapper-validation-action@v3
 
