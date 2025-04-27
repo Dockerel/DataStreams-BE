@@ -17,8 +17,8 @@ public class CrawlingInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String stockType; // korea, us
-    private String stockName; // name / ticker
+    private String stockType; // korea or us
+    private String stockName; // name or ticker
 
     private String newsKeyword; // news keyword
 

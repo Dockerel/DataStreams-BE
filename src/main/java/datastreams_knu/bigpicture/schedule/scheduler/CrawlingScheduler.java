@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class GlobalScheduler {
+public class CrawlingScheduler {
 
     private final SchedulerService schedulerService;
 
