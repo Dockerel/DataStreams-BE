@@ -1,6 +1,6 @@
 package datastreams_knu.bigpicture.schedule.scheduler;
 
-import datastreams_knu.bigpicture.schedule.service.SchedulerService;
+import datastreams_knu.bigpicture.schedule.service.CrawlingSchedulerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CrawlingScheduler {
 
-    private final SchedulerService schedulerService;
+    private final CrawlingSchedulerService schedulerService;
 
     // 달러 환율 크롤링
     @Scheduled(cron = "0 0 1 * * MON", zone = "Asia/Seoul") // 월요일 새벽 1시
