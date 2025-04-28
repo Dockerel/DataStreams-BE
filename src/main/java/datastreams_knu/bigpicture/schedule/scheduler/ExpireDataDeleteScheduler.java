@@ -15,7 +15,7 @@ public class ExpireDataDeleteScheduler {
     private final ExpireDataDeleteSchedulerService schedulerService;
 
     // 달러 환율 크롤링 데이터 삭제
-    @Scheduled(cron = "0 15 1 * * MON", zone = "Asia/Seoul") // 매주 월요일 새벽 1시 15분
+    @Scheduled(cron = "0 10 1 * * MON", zone = "Asia/Seoul") // 매주 월요일 새벽 1시 15분
     public void deleteExchangeData() {
         DeleteResultDto result = schedulerService.deleteExpireExchangeData();
         log.info("{}: {}", result.getMessage(), result.getDeleteCount());
@@ -32,6 +32,13 @@ public class ExpireDataDeleteScheduler {
     @Scheduled(cron = "0 50 1 1 * *", zone = "Asia/Seoul") // 매달 1일 새벽 1시 50분
     public void deleteUSInterestData() {
         DeleteResultDto result = schedulerService.deleteExpireUSInterestData();
+        log.info("{}: {}", result.getMessage(), result.getDeleteCount());
+    }
+
+    // 뉴스 크롤링 데이터 삭제
+    @Scheduled(cron = "0 0 2 * * *", zone = "Asia/Seoul") // 매일 새벽 2시
+    public void deleteNewsData() {
+        DeleteResultDto result = schedulerService.deleteExpireNewsData();
         log.info("{}: {}", result.getMessage(), result.getDeleteCount());
     }
 }
