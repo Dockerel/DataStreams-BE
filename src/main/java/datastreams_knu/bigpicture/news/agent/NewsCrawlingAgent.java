@@ -30,9 +30,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -58,7 +56,7 @@ public class NewsCrawlingAgent {
         this.model = aiModelConfig.openAiChatModel();
     }
 
-    @Tool("keyword를 기반으로 지난 7일 동안의 관련 뉴스 기사를 검색합니다.")
+    @Tool("keyword를 기반으로 keyword 관련 뉴스 기사를 검색합니다.")
     public List<SummarizedNewsDto> crawlingNewsByKeyword(String keyword) {
         Map<String, String> params = Map.of("&query=", URLEncoder.encode(keyword, StandardCharsets.UTF_8));
         String url = createUrl(params);
@@ -74,7 +72,7 @@ public class NewsCrawlingAgent {
         return summarizedNewsList;
     }
 
-    @Tool("특정 키워드 없이 지난 7일 동안의 주요 경제 뉴스를 수집합니다.")
+    @Tool("특정 키워드 없이 주요 경제 뉴스를 수집합니다.")
     public List<SummarizedNewsDto> crawlingNewsGeneral(String keyword) { // keyword : 국내, 해외
         String code = keyword.equals("국내") ? "02" : "11";
         Map<String, String> params = Map.of("&div_code=", code);
@@ -106,8 +104,9 @@ public class NewsCrawlingAgent {
 
     @Tool("keyword, 생성된 기사 요약과 기사 출처 URL들 그리고 해당 기사의 날짜들을 DB에 저장하고 처리 성공 여부를 반환합니다.")
     public CrawlingResultDto saveSummarizedNewsWithUrls(String keyword, SummarizedMultipleNewsDto summarizedMultipleNews) {
-        News news = updateNews(keyword, summarizedMultipleNews);
-        newsRepository.save(news);
+        News news = saveNews(keyword, summarizedMultipleNews);
+        News saveNews = newsRepository.save(news);
+        System.out.println("saveNews = " + saveNews.getId());
         return CrawlingResultDto.of(true, "뉴스 크롤링 성공");
     }
 
@@ -125,7 +124,7 @@ public class NewsCrawlingAgent {
             stringBuilder.append(params.get(s));
         }
 
-        DateRangeDto range = getDateRange("week");
+        DateRangeDto range = getDateRange();
         stringBuilder
             .append("&from=")
             .append(range.getFromDate())
@@ -135,22 +134,9 @@ public class NewsCrawlingAgent {
         return stringBuilder.toString();
     }
 
-    private static DateRangeDto getDateRange(String option) {
-        LocalDate today = LocalDate.now();
-
-        if (option.equals("day")) {
-            String processDateToday = processDate(today);
-            return DateRangeDto.of(processDateToday);
-        }
-
-        // 이번 주 월요일 찾기
-        LocalDate thisMonday = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        // 저번 주 월요일 = 이번 주 월요일 - 7일
-        LocalDate lastMonday = thisMonday.minusDays(7);
-        // 저번 주 일요일 = 저번 주 월요일 + 6일
-        LocalDate lastSunday = lastMonday.plusDays(6);
-
-        return DateRangeDto.of(processDate(lastMonday), processDate(lastSunday));
+    private static DateRangeDto getDateRange() {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        return DateRangeDto.of(processDate(yesterday));
     }
 
     private static String processDate(LocalDate date) {
@@ -237,19 +223,13 @@ public class NewsCrawlingAgent {
         return userMessage;
     }
 
-    private News updateNews(String keyword, SummarizedMultipleNewsDto result) {
-        News findNews = newsRepository.findByKeyword(keyword)
-            .orElse(News.of(keyword));
-
-        referenceRepository.deleteAllByNewsId(findNews.getId());
-
-        String newSummary = result.getSummary();
-        findNews.setContent(newSummary);
+    private News saveNews(String keyword, SummarizedMultipleNewsDto result) {
+        News news = News.of(LocalDate.now(), keyword, result.getSummary());
 
         result.getSources().stream()
-            .map(info -> Reference.of(info.getUrl(), info.getDate()))
-            .forEach(findNews::addReference);
+            .map(info -> Reference.of(info.getUrl()))
+            .forEach(news::addReference);
 
-        return findNews;
+        return news;
     }
 }

@@ -8,18 +8,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReferenceDto {
     private String url;
-    private String date;
 
     @Builder
-    public ReferenceDto(String url, String date) {
+    public ReferenceDto(String url) {
         this.url = url;
-        this.date = date;
     }
 
-    public static ReferenceDto of(String url, String date) {
+    public static ReferenceDto of(String url) {
         return ReferenceDto.builder()
             .url(url)
-            .date(date)
             .build();
     }
 }

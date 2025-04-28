@@ -26,16 +26,13 @@ public abstract class AgentPrompt {
             "summary": "전체 뉴스를 종합한 요약(600~1200단어 이내)",
             "sources": [
                 {
-                    "url": "기사 URL 1",
-                    "date": "기사 DATE 1"
+                    "url": "기사 URL 1"
                 },
                 {
-                    "url": "기사 URL 2",
-                    "date": "기사 DATE 2"
+                    "url": "기사 URL 2"
                 },
                 {
-                    "url": "기사 URL 3",
-                    "date": "기사 DATE 3"
+                    "url": "기사 URL 3"
                 },
                 ...
             ]
