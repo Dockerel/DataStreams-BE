@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +33,9 @@ public class NewsCrawlingAgentTest {
         String keyword = "keyword";
 
         List<ReferenceDto> referenceDtos = List.of(
-            ReferenceDto.of("url1", "date1"),
-            ReferenceDto.of("url2", "date2"),
-            ReferenceDto.of("url3", "date3")
+            ReferenceDto.of("url1"),
+            ReferenceDto.of("url2"),
+            ReferenceDto.of("url3")
         );
 
         SummarizedMultipleNewsDto summarizedMultipleNewsDto = SummarizedMultipleNewsDto.of("summary", referenceDtos);

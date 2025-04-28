@@ -19,9 +19,9 @@ class KoreaInterestRepositoryTest {
     @Autowired
     KoreaInterestRepository koreaInterestRepository;
 
-    @DisplayName("")
+    @DisplayName("기준 날짜 이전에 수집된 금리 데이터들을 모두 삭제한다.")
     @Test
-    void test() {
+    void deleteAllByInterestDateBeforeTest() {
         // given
         List<KoreaInterest> koreaInterests = List.of(
             KoreaInterest.of(LocalDate.now(), 0.01),
