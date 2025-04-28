@@ -37,8 +37,8 @@ jobs:
 
       - name: 📄 Generate application-test.properties
         run: |
-          mkdir -p src/main/resources
-          cat <<EOF > src/main/resources/application-secret.properties
+          mkdir -p src/test/resources
+          cat <<EOF > src/main/resources/application-test.properties
           MYSQL_HOST=${{ secrets.MYSQL_HOST }}
           MYSQL_PORT=${{ secrets.MYSQL_PORT }}
           MYSQL_USER=${{ secrets.MYSQL_USER }}
