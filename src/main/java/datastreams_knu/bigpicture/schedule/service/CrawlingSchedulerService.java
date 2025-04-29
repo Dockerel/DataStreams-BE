@@ -6,7 +6,6 @@ import datastreams_knu.bigpicture.news.service.NewsCrawlingService;
 import datastreams_knu.bigpicture.schedule.entity.CrawlingInfo;
 import datastreams_knu.bigpicture.schedule.repository.CrawlingInfoRepository;
 import datastreams_knu.bigpicture.schedule.util.RetryExecutor;
-import datastreams_knu.bigpicture.schedule.util.TickerParser;
 import datastreams_knu.bigpicture.stock.service.StockCrawlingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,6 @@ public class CrawlingSchedulerService {
     private final NewsCrawlingService newsCrawlingService;
 
     private final CrawlingInfoRepository crawlingInfoRepository;
-    private final TickerParser tickerParser;
 
     public void exchangeCrawling() {
         RetryExecutor.execute(() -> exchangeCrawlingService.crawling(), "ExchangeCrawlingService");
@@ -42,18 +40,42 @@ public class CrawlingSchedulerService {
         RetryExecutor.execute(() -> newsCrawlingService.crawling("general", "해외"), "NewsCrawling/general-해외");
     }
 
-    // 주가 + 관련 뉴스
-    public void stockAndNewsCrawling() {
+    // 키워드 뉴스
+    public void newsCrawling() {
         List<CrawlingInfo> crawlingInfos = crawlingInfoRepository.findAll();
         for (CrawlingInfo info : crawlingInfos) {
-            String newsCrawlingTaskName = "NewsCrawling/%s-%s".formatted("keyword", info.getNewsKeyword());
-            RetryExecutor.execute(() -> newsCrawlingService.crawling("keyword", info.getNewsKeyword()), newsCrawlingTaskName);
+            String newsCrawlingTaskName = "NewsCrawling/%s-%s".formatted("keyword", info.getStockKeyword());
+            RetryExecutor.execute(() -> newsCrawlingService.crawling("keyword", info.getStockKeyword()), newsCrawlingTaskName);
+        }
+    }
 
+    // 한국 주식 주가
+    public void koreaStockCrawling() {
+        List<CrawlingInfo> crawlingInfos = crawlingInfoRepository.findAllByStockType("korea");
+        for (CrawlingInfo info : crawlingInfos) {
             // 뉴스 크롤링 키워드가 존재하지 않는 경우 패스
-            if (info.getNewsKeyword().equals("unknown")) continue;
+            if (info.getStockName().equals("unknown")) continue;
 
-            String stockCrawlingTaskName = "StockCrawling/%s-%s".formatted(info.getStockType(), info.getStockName());
-            RetryExecutor.execute(() -> stockCrawlingService.crawling(info.getStockType(), info.getStockName()), stockCrawlingTaskName);
+            String stockCrawlingTaskName = "StockCrawling-Korea/%s-%s-%s".formatted(info.getStockType(), info.getStockName(), info.getStockKeyword());
+            RetryExecutor.execute(() -> stockCrawlingService.crawling(info.getStockType(), info.getStockKeyword()), stockCrawlingTaskName);
+        }
+    }
+
+    // 미국 주식 주가
+    public void usStockCrawling() {
+        List<CrawlingInfo> crawlingInfos = crawlingInfoRepository.findAllByStockType("us");
+        for (CrawlingInfo info : crawlingInfos) {
+            // 뉴스 크롤링 키워드가 존재하지 않는 경우 패스
+            if (info.getStockName().equals("unknown")) continue;
+
+            // api 호출 제한을 피하기 위한 대기 시간(60초)
+            try {
+                String stockCrawlingTaskName = "StockCrawling-US/%s-%s-%s".formatted(info.getStockType(), info.getStockName(), info.getStockKeyword());
+                RetryExecutor.execute(() -> stockCrawlingService.crawling(info.getStockType(), info.getStockKeyword()), stockCrawlingTaskName);
+                Thread.sleep(60 * 1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

@@ -106,7 +106,6 @@ public class NewsCrawlingAgent {
     public CrawlingResultDto saveSummarizedNewsWithUrls(String keyword, SummarizedMultipleNewsDto summarizedMultipleNews) {
         News news = saveNews(keyword, summarizedMultipleNews);
         News saveNews = newsRepository.save(news);
-        System.out.println("saveNews = " + saveNews.getId());
         return CrawlingResultDto.of(true, "뉴스 크롤링 성공");
     }
 

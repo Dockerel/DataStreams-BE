@@ -29,9 +29,21 @@ public class CrawlingScheduler {
         schedulerService.generalNewsCrawling();
     }
 
-    // 주가 + 관련 뉴스 크롤링
-    @Scheduled(cron = "0 0 2 * * *", zone = "Asia/Seoul") // 매일 새벽 2시
+    // 키워드 뉴스 크롤링
+    @Scheduled(cron = "0 0 2 * * *", zone = "Asia/Seoul") // 매일 오전 2시
     public void runNewsCrawling() {
-        schedulerService.stockAndNewsCrawling();
+        schedulerService.newsCrawling();
+    }
+
+    // 한국 주식 주가 크롤링
+    @Scheduled(cron = "0 0 13 * * *", zone = "Asia/Seoul") // 매일 오후 1시
+    public void runKoreaStockCrawling() {
+        schedulerService.koreaStockCrawling();
+    }
+
+    // 미국 주식 주가 크롤링
+    @Scheduled(cron = "0 0 14 * * *", zone = "Asia/Seoul") // 매일 오후 2시
+    public void runUSStockCrawling() {
+        schedulerService.usStockCrawling();
     }
 }

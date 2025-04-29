@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class SchedulerService {
@@ -19,7 +20,6 @@ public class SchedulerService {
     private final CrawlingInfoRepository crawlingInfoRepository;
     private final TickerParser tickerParser;
 
-    @Transactional
     public RegisterCrawlingDataResponse registerCrawlingData(RegisterCrawlingDataServiceRequest request) {
         // 이미 존재하는 크롤링 정보
         Optional<CrawlingInfo> findCrawlingInfo = crawlingInfoRepository.findByStockName(request.getStockName());
@@ -30,9 +30,11 @@ public class SchedulerService {
         // 한국 기업의 경우 주식 이름을 뉴스 크롤링 키워드로 사용
         if (request.getStockType().equals("korea")) {
             String stockName = request.getStockName();
-            return RegisterCrawlingDataResponse.of(CrawlingInfo.of(request.getStockType(), stockName, stockName));
+            CrawlingInfo crawlingInfo = CrawlingInfo.of(request.getStockType(), stockName, stockName);
+            return RegisterCrawlingDataResponse.of(crawlingInfoRepository.save(crawlingInfo));
         }
 
+        // us
         // 해외 기업의 경우 LLM을 통해 ticker(stockName)로부터 적절한 키워드를 생성하여 뉴스 크롤링에 사용
         RecommendedKeywordDto response = tickerParser.parseTicker(request.getStockName());
         CrawlingInfo crawlingInfo = CrawlingInfo.of(request.getStockType(), request.getStockName(), response.getKeyword());
