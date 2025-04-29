@@ -1,24 +1,26 @@
 package datastreams_knu.bigpicture.news.entity;
 
-import datastreams_knu.bigpicture.common.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
 @Getter
 @Entity
-public class News extends BaseEntity {
+public class News {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String keyword;
+
+    private LocalDate newsCrawlingDate;
 
     @Lob
     private String content;
@@ -32,20 +34,18 @@ public class News extends BaseEntity {
     }
 
     @Builder
-    public News(String keyword, String content) {
+    public News(LocalDate newsCrawlingDate, String keyword, String content) {
+        this.newsCrawlingDate = newsCrawlingDate;
         this.keyword = keyword;
         this.content = content;
     }
 
-    public static News of(String keyword, String content) {
+    public static News of(LocalDate newsCrawlingDate, String keyword, String content) {
         return News.builder()
+            .newsCrawlingDate(newsCrawlingDate)
             .keyword(keyword)
             .content(content)
             .build();
-    }
-
-    public static News of(String keyword) {
-        return News.of(keyword, null);
     }
 
     public void setContent(String content) {

@@ -17,23 +17,23 @@ public class CrawlingInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String stockType; // korea, us
-    private String stockName; // name / ticker
+    private String stockType; // korea or us
+    private String stockName; // name or ticker
 
-    private String newsKeyword; // news keyword
+    private String stockKeyword; // news keyword
 
     @Builder
-    public CrawlingInfo(String stockType, String stockName, String newsKeyword) {
+    public CrawlingInfo(String stockType, String stockName, String stockKeyword) {
         this.stockType = stockType;
         this.stockName = stockName;
-        this.newsKeyword = newsKeyword;
+        this.stockKeyword = stockKeyword;
     }
 
     public static CrawlingInfo of(String stockType, String stockName, String newsKeyword) {
         return CrawlingInfo.builder()
             .stockType(stockType)
             .stockName(stockName)
-            .newsKeyword(newsKeyword)
+            .stockKeyword(newsKeyword)
             .build();
     }
 }

@@ -1,4 +1,4 @@
-package datastreams_knu.bigpicture.schedule.service;
+package datastreams_knu.bigpicture.schedule.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

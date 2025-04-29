@@ -40,17 +40,15 @@ public class InterestCrawlingAgent {
     @Value("${fred.api.key}")
     private String fredApiKey;
 
-    @Tool("지난 n년 동안의 한국 금리를 크롤링합니다.")
+    @Tool("지난 n달 동안의 한국 금리를 크롤링합니다.")
     public KoreaInterestCrawlingDto crawlingInterestsOfKorea(int n) {
-        String dateRange = getKoreaDateRange(n);
+        DateRangeDto dateRange = getKoreaDateRange(n);
         String url = createKoreaInterestUrl(dateRange);
         return webClientUtil.get(url, KoreaInterestCrawlingDto.class);
     }
 
-    @Tool("크롤링 된 지난 n년 동안의 한국 금리를 DB에 저장하고 처리 성공 여부를 반환합니다.")
+    @Tool("크롤링 된 지난 n달 동안의 한국 금리를 DB에 저장하고 처리 성공 여부를 반환합니다.")
     public CrawlingResultDto saveKoreaInterest(KoreaInterestCrawlingDto koreaInterestCrawlingDto) {
-        koreaInterestRepository.deleteAll();
-
         List<StatisticRow> interestDataRows = koreaInterestCrawlingDto.getStatisticSearch().getRow();
         for (StatisticRow row : interestDataRows) {
             LocalDate interestDate = parseStringToLocalDate(row.getTime());
@@ -61,14 +59,14 @@ public class InterestCrawlingAgent {
         return CrawlingResultDto.of(true, "한국 금리 크롤링 성공");
     }
 
-    @Tool("지난 n년 동안의 미국 금리를 크롤링합니다.")
+    @Tool("지난 n달 동안의 미국 금리를 크롤링합니다.")
     public USInterestCrawlingDto crawlingInterestsOfUS(int n) {
         DateRangeDto dateRange = getUSDateRange(n);
         String url = createUSInterestUrl(dateRange);
         return webClientUtil.get(url, USInterestCrawlingDto.class);
     }
 
-    @Tool("크롤링 된 지난 n년 동안의 미국 금리를 DB에 저장하고 처리 성공 여부를 반환합니다.")
+    @Tool("크롤링 된 지난 n달 동안의 미국 금리를 DB에 저장하고 처리 성공 여부를 반환합니다.")
     public CrawlingResultDto saveUSInterest(USInterestCrawlingDto usInterestCrawlingDto) {
         usInterestRepository.deleteAll();
 
@@ -93,12 +91,14 @@ public class InterestCrawlingAgent {
         return yearMonth.atDay(1);
     }
 
-    private String createKoreaInterestUrl(String dateRange) {
+    private String createKoreaInterestUrl(DateRangeDto dateRange) {
         StringBuilder sb = new StringBuilder();
         sb.append(ecosBaseUrl)
             .append(ecosApiKey)
             .append("/json/kr/1/1000/722Y001/M/")
-            .append(dateRange)
+            .append(dateRange.getStartYear())
+            .append("/")
+            .append(dateRange.getEndYear())
             .append("/0101000");
         return sb.toString();
     }
@@ -118,17 +118,20 @@ public class InterestCrawlingAgent {
         return sb.toString();
     }
 
-    private static String getKoreaDateRange(int year) {
+    private static DateRangeDto getKoreaDateRange(int month) {
         YearMonth yearMonth = YearMonth.from(LocalDate.now());
-        String formattedYearMonthDay = formatYearMonth(yearMonth); // 오늘 기준 년월
-        YearMonth yearsAgoYearMonth = yearMonth.minusYears(year);
-        String formattedYearMonthFiveYearsAgo = formatYearMonth(yearsAgoYearMonth);
-        return formattedYearMonthFiveYearsAgo + "/" + formattedYearMonthDay;
+        String formattedYearMonth = formatYearMonth(yearMonth); // 오늘 기준 년월
+        YearMonth monthsAgoYearMonth = yearMonth.minusMonths(month);
+        String formattedYearMonthMonthsAgo = formatYearMonth(monthsAgoYearMonth);
+        return DateRangeDto.builder()
+            .startYear(formattedYearMonthMonthsAgo)
+            .endYear(formattedYearMonth)
+            .build();
     }
 
-    private static DateRangeDto getUSDateRange(int year) {
+    private static DateRangeDto getUSDateRange(int month) {
         LocalDate todayLocalDate = LocalDate.now();
-        LocalDate yearsAgoLocalDate = todayLocalDate.minusYears(year);
+        LocalDate yearsAgoLocalDate = todayLocalDate.minusMonths(month);
         return DateRangeDto.builder()
             .startYear(yearsAgoLocalDate.toString())
             .endYear(todayLocalDate.toString())

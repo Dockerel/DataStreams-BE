@@ -15,26 +15,23 @@ public class Reference {
     private Long id;
 
     private String url;
-    private String date;
 
     @ManyToOne
     @JoinColumn(name = "NEWS_ID")
     private News news;
 
     @Builder
-    public Reference(String url, String date) {
+    public Reference(String url) {
         this.url = url;
-        this.date = date;
     }
 
-    public static Reference of(String url, String date) {
+    public static Reference of(String url) {
         return Reference.builder()
             .url(url)
-            .date(date)
             .build();
     }
 
-    public void setNews(News news) {
+    protected void setNews(News news) {
         this.news = news;
     }
 }

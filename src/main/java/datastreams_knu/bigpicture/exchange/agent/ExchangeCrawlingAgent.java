@@ -26,7 +26,7 @@ public class ExchangeCrawlingAgent {
     @Value("${exchange.api.base-url}")
     private String exchangeBaseUrl;
 
-    @Tool("지난 한달 동안의 환율 데이터를 수집합니다.")
+    @Tool("지난 일주일 동안의 환율 데이터를 수집합니다.")
     public List<ExchangeInfoDto> crawlingExchangeRate() {
         ExchangeCrawlingDto response = webClientUtil.get(exchangeBaseUrl, ExchangeCrawlingDto.class);
 
@@ -40,14 +40,13 @@ public class ExchangeCrawlingAgent {
             .collect(Collectors.toList());
     }
 
-    @Tool("수집된 결과를 DB에 저장합니다.")
+    @Tool("수집된 환율 데이터의 평균값을 DB에 저장합니다.")
     public CrawlingResultDto saveExchange(List<ExchangeInfoDto> infos) {
-        exchangeRepository.deleteAll();
-        infos.stream()
-            .forEach(info -> {
-                Exchange exchange = Exchange.of(info.getDate(), info.getRate());
-                exchangeRepository.save(exchange);
-            });
+        double averageExchangeRate = infos.stream()
+            .mapToDouble(ExchangeInfoDto::getRate)
+            .average()
+            .orElse(0.0);
+        exchangeRepository.save(Exchange.of(LocalDate.now(), averageExchangeRate));
         return CrawlingResultDto.of(true, "환율 크롤링 성공");
     }
 }
