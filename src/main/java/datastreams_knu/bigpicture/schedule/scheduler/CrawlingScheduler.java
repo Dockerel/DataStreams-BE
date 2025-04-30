@@ -9,41 +9,41 @@ import org.springframework.stereotype.Component;
 @Component
 public class CrawlingScheduler {
 
-    private final CrawlingSchedulerService schedulerService;
+    private final CrawlingSchedulerService crawlingSchedulerService;
 
     // 달러 환율 크롤링
     @Scheduled(cron = "0 10 23 * * SUN", zone = "Asia/Seoul") // 매주 일요일 오후 11시 10분
     public void runExchangeCrawling() {
-        schedulerService.exchangeCrawling();
+        crawlingSchedulerService.exchangeCrawling();
     }
 
     // 한국 / 미국 금리 크롤링
     @Scheduled(cron = "0 0 1 20 * *", zone = "Asia/Seoul") // 매달 20일 오전 1시
     public void runInterestCrawling() {
-        schedulerService.interestCrawling();
+        crawlingSchedulerService.interestCrawling();
     }
 
     // 기본 경제 뉴스 크롤링
     @Scheduled(cron = "0 50 1 * * *", zone = "Asia/Seoul") // 매일 오전 1시 50분
     public void runGeneralNewsCrawling() {
-        schedulerService.generalNewsCrawling();
+        crawlingSchedulerService.generalNewsCrawling();
     }
 
     // 키워드 뉴스 크롤링
     @Scheduled(cron = "0 0 2 * * *", zone = "Asia/Seoul") // 매일 오전 2시
     public void runNewsCrawling() {
-        schedulerService.newsCrawling();
+        crawlingSchedulerService.newsCrawling();
     }
 
     // 한국 주식 주가 크롤링
     @Scheduled(cron = "0 0 13 * * *", zone = "Asia/Seoul") // 매일 오후 1시
     public void runKoreaStockCrawling() {
-        schedulerService.koreaStockCrawling();
+        crawlingSchedulerService.koreaStockCrawling();
     }
 
     // 미국 주식 주가 크롤링
     @Scheduled(cron = "0 0 14 * * *", zone = "Asia/Seoul") // 매일 오후 2시
     public void runUSStockCrawling() {
-        schedulerService.usStockCrawling();
+        crawlingSchedulerService.usStockCrawling();
     }
 }
