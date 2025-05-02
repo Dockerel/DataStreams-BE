@@ -47,7 +47,6 @@ public class NewsCrawlingAgent {
     private final AiModelConfig aiModelConfig;
     private final ObjectMapper objectMapper;
     private final NewsRepository newsRepository;
-    private final ReferenceRepository referenceRepository;
 
     private ChatLanguageModel model;
 

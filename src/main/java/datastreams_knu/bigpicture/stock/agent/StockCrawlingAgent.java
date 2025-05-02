@@ -34,7 +34,6 @@ public class StockCrawlingAgent {
 
     private final WebClientUtil webClientUtil;
     private final StockRepository stockRepository;
-    private final StockInfoRepository stockInfoRepository;
 
     @Value("${korea-stock.api.base-url}")
     private String koreaStockBaseUrl;
