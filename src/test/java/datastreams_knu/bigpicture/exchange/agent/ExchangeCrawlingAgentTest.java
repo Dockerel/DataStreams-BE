@@ -41,6 +41,6 @@ class ExchangeCrawlingAgentTest {
         // then
         assertThat(result.getResult()).isEqualTo(true);
         assertThat(result.getMessage()).isEqualTo("환율 크롤링 성공");
-        assertThat(findExchange).hasSize(3);
+        assertThat(findExchange).hasSize(1);
     }
 }

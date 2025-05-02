@@ -30,6 +30,8 @@ import java.util.stream.Collectors;
 @Component
 public class StockCrawlingAgent {
 
+    public static final int DAYS_TO_SUBTRACT = 1;
+
     private final WebClientUtil webClientUtil;
     private final StockRepository stockRepository;
     private final StockInfoRepository stockInfoRepository;
@@ -84,8 +86,6 @@ public class StockCrawlingAgent {
         Stock stock = stockRepository.findByName(stockName)
             .orElse(Stock.of(stockName, getStockType(type)));
 
-        stockInfoRepository.deleteAllByStockId(stock.getId());
-
         stockInfos.stream()
             .map(info -> StockInfo.of(info.getStockPrice(), info.getStockDate()))
             .forEach(stock::addStockInfo);
@@ -130,7 +130,7 @@ public class StockCrawlingAgent {
 
     private DateRangeDto getKoreaStockDateRange() {
         LocalDate now = LocalDate.now();
-        LocalDate past = now.minusMonths(1);
+        LocalDate past = now.minusDays(DAYS_TO_SUBTRACT);
         String nowDate = parseDate(now);
         String pastDate = parseDate(past);
         return DateRangeDto.of(pastDate, nowDate);
@@ -138,7 +138,7 @@ public class StockCrawlingAgent {
 
     private DateRangeDto getUSStockDateRange() {
         LocalDate now = LocalDate.now();
-        LocalDate past = now.minusMonths(1);
+        LocalDate past = now.minusDays(DAYS_TO_SUBTRACT);
         String pastDate = past.toString();
         String nowDate = now.toString();
         return DateRangeDto.of(pastDate, nowDate);

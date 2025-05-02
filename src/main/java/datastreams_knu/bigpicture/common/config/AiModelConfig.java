@@ -13,7 +13,7 @@ import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 @Configuration
 public class AiModelConfig {
 
-    @Value("${openai.api-key}")
+    @Value("${openai.api.key}")
     public String OPENAI_API_KEY;
 
     @Bean

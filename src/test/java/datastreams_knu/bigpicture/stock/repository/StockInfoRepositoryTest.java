@@ -1,5 +1,6 @@
 package datastreams_knu.bigpicture.stock.repository;
 
+import datastreams_knu.bigpicture.news.entity.News;
 import datastreams_knu.bigpicture.stock.entity.Stock;
 import datastreams_knu.bigpicture.stock.entity.StockInfo;
 import datastreams_knu.bigpicture.stock.entity.StockType;
@@ -21,38 +22,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 class StockInfoRepositoryTest {
 
     @Autowired
-    StockRepository stockRepository;
-    @Autowired
     StockInfoRepository stockInfoRepository;
 
-    @Autowired
-    EntityManager em;
-
-    @DisplayName("StockId에 해당하는 stockInfo들을 삭제한다.")
+    @DisplayName("기준 날짜 이전에 수집된 주가 데이터들을 모두 삭제한다.")
     @Test
-    void DeleteAllStockInfosByStockIdTest() {
+    void deleteAllByStockDateBeforeTest() {
         // given
-        Stock stock = Stock.of("testName", StockType.KOREA);
+        LocalDate now = LocalDate.now();
 
-        StockInfo stockInfo1 = StockInfo.of(0.01, LocalDate.now());
-        StockInfo stockInfo2 = StockInfo.of(0.02, LocalDate.now());
-        StockInfo stockInfo3 = StockInfo.of(0.03, LocalDate.now());
-
-        stock.addStockInfo(stockInfo1);
-        stock.addStockInfo(stockInfo2);
-        stock.addStockInfo(stockInfo3);
-
-        stockRepository.save(stock);
+        List<StockInfo> stockInfos = List.of(
+            StockInfo.of(0.01,now),
+            StockInfo.of(0.02,now.minusDays(2)),
+            StockInfo.of(0.03,now.minusDays(2))
+        );
+        stockInfoRepository.saveAll(stockInfos);
 
         // when
-        stockInfoRepository.deleteAllByStockId(stock.getId());
-        em.flush();
-        em.clear();
+        int result = stockInfoRepository.deleteAllByStockDateBefore(now.minusDays(1));
 
         // then
-        Optional<Stock> findStock = stockRepository.findById(stock.getId());
-        assertThat(findStock.isPresent()).isTrue();
-        assertThat(findStock.get().getStockInfos()).hasSize(0);
+        assertThat(result).isEqualTo(2);
+        assertThat(stockInfoRepository.findAll()).hasSize(1);
     }
 
 }
