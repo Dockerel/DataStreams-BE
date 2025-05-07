@@ -46,8 +46,7 @@ class NewsCrawlingAgentMockTest {
             webClientUtil,
             aiModelConfig,
             objectMapper,
-            newsRepository,
-            referenceRepository
+            newsRepository
         );
         spyNewsCrawlingAgent = Mockito.spy(newsCrawlingAgent);
 

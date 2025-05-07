@@ -18,9 +18,9 @@ import java.time.LocalDate;
 public class ExpireDataDeleteSchedulerService {
 
     public static final int EXCHANGE_DATA_EXPIRE_MONTH = 3;
-    public static final int STOCK_DATA_EXPIRE_MONTH = 1;
     public static final int INTEREST_DATA_EXPIRE_YEAR = 1;
     public static final int NEWS_DATA_EXPIRE_DAY = 7;
+    public static final int STOCK_DATA_EXPIRE_MONTH = 1;
 
     private final ExchangeRepository exchangeRepository;
     private final KoreaInterestRepository koreaInterestRepository;
