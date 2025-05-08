@@ -29,6 +29,7 @@ jobs:
           MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
           MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
           openai.api.key=${{ secrets.OPENAI_API_KEY }}
+          gemini.api.key=${{ secrets.GEMINI_API_KEY }}
           ecos.api.key=${{ secrets.ECOS_API_KEY }}
           fred.api.key=${{ secrets.FRED_API_KEY }}
           korea-stock.api.key=${{ secrets.KOREA_STOCK_API_KEY }}
@@ -45,6 +46,7 @@ jobs:
           MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
           MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}
           openai.api.key=${{ secrets.OPENAI_API_KEY }}
+          gemini.api.key=${{ secrets.GEMINI_API_KEY }}
           ecos.api.key=${{ secrets.ECOS_API_KEY }}
           fred.api.key=${{ secrets.FRED_API_KEY }}
           korea-stock.api.key=${{ secrets.KOREA_STOCK_API_KEY }}
