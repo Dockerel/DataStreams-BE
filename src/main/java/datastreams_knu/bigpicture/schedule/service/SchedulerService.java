@@ -94,7 +94,7 @@ public class SchedulerService {
 
         USStockCrawlingDto response = webClientUtil.get(url, USStockCrawlingDto.class);
 
-        return response.getResults().size() > 0;
+        return response.getResults() != null;
     }
 
     private String createKoreaStockUrl(String stockName, DateRangeDto dateRange) {
