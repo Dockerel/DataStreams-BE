@@ -28,4 +28,13 @@ public class GlobalExceptionAdvice {
             e.getBindingResult().getAllErrors().get(0).getDefaultMessage()
         );
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ApiResponse<Object> illegalArgumentException(IllegalArgumentException e) {
+        return ApiResponse.of(
+            HttpStatus.BAD_REQUEST,
+            e.getMessage()
+        );
+    }
 }

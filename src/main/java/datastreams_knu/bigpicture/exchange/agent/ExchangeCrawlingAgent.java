@@ -46,7 +46,8 @@ public class ExchangeCrawlingAgent {
             .mapToDouble(ExchangeInfoDto::getRate)
             .average()
             .orElse(0.0);
-        exchangeRepository.save(Exchange.of(LocalDate.now(), averageExchangeRate));
+        double roundAverageExchangeRate = Math.round(averageExchangeRate * 100) / 100.0;
+        exchangeRepository.save(Exchange.of(LocalDate.now(), roundAverageExchangeRate));
         return CrawlingResultDto.of(true, "환율 크롤링 성공");
     }
 }
