@@ -2,10 +2,12 @@ package datastreams_knu.bigpicture.interest.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "US_INTEREST")
