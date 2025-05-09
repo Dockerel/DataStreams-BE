@@ -39,7 +39,7 @@ class ScheduleControllerTest {
         RegisterCrawlingDataRequest request = RegisterCrawlingDataRequest.of(testStockType, "testStockName");
 
         CrawlingInfo crawlingInfo = CrawlingInfo.of(testStockType, "testStockName", "testNewsKeyword");
-        RegisterCrawlingDataResponse response = RegisterCrawlingDataResponse.of(crawlingInfo);
+        RegisterCrawlingDataResponse response = RegisterCrawlingDataResponse.from(crawlingInfo);
 
         // when
         when(schedulerService.registerCrawlingData(any()))

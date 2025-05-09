@@ -1,6 +1,7 @@
 package datastreams_knu.bigpicture.schedule.controller.dto;
 
 import datastreams_knu.bigpicture.schedule.entity.CrawlingInfo;
+import datastreams_knu.bigpicture.schedule.entity.CrawlingSeed;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,11 +21,19 @@ public class RegisterCrawlingDataResponse {
         this.stockKeyword = stockKeyword;
     }
 
-    public static RegisterCrawlingDataResponse of(CrawlingInfo crawlingInfo) {
+    public static RegisterCrawlingDataResponse from(CrawlingInfo crawlingInfo) {
         return RegisterCrawlingDataResponse.builder()
             .stockType(crawlingInfo.getStockType())
             .stockName(crawlingInfo.getStockName())
             .stockKeyword(crawlingInfo.getStockKeyword())
+            .build();
+    }
+
+    public static RegisterCrawlingDataResponse from(CrawlingSeed crawlingSeed) {
+        return RegisterCrawlingDataResponse.builder()
+            .stockType(crawlingSeed.getStockType())
+            .stockName(crawlingSeed.getStockName())
+            .stockKeyword(crawlingSeed.getStockKeyword())
             .build();
     }
 }

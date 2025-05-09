@@ -113,10 +113,10 @@ public class CrawlingSchedulerService {
             // 주가 : 1달 동안의 주가 데이터 수집 필요
             if (crawlingSeed.getStockType().equals("korea")) {
                 String stockCrawlingTaskName = "StockCrawling-Korea/%s-%s-%s".formatted(crawlingSeed.getStockType(), crawlingSeed.getStockName(), crawlingSeed.getStockKeyword());
-                RetryExecutor.execute(() -> stockCrawlingService.dataInit(crawlingSeed.getStockName(),crawlingSeed.getStockType(), crawlingSeed.getStockKeyword()), stockCrawlingTaskName);
+                RetryExecutor.execute(() -> stockCrawlingService.dataInit(crawlingSeed.getStockName(), crawlingSeed.getStockType(), crawlingSeed.getStockKeyword()), stockCrawlingTaskName);
             } else {
                 String stockCrawlingTaskName = "StockCrawling-US/%s-%s-%s".formatted(crawlingSeed.getStockType(), crawlingSeed.getStockName(), crawlingSeed.getStockKeyword());
-                RetryExecutor.execute(() -> stockCrawlingService.dataInit(crawlingSeed.getStockName(),crawlingSeed.getStockType(), crawlingSeed.getStockKeyword()), stockCrawlingTaskName);
+                RetryExecutor.execute(() -> stockCrawlingService.dataInit(crawlingSeed.getStockName(), crawlingSeed.getStockType(), crawlingSeed.getStockKeyword()), stockCrawlingTaskName);
             }
 
             // 뉴스 : 일주일 동안의 뉴스 데이터 수집 필요
@@ -126,6 +126,9 @@ public class CrawlingSchedulerService {
             }
 
             prevStockType = crawlingSeed.getStockType();
+
+            CrawlingInfo crawlingInfo = CrawlingInfo.of(crawlingSeed.getStockType(), crawlingSeed.getStockName(), crawlingSeed.getStockKeyword());
+            crawlingInfoRepository.save(crawlingInfo);
 
             crawlingSeedRepository.delete(crawlingSeed);
         }

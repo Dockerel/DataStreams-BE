@@ -50,7 +50,7 @@ public class SchedulerService {
         // 이미 존재하는 크롤링 정보
         Optional<CrawlingInfo> findCrawlingInfo = crawlingInfoRepository.findByStockName(request.getStockName());
         if (findCrawlingInfo.isPresent()) {
-            return RegisterCrawlingDataResponse.of(findCrawlingInfo.get());
+            return RegisterCrawlingDataResponse.from(findCrawlingInfo.get());
         }
 
         String crawlingKeyword = request.getStockName();
@@ -65,11 +65,8 @@ public class SchedulerService {
         }
 
         CrawlingSeed crawlingSeed = CrawlingSeed.of(request.getStockType(), request.getStockName(), crawlingKeyword);
-        crawlingSeedRepository.save(crawlingSeed);
 
-        CrawlingInfo crawlingInfo = CrawlingInfo.of(request.getStockType(), request.getStockName(), crawlingKeyword);
-
-        return RegisterCrawlingDataResponse.of(crawlingInfoRepository.save(crawlingInfo));
+        return RegisterCrawlingDataResponse.from(crawlingSeedRepository.save(crawlingSeed));
     }
 
     private boolean isInvalidStockName(RegisterCrawlingDataServiceRequest request) {
