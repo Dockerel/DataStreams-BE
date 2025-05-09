@@ -9,7 +9,6 @@ import datastreams_knu.bigpicture.stock.agent.dto.USStockCrawlingDto;
 import datastreams_knu.bigpicture.stock.entity.Stock;
 import datastreams_knu.bigpicture.stock.entity.StockInfo;
 import datastreams_knu.bigpicture.stock.entity.StockType;
-import datastreams_knu.bigpicture.stock.repository.StockInfoRepository;
 import datastreams_knu.bigpicture.stock.repository.StockRepository;
 import dev.langchain4j.agent.tool.Tool;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +21,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,6 +70,10 @@ public class StockCrawlingAgent {
         String url = createUSStockUrl(stockName, dateRange);
 
         USStockCrawlingDto response = webClientUtil.get(url, USStockCrawlingDto.class);
+
+        if (response.getResults() == null) {
+            return Collections.emptyList();
+        }
 
         return response.getResults().stream()
             .map(result -> {
