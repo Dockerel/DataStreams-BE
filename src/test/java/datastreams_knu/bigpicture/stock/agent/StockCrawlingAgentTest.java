@@ -41,7 +41,7 @@ class StockCrawlingAgentTest {
         // when
         CrawlingResultDto result = stockCrawlingAgent.saveStock(type, stockName, stockInfoDtoList);
 
-        Optional<Stock> findStock = stockRepository.findByName(stockName);
+        Optional<Stock> findStock = stockRepository.findByStockName(stockName);
 
         // then
         assertThat(result.getResult()).isTrue();

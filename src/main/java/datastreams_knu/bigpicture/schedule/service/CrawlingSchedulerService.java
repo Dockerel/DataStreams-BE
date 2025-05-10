@@ -59,7 +59,7 @@ public class CrawlingSchedulerService {
         List<CrawlingInfo> crawlingInfos = crawlingInfoRepository.findAllByStockType("korea");
         for (CrawlingInfo info : crawlingInfos) {
             String stockCrawlingTaskName = "StockCrawling-Korea/%s-%s-%s".formatted(info.getStockType(), info.getStockName(), info.getStockKeyword());
-            RetryExecutor.execute(() -> stockCrawlingService.crawling(info.getStockType(), info.getStockKeyword()), stockCrawlingTaskName);
+            RetryExecutor.execute(() -> stockCrawlingService.crawling(info.getStockType(), info.getStockName()), stockCrawlingTaskName);
         }
     }
 
@@ -70,7 +70,7 @@ public class CrawlingSchedulerService {
             // api 호출 제한을 피하기 위한 대기 시간(60초)
             try {
                 String stockCrawlingTaskName = "StockCrawling-US/%s-%s-%s".formatted(info.getStockType(), info.getStockName(), info.getStockKeyword());
-                RetryExecutor.execute(() -> stockCrawlingService.crawling(info.getStockType(), info.getStockKeyword()), stockCrawlingTaskName);
+                RetryExecutor.execute(() -> stockCrawlingService.crawling(info.getStockType(), info.getStockName()), stockCrawlingTaskName);
                 Thread.sleep(60 * 1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -113,10 +113,10 @@ public class CrawlingSchedulerService {
             // 주가 : 1달 동안의 주가 데이터 수집 필요
             if (crawlingSeed.getStockType().equals("korea")) {
                 String stockCrawlingTaskName = "StockCrawling-Korea/%s-%s-%s".formatted(crawlingSeed.getStockType(), crawlingSeed.getStockName(), crawlingSeed.getStockKeyword());
-                RetryExecutor.execute(() -> stockCrawlingService.dataInit(crawlingSeed.getStockName(), crawlingSeed.getStockType(), crawlingSeed.getStockKeyword()), stockCrawlingTaskName);
+                RetryExecutor.execute(() -> stockCrawlingService.dataInit(crawlingSeed.getStockName(), crawlingSeed.getStockType()), stockCrawlingTaskName);
             } else {
                 String stockCrawlingTaskName = "StockCrawling-US/%s-%s-%s".formatted(crawlingSeed.getStockType(), crawlingSeed.getStockName(), crawlingSeed.getStockKeyword());
-                RetryExecutor.execute(() -> stockCrawlingService.dataInit(crawlingSeed.getStockName(), crawlingSeed.getStockType(), crawlingSeed.getStockKeyword()), stockCrawlingTaskName);
+                RetryExecutor.execute(() -> stockCrawlingService.dataInit(crawlingSeed.getStockName(), crawlingSeed.getStockType()), stockCrawlingTaskName);
             }
 
             // 뉴스 : 일주일 동안의 뉴스 데이터 수집 필요

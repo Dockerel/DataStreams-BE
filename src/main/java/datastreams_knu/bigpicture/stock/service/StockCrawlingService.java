@@ -61,10 +61,10 @@ public class StockCrawlingService {
     }
 
     @Transactional
-    public CrawlingResultDto dataInit(String stockName, String stockType, String stockKeyword) {
+    public CrawlingResultDto dataInit(String stockName, String stockType) {
         List<StockInfoDto> stockInfos = getStockInfos(stockType, stockName);
 
-        Stock stock = Stock.of(stockKeyword, getStockType(stockType));
+        Stock stock = Stock.of(stockName, getStockType(stockType));
 
         stockInfos.stream()
             .map(info -> StockInfo.of(info.getStockPrice(), info.getStockDate()))

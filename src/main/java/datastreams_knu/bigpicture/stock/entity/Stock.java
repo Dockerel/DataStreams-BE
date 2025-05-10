@@ -18,7 +18,7 @@ public class Stock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String stockName;
 
     @Enumerated(EnumType.STRING)
     private StockType stockType;
@@ -36,14 +36,14 @@ public class Stock {
     }
 
     @Builder
-    public Stock(String name, StockType stockType) {
-        this.name = name;
+    public Stock(String stockName, StockType stockType) {
+        this.stockName = stockName;
         this.stockType = stockType;
     }
 
-    public static Stock of(String name, StockType stockType) {
+    public static Stock of(String stockName, StockType stockType) {
         return Stock.builder()
-            .name(name)
+            .stockName(stockName)
             .stockType(stockType)
             .build();
     }
