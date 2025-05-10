@@ -125,7 +125,7 @@ public class ReportService {
                 .collect(Collectors.toList());
             String newsListData = parseToString(newsList);
 
-            Stock stock = stockRepository.findByName(keyword)
+            Stock stock = stockRepository.findByStockName(keyword)
                 .orElseThrow(IllegalArgumentException::new);
             List<StockPromptInputDto> stockInfos = stock.getStockInfos().stream()
                 .map(stockInfo -> StockPromptInputDto.from(stockInfo))

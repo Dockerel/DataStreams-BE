@@ -18,7 +18,7 @@ public class StockService {
     private final StockRepository stockRepository;
 
     public List<StockResponse> getStocks(String stockName) {
-        Stock stock = stockRepository.findByName(stockName)
+        Stock stock = stockRepository.findByStockName(stockName)
             .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 stockName 입니다."));
 
         return stock.getStockInfos().stream()

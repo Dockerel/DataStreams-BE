@@ -86,7 +86,7 @@ public class StockCrawlingAgent {
 
     @Tool("크롤링 된 주가 데이터를 주식의 'type'과 'stockName'과 함께 DB에 저장하고 처리 성공 여부를 반환합니다.")
     public CrawlingResultDto saveStock(String type, String stockName, List<StockInfoDto> stockInfos) {
-        Stock stock = stockRepository.findByName(stockName)
+        Stock stock = stockRepository.findByStockName(stockName)
             .orElse(Stock.of(stockName, getStockType(type)));
 
         stockInfos.stream()
