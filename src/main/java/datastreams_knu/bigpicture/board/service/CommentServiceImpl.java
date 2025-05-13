@@ -61,42 +61,32 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public Comment updateComment(Long boardIdx, Long commentIdx, Comment commentDetails){
+    public Comment updateComment(Long commentIdx, Comment commentDetails){
         Comment existingComment = getCommentById(commentIdx);
 
-        if (existingComment.getBoard().getBoardIdx() != boardIdx) {
-            throw new IllegalArgumentException("Comment (ID: " + commentIdx + ") does not belong to Board (ID: " + boardIdx + ")");
-        }
-
         if (!StringUtils.hasText(commentDetails.getCommentPassword())) {
-            throw new IllegalArgumentException("Password is required.");
+            throw new IllegalArgumentException("Password is required for comment update.");
         }
         if (!existingComment.getCommentPassword().equals(commentDetails.getCommentPassword())) {
-            throw new IllegalArgumentException("Incorrect password.");
+            throw new IllegalArgumentException("Incorrect password for comment update.");
         }
 
         if (StringUtils.hasText(commentDetails.getComment())) {
             existingComment.setComment(commentDetails.getComment());
         }
-
-        existingComment.setUpdatedAt(LocalDateTime.now());
-        return commentRepository.save(existingComment);
+        return existingComment;
     }
 
     @Override
     @Transactional
-    public void deleteComment(Long boardIdx, Long commentIdx, String password){
+    public void deleteComment(Long commentIdx, String password){
         Comment commentToDelete = getCommentById(commentIdx);
 
-        if (commentToDelete.getBoard().getBoardIdx() != boardIdx) {
-            throw new IllegalArgumentException("Comment (ID: " + commentIdx + ") does not belong to Board (ID: " + boardIdx + ")");
-        }
-
         if (!StringUtils.hasText(password)) {
-            throw new IllegalArgumentException("Password is required.");
+            throw new IllegalArgumentException("Password is required for comment deletion.");
         }
         if (!commentToDelete.getCommentPassword().equals(password)) {
-            throw new IllegalArgumentException("Incorrect password.");
+            throw new IllegalArgumentException("Incorrect password for comment deletion.");
         }
 
         commentRepository.delete(commentToDelete);

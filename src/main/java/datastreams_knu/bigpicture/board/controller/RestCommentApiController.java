@@ -1,5 +1,6 @@
 package datastreams_knu.bigpicture.board.controller;
 
+import datastreams_knu.bigpicture.board.dto.CommentCreateRequestDto;
 import datastreams_knu.bigpicture.board.service.CommentService;
 import datastreams_knu.bigpicture.board.entity.Comment;
 import datastreams_knu.bigpicture.common.domain.ApiResponse;
@@ -11,38 +12,42 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/v1/board/{boardIdx}/comments")
+@RequestMapping("/api/v1/comments")
 public class RestCommentApiController {
 
     private final CommentService commentService;
 
-    @Autowired
     public RestCommentApiController(CommentService commentService) {
         this.commentService = commentService;
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Comment> createComment(@PathVariable Long boardIdx, @RequestBody Comment comment){
-        Comment createdComment = commentService.createComment(boardIdx, comment);
+    public ApiResponse<Comment> createComment(@RequestBody CommentCreateRequestDto requestDto){
+        Comment commentToCreate = new Comment();
+        commentToCreate.setComment(requestDto.getComment());
+        commentToCreate.setCommentPassword(requestDto.getCommentPassword());
+        Comment createdComment = commentService.createComment(requestDto.getBoardIdx(), commentToCreate);
         return ApiResponse.of(HttpStatus.CREATED, "Comment created successfully", createdComment);
     }
 
     @GetMapping()
-    public ApiResponse<List<Comment>> getCommentsByBoard(@PathVariable Long boardIdx){
+    public ApiResponse<List<Comment>> getCommentsByBoard(@RequestParam Long boardIdx){
         List<Comment> comments = commentService.getCommentsByBoardIdx(boardIdx);
         return ApiResponse.ok(comments);
     }
 
     @PutMapping("/{commentIdx}")
-    public ApiResponse<Comment> updateComment(@PathVariable Long boardIdx, @PathVariable Long commentIdx, @RequestBody Comment commentDetails){
-        Comment updatedComment = commentService.updateComment(boardIdx, commentIdx, commentDetails);
+    public ApiResponse<Comment> updateComment(@PathVariable Long commentIdx,
+                                              @RequestBody Comment commentDetails){
+        Comment updatedComment = commentService.updateComment(commentIdx, commentDetails);
         return ApiResponse.ok(updatedComment);
     }
 
     @DeleteMapping("/{commentIdx}")
-    public ApiResponse<Object> deleteComment(@PathVariable Long boardIdx, @PathVariable Long commentIdx, @RequestParam String password){
-        commentService.deleteComment(boardIdx, commentIdx, password);
+    public ApiResponse<Object> deleteComment(@PathVariable Long commentIdx,
+                                             @RequestParam String password){
+        commentService.deleteComment(commentIdx, password);
         return ApiResponse.of(HttpStatus.OK, "Comment deleted successfully (ID: " + commentIdx + ")");
     }
 

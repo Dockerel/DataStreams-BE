@@ -26,7 +26,7 @@ public class Comment extends BaseEntity {
     @JsonBackReference
     private Board board;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false) //columnDefinition = "TEXT"
     private String comment;
 
     @Column(nullable = false)

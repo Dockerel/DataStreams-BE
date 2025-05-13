@@ -11,7 +11,7 @@ public interface CommentService {
 
     Comment getCommentById(Long commentIdx);
 
-    Comment updateComment(Long boardIdx, Long commentIdx, Comment commentDetails);
+    Comment updateComment(Long commentIdx, Comment commentDetails);
 
-    void deleteComment(Long boardIdx, Long commentIdx, String password);
+    void deleteComment(Long commentIdx, String password);
 }

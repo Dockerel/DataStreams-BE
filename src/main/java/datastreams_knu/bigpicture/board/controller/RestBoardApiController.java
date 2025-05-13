@@ -3,6 +3,7 @@ package datastreams_knu.bigpicture.board.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import datastreams_knu.bigpicture.board.dto.BoardUpdateRequestDto;
 import datastreams_knu.bigpicture.board.entity.Board;
 import datastreams_knu.bigpicture.board.service.JpaBoardService;
 import datastreams_knu.bigpicture.common.domain.ApiResponse;
@@ -42,37 +43,15 @@ public class RestBoardApiController {
 	}
 
 	@PutMapping("/{boardIdx}")
-	public ApiResponse<Board> updateBoard(@PathVariable("boardIdx") long boardIdx, @RequestBody Board boardDetails){
-		if (!StringUtils.hasText(boardDetails.getBoardPassword())) {
-			throw new IllegalArgumentException("Password is required.");
-		}
-
-		Board existingBoard = jpaBoardService.selectBoardDetail(boardIdx);
-		if (!existingBoard.getBoardPassword().equals(boardDetails.getBoardPassword())) {
-			throw new IllegalArgumentException("Incorrect password.");
-		}
-
-		existingBoard.setTitle(boardDetails.getTitle());
-		if (boardDetails.getContents() != null) {
-			existingBoard.setContents(boardDetails.getContents());
-		}
-
-		Board updatedBoard = jpaBoardService.saveBoard(existingBoard);
+	public ApiResponse<Board> updateBoard(@PathVariable("boardIdx") long boardIdx,
+										  @RequestBody BoardUpdateRequestDto requestDto){
+		Board updatedBoard = jpaBoardService.updateBoard(boardIdx, requestDto);
 		return ApiResponse.ok(updatedBoard);
 	}
 
 	@DeleteMapping("/{boardIdx}")
-	public ApiResponse<Object> deleteBoard(@PathVariable("boardIdx") long boardIdx, @RequestParam String password){
-		if (!StringUtils.hasText(password)) {
-			throw new IllegalArgumentException("Password is required.");
-		}
-
-		Board boardToDelete = jpaBoardService.selectBoardDetail(boardIdx);
-		if (!boardToDelete.getBoardPassword().equals(password)) {
-			throw new IllegalArgumentException("Incorrect password.");
-		}
-
-		jpaBoardService.deleteBoard(boardIdx);
+	public ApiResponse<Object> deleteBoard(@PathVariable("boardIdx") long boardIdx, @RequestBody String password){
+		jpaBoardService.deleteBoard(boardIdx, password);
 		return ApiResponse.of(HttpStatus.OK, "Board deleted successfully (ID: " + boardIdx + ")");
 	}
 

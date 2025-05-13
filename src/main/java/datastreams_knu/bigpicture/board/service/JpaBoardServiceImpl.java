@@ -3,7 +3,8 @@ package datastreams_knu.bigpicture.board.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
+
+import datastreams_knu.bigpicture.board.dto.BoardUpdateRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import datastreams_knu.bigpicture.board.entity.Board;
@@ -20,6 +21,7 @@ public class JpaBoardServiceImpl implements JpaBoardService {
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<Board> selectBoardList(){
         return jpaBoardRepository.findAllByOrderByBoardIdxDesc();
     }
@@ -40,23 +42,51 @@ public class JpaBoardServiceImpl implements JpaBoardService {
 
     @Override
     @Transactional
-    public Board selectBoardDetail(long boardIdx){
-        Optional<Board> optional = jpaBoardRepository.findById(boardIdx);
-        if(optional.isEmpty()) {
-            throw new IllegalArgumentException("Board not found with id: " + boardIdx + " for deletion.");
-        }
-        Board board = optional.get();
+    public Board selectBoardDetail(long boardIdx) {
+        Board board = jpaBoardRepository.findById(boardIdx)
+                .orElseThrow(() -> new IllegalArgumentException("Board not found with id: " + boardIdx + " for deletion."));
+
         board.setViewCount(board.getViewCount() + 1);
         return board;
     }
 
     @Override
     @Transactional
-    public void deleteBoard(long boardIdx){
-        if (!jpaBoardRepository.existsById(boardIdx)) {
-            throw new NoSuchElementException("Board not found with id: " + boardIdx + " for deletion.");
+    public Board updateBoard(long boardIdx, BoardUpdateRequestDto requestDto) {
+        Board existingBoard = jpaBoardRepository.findById(boardIdx)
+                .orElseThrow(() -> new NoSuchElementException("Board not found with ID: " + boardIdx));
+
+        if (!StringUtils.hasText(requestDto.getBoardPassword())) {
+            throw new IllegalArgumentException("Password is required for update.");
         }
-        jpaBoardRepository.deleteById(boardIdx);
+        if (!existingBoard.getBoardPassword().equals(requestDto.getBoardPassword())) {
+            throw new IllegalArgumentException("Incorrect password.");
+        }
+
+        if (StringUtils.hasText(requestDto.getTitle())) {
+            existingBoard.setTitle(requestDto.getTitle());
+        }
+        if (StringUtils.hasText(requestDto.getContents())) {
+            existingBoard.setContents(requestDto.getContents());
+        }
+
+        existingBoard.setUpdatedAt(LocalDateTime.now());
+        return existingBoard;
+    }
+
+    @Override
+    @Transactional
+    public void deleteBoard(long boardIdx, String password){
+        Board boardToDelete = jpaBoardRepository.findById(boardIdx)
+                .orElseThrow(() -> new NoSuchElementException("Board not found with id: " + boardIdx + " for deletion."));
+
+        if (!StringUtils.hasText(password)) {
+            throw new IllegalArgumentException("Password is required for deletion.");
+        }
+        if (!boardToDelete.getBoardPassword().equals(password)) {
+            throw new IllegalArgumentException("Incorrect password for deletion.");
+        }
+        jpaBoardRepository.delete(boardToDelete);
     }
 
 
