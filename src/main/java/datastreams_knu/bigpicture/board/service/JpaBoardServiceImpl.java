@@ -8,22 +8,22 @@ import datastreams_knu.bigpicture.board.dto.BoardUpdateRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import datastreams_knu.bigpicture.board.entity.Board;
-import datastreams_knu.bigpicture.board.repository.JpaBoardRepository;
+import datastreams_knu.bigpicture.board.repository.BoardRepository;
 import org.springframework.util.StringUtils;
 
 @Service
 public class JpaBoardServiceImpl implements JpaBoardService {
 
-    private final JpaBoardRepository jpaBoardRepository;
+    private final BoardRepository boardRepository;
 
-    public JpaBoardServiceImpl(JpaBoardRepository jpaBoardRepository) {
-        this.jpaBoardRepository = jpaBoardRepository;
+    public JpaBoardServiceImpl(BoardRepository boardRepository) {
+        this.boardRepository = boardRepository;
     }
 
     @Override
     @Transactional(readOnly=true)
     public List<Board> selectBoardList(){
-        return jpaBoardRepository.findAllByOrderByBoardIdxDesc();
+        return boardRepository.findAllByOrderByBoardIdxDesc();
     }
 
     @Override
@@ -37,13 +37,13 @@ public class JpaBoardServiceImpl implements JpaBoardService {
         } else {
             board.setUpdatedAt(LocalDateTime.now());
         }
-        return jpaBoardRepository.save(board);
+        return boardRepository.save(board);
     }
 
     @Override
     @Transactional
     public Board selectBoardDetail(long boardIdx) {
-        Board board = jpaBoardRepository.findById(boardIdx)
+        Board board = boardRepository.findById(boardIdx)
                 .orElseThrow(() -> new IllegalArgumentException("Board not found with id: " + boardIdx + " for deletion."));
 
         board.setViewCount(board.getViewCount() + 1);
@@ -53,7 +53,7 @@ public class JpaBoardServiceImpl implements JpaBoardService {
     @Override
     @Transactional
     public Board updateBoard(long boardIdx, BoardUpdateRequestDto requestDto) {
-        Board existingBoard = jpaBoardRepository.findById(boardIdx)
+        Board existingBoard = boardRepository.findById(boardIdx)
                 .orElseThrow(() -> new NoSuchElementException("Board not found with ID: " + boardIdx));
 
         if (!StringUtils.hasText(requestDto.getBoardPassword())) {
@@ -77,7 +77,7 @@ public class JpaBoardServiceImpl implements JpaBoardService {
     @Override
     @Transactional
     public void deleteBoard(long boardIdx, String password){
-        Board boardToDelete = jpaBoardRepository.findById(boardIdx)
+        Board boardToDelete = boardRepository.findById(boardIdx)
                 .orElseThrow(() -> new NoSuchElementException("Board not found with id: " + boardIdx + " for deletion."));
 
         if (!StringUtils.hasText(password)) {
@@ -86,7 +86,7 @@ public class JpaBoardServiceImpl implements JpaBoardService {
         if (!boardToDelete.getBoardPassword().equals(password)) {
             throw new IllegalArgumentException("Incorrect password for deletion.");
         }
-        jpaBoardRepository.delete(boardToDelete);
+        boardRepository.delete(boardToDelete);
     }
 
 

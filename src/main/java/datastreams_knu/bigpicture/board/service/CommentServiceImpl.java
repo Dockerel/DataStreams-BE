@@ -3,7 +3,7 @@ package datastreams_knu.bigpicture.board.service;
 import datastreams_knu.bigpicture.board.entity.Board;
 import datastreams_knu.bigpicture.board.entity.Comment;
 import datastreams_knu.bigpicture.board.repository.CommentRepository;
-import datastreams_knu.bigpicture.board.repository.JpaBoardRepository;
+import datastreams_knu.bigpicture.board.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +17,10 @@ import java.util.NoSuchElementException;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final JpaBoardRepository boardRepository;
+    private final BoardRepository boardRepository;
 
     @Autowired
-    public CommentServiceImpl(CommentRepository commentRepository, JpaBoardRepository boardRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, BoardRepository boardRepository) {
         this.commentRepository = commentRepository;
         this.boardRepository = boardRepository;
     }
@@ -49,7 +49,7 @@ public class CommentServiceImpl implements CommentService {
         if (!boardRepository.existsById(boardIdx)) {
             throw new NoSuchElementException("Board not found with ID: " + boardIdx);
         }
-        return commentRepository.findByBoardBoardIdxOrderByIdxAsc(boardIdx);
+        return commentRepository.findByBoardBoardIdxOrderByCommentIdxAsc(boardIdx);
     }
 
     @Override
