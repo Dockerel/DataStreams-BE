@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import datastreams_knu.bigpicture.board.entity.Board;
 
-public interface JpaBoardRepository extends JpaRepository<Board, Long>{
+public interface BoardRepository extends JpaRepository<Board, Long>{
 
 	List<Board> findAllByOrderByBoardIdxDesc();
 

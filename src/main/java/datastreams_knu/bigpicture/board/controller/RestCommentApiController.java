@@ -1,10 +1,9 @@
 package datastreams_knu.bigpicture.board.controller;
 
 import datastreams_knu.bigpicture.board.dto.CommentCreateRequestDto;
-import datastreams_knu.bigpicture.board.service.CommentService;
 import datastreams_knu.bigpicture.board.entity.Comment;
+import datastreams_knu.bigpicture.board.service.CommentService;
 import datastreams_knu.bigpicture.common.domain.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +22,7 @@ public class RestCommentApiController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Comment> createComment(@RequestBody CommentCreateRequestDto requestDto){
+    public ApiResponse<Comment> createComment(@RequestBody CommentCreateRequestDto requestDto) {
         Comment commentToCreate = new Comment();
         commentToCreate.setComment(requestDto.getComment());
         commentToCreate.setCommentPassword(requestDto.getCommentPassword());
@@ -32,21 +31,21 @@ public class RestCommentApiController {
     }
 
     @GetMapping()
-    public ApiResponse<List<Comment>> getCommentsByBoard(@RequestParam Long boardIdx){
+    public ApiResponse<List<Comment>> getCommentsByBoard(@RequestParam Long boardIdx) {
         List<Comment> comments = commentService.getCommentsByBoardIdx(boardIdx);
         return ApiResponse.ok(comments);
     }
 
     @PutMapping("/{commentIdx}")
     public ApiResponse<Comment> updateComment(@PathVariable Long commentIdx,
-                                              @RequestBody Comment commentDetails){
+                                              @RequestBody Comment commentDetails) {
         Comment updatedComment = commentService.updateComment(commentIdx, commentDetails);
         return ApiResponse.ok(updatedComment);
     }
 
     @DeleteMapping("/{commentIdx}")
     public ApiResponse<Object> deleteComment(@PathVariable Long commentIdx,
-                                             @RequestParam String password){
+                                             @RequestParam String password) {
         commentService.deleteComment(commentIdx, password);
         return ApiResponse.of(HttpStatus.OK, "Comment deleted successfully (ID: " + commentIdx + ")");
     }
