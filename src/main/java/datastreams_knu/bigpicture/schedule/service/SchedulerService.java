@@ -9,7 +9,7 @@ import datastreams_knu.bigpicture.schedule.repository.CrawlingInfoRepository;
 import datastreams_knu.bigpicture.schedule.repository.CrawlingSeedRepository;
 import datastreams_knu.bigpicture.schedule.service.dto.RecommendedKeywordDto;
 import datastreams_knu.bigpicture.schedule.service.dto.RegisterCrawlingDataServiceRequest;
-import datastreams_knu.bigpicture.schedule.util.TickerParser;
+import datastreams_knu.bigpicture.common.util.TickerParser;
 import datastreams_knu.bigpicture.stock.agent.dto.KoreaStockCrawlingDto;
 import datastreams_knu.bigpicture.stock.agent.dto.USStockCrawlingDto;
 import lombok.RequiredArgsConstructor;

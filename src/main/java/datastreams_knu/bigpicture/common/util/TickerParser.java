@@ -1,4 +1,4 @@
-package datastreams_knu.bigpicture.schedule.util;
+package datastreams_knu.bigpicture.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +11,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static datastreams_knu.bigpicture.schedule.util.TickerParserPrompt.TICKER_PARSER_PROMPT;
+import static datastreams_knu.bigpicture.common.util.TickerParserPrompt.TICKER_PARSER_PROMPT;
 
 @RequiredArgsConstructor
 @Service

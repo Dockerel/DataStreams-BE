@@ -1,4 +1,4 @@
-package datastreams_knu.bigpicture.schedule.util;
+package datastreams_knu.bigpicture.common.util;
 
 public abstract class TickerParserPrompt {
     public static final String TICKER_PARSER_PROMPT = """

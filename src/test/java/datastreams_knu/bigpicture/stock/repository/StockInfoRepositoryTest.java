@@ -1,10 +1,6 @@
 package datastreams_knu.bigpicture.stock.repository;
 
-import datastreams_knu.bigpicture.news.entity.News;
-import datastreams_knu.bigpicture.stock.entity.Stock;
 import datastreams_knu.bigpicture.stock.entity.StockInfo;
-import datastreams_knu.bigpicture.stock.entity.StockType;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

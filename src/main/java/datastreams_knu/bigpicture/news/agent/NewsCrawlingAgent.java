@@ -11,10 +11,9 @@ import datastreams_knu.bigpicture.news.agent.dto.StringSummaryDto;
 import datastreams_knu.bigpicture.news.agent.dto.SummarizedMultipleNewsDto;
 import datastreams_knu.bigpicture.news.agent.dto.SummarizedNewsDto;
 import datastreams_knu.bigpicture.news.entity.News;
-import datastreams_knu.bigpicture.news.entity.Reference;
 import datastreams_knu.bigpicture.news.exception.NewsCrawlingException;
 import datastreams_knu.bigpicture.news.repository.NewsRepository;
-import datastreams_knu.bigpicture.news.repository.ReferenceRepository;
+import datastreams_knu.bigpicture.news.entity.Reference;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -36,7 +35,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static datastreams_knu.bigpicture.news.agent.AgentPrompt.*;
-import static datastreams_knu.bigpicture.news.agent.dto.CrawledNewsDto.YibKrA;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -142,13 +140,13 @@ public class NewsCrawlingAgent {
     }
 
     private static List<String> getNewsIds(CrawledNewsDto response) {
-        YibKrA yibKrA = response.getYIB_KR_A();
+        CrawledNewsDto.YibKrA yibKrA = response.getYIB_KR_A();
         return yibKrA.getResult().stream()
             .map(result -> result.getCID())
             .collect(Collectors.toList());
     }
 
-    protected SummarizedNewsDto getSummarizedNews(String keyword, String id) {
+    public SummarizedNewsDto getSummarizedNews(String keyword, String id) {
         SummarizedNewsDto news = getReference(id);
         String summarizeNewsContent = summarizeNews(news.getContent(), keyword);
         news.setContent(summarizeNewsContent);
