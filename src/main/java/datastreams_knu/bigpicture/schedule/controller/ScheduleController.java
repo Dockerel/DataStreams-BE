@@ -18,12 +18,6 @@ public class ScheduleController {
 
     private final SchedulerService schedulerService;
 
-    @GetMapping
-    @Operation(summary = "테스트 엔드포인트", description = "테스트용 엔드포인트")
-    public ApiResponse<String> getTest() {
-        return ApiResponse.ok("test ok");
-    }
-
     @PostMapping("/register")
     @Operation(summary = "크롤링 데이터 등록", description = "크롤링 데이터 등록")
     public ApiResponse<RegisterCrawlingDataResponse> registerCrawlingData(@Valid @RequestBody RegisterCrawlingDataRequest request) {
