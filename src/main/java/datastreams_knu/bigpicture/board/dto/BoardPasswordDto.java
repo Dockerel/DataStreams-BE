@@ -4,8 +4,6 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor
-public class BoardUpdateRequestDto {
-    private String title;
-    private String contents;
+public class BoardPasswordDto {
     private String boardPassword;
 }

@@ -1,6 +1,7 @@
 package datastreams_knu.bigpicture.board.controller;
 
 import datastreams_knu.bigpicture.board.dto.CommentCreateRequestDto;
+import datastreams_knu.bigpicture.board.dto.CommentPasswordDto;
 import datastreams_knu.bigpicture.board.entity.Comment;
 import datastreams_knu.bigpicture.board.service.CommentService;
 import datastreams_knu.bigpicture.common.domain.ApiResponse;
@@ -44,8 +45,8 @@ public class RestCommentApiController {
     }
 
     @DeleteMapping("/{commentIdx}")
-    public ApiResponse<Object> deleteComment(@PathVariable Long commentIdx,
-                                             @RequestParam String password) {
+    public ApiResponse<Object> deleteComment(@PathVariable Long commentIdx, @RequestBody CommentPasswordDto commentPassword) {
+        String password = commentPassword.getCommentPassword();
         commentService.deleteComment(commentIdx, password);
         return ApiResponse.of(HttpStatus.OK, "Comment deleted successfully (ID: " + commentIdx + ")");
     }
