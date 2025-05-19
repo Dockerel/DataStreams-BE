@@ -36,6 +36,13 @@ jobs:
           us-stock.api.key=${{ secrets.US_STOCK_API_KEY }}
           EOF
 
+      - name: 📄 Generate firebase_service_key.json
+        run: |
+          mkdir -p src/main/resources/firebase
+          cat <<EOF > src/main/resources/firebase/firebase_service_key.json
+          ${{ secrets.FIREBASE_SERVICE_KEY }}
+          EOF
+
       - name: 📄 Generate application-test.properties
         run: |
           mkdir -p src/test/resources
