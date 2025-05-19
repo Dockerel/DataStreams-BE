@@ -1,15 +1,14 @@
 package datastreams_knu.bigpicture.schedule.service;
 
 import datastreams_knu.bigpicture.common.dto.DateRangeDto;
+import datastreams_knu.bigpicture.common.util.TickerParser;
 import datastreams_knu.bigpicture.common.util.WebClientUtil;
 import datastreams_knu.bigpicture.schedule.controller.dto.RegisterCrawlingDataResponse;
 import datastreams_knu.bigpicture.schedule.entity.CrawlingInfo;
 import datastreams_knu.bigpicture.schedule.entity.CrawlingSeed;
 import datastreams_knu.bigpicture.schedule.repository.CrawlingInfoRepository;
 import datastreams_knu.bigpicture.schedule.repository.CrawlingSeedRepository;
-import datastreams_knu.bigpicture.schedule.service.dto.RecommendedKeywordDto;
 import datastreams_knu.bigpicture.schedule.service.dto.RegisterCrawlingDataServiceRequest;
-import datastreams_knu.bigpicture.common.util.TickerParser;
 import datastreams_knu.bigpicture.stock.agent.dto.KoreaStockCrawlingDto;
 import datastreams_knu.bigpicture.stock.agent.dto.USStockCrawlingDto;
 import lombok.RequiredArgsConstructor;
@@ -55,8 +54,7 @@ public class SchedulerService {
 
         String crawlingKeyword = request.getStockName();
         if (request.getStockType().equals("us")) {
-            RecommendedKeywordDto response = tickerParser.parseTicker(request.getStockName());
-            crawlingKeyword = response.getKeyword();
+            crawlingKeyword = tickerParser.parseTicker(request.getStockName());
         }
 
         // 실제 있는 stock인지 확인 필요
@@ -71,7 +69,7 @@ public class SchedulerService {
 
     private boolean isInvalidStockName(RegisterCrawlingDataServiceRequest request) {
         return (request.getStockType().equals("korea") && !isExistentKoreaStock(request.getStockName()))
-            || (request.getStockType().equals("us") && !isExistentUSStock(request.getStockName()));
+                || (request.getStockType().equals("us") && !isExistentUSStock(request.getStockName()));
     }
 
     public boolean isExistentKoreaStock(String stockName) {
@@ -98,15 +96,15 @@ public class SchedulerService {
         StringBuilder sb = new StringBuilder();
         sb.append(koreaStockBaseUrl);
         sb.append("?serviceKey=")
-            .append(koreaStockApiKey);
+                .append(koreaStockApiKey);
         sb.append("&itmsNm=")
-            .append(stockName);
+                .append(stockName);
         sb.append("&beginBasDt=")
-            .append(dateRange.getFromDate());
+                .append(dateRange.getFromDate());
         sb.append("&endBasDt=")
-            .append(dateRange.getToDate());
+                .append(dateRange.getToDate());
         sb.append("&resultType=json")
-            .append("&numOfRows=1");
+                .append("&numOfRows=1");
 
         return sb.toString();
     }
@@ -116,10 +114,10 @@ public class SchedulerService {
         sb.append(usStockBaseUrl);
         sb.append("ticker/").append(stockName);
         sb.append("/range/1/day")
-            .append("/" + dateRange.getFromDate())
-            .append("/" + dateRange.getToDate());
+                .append("/" + dateRange.getFromDate())
+                .append("/" + dateRange.getToDate());
         sb.append("?apiKey=")
-            .append(usStockApiKey);
+                .append(usStockApiKey);
         sb.append("&limit=1");
         return sb.toString();
     }
@@ -134,7 +132,7 @@ public class SchedulerService {
 
     private DateRangeDto getUSStockDateRange() {
         LocalDate now = LocalDate.now();
-        LocalDate past = now.minusDays(YEARS_TO_SUBTRACT);
+        LocalDate past = now.minusYears(YEARS_TO_SUBTRACT);
         String pastDate = past.toString();
         String nowDate = now.toString();
         return DateRangeDto.of(pastDate, nowDate);

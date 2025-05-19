@@ -27,13 +27,14 @@ public class TickerParser {
         this.model = aiModelConfig.openAiChatModel();
     }
 
-    public RecommendedKeywordDto parseTicker(String ticker) {
+    public String parseTicker(String ticker) {
         try {
             UserMessage prompt = createPrompt(ticker);
 
             String response = model.chat(prompt).aiMessage().text();
 
-            return objectMapper.readValue(response, RecommendedKeywordDto.class);
+            RecommendedKeywordDto recommendedKeywordDto = objectMapper.readValue(response, RecommendedKeywordDto.class);
+            return recommendedKeywordDto.getKeyword();
         } catch (JsonProcessingException e) {
             throw new ObjectMapperException("Json 파싱 중 예외가 발생하였습니다.", e);
         }
