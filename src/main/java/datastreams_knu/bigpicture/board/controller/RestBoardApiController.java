@@ -3,13 +3,13 @@ package datastreams_knu.bigpicture.board.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import datastreams_knu.bigpicture.board.dto.BoardPasswordDto;
 import datastreams_knu.bigpicture.board.dto.BoardUpdateRequestDto;
 import datastreams_knu.bigpicture.board.entity.Board;
 import datastreams_knu.bigpicture.board.service.JpaBoardService;
 import datastreams_knu.bigpicture.common.domain.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -50,7 +50,8 @@ public class RestBoardApiController {
 	}
 
 	@DeleteMapping("/{boardIdx}")
-	public ApiResponse<Object> deleteBoard(@PathVariable("boardIdx") long boardIdx, @RequestBody String password){
+	public ApiResponse<Object> deleteBoard(@PathVariable("boardIdx") long boardIdx, @RequestBody BoardPasswordDto passwordDto){
+		String password = passwordDto.getBoardPassword();
 		jpaBoardService.deleteBoard(boardIdx, password);
 		return ApiResponse.of(HttpStatus.OK, "Board deleted successfully (ID: " + boardIdx + ")");
 	}

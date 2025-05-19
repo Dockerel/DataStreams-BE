@@ -44,8 +44,8 @@ public class RestCommentApiController {
     }
 
     @DeleteMapping("/{commentIdx}")
-    public ApiResponse<Object> deleteComment(@PathVariable Long commentIdx,
-                                             @RequestParam String password) {
+    public ApiResponse<Object> deleteComment(@PathVariable Long commentIdx, @RequestBody Comment commentPassword) {
+        String password = commentPassword.getCommentPassword();
         commentService.deleteComment(commentIdx, password);
         return ApiResponse.of(HttpStatus.OK, "Comment deleted successfully (ID: " + commentIdx + ")");
     }
