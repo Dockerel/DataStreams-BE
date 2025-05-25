@@ -4,8 +4,6 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor
-public class CommentCreateRequestDto {
-    private Long boardIdx;
-    private String comment;
+public class CommentPasswordDto {
     private String commentPassword;
 }
