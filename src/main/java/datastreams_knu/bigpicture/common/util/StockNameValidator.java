@@ -1,33 +1,22 @@
-package datastreams_knu.bigpicture.schedule.service;
+package datastreams_knu.bigpicture.common.util;
 
 import datastreams_knu.bigpicture.common.dto.DateRangeDto;
-import datastreams_knu.bigpicture.common.util.TickerParser;
-import datastreams_knu.bigpicture.common.util.WebClientUtil;
-import datastreams_knu.bigpicture.schedule.controller.dto.RegisterCrawlingDataResponse;
-import datastreams_knu.bigpicture.schedule.entity.CrawlingInfo;
-import datastreams_knu.bigpicture.schedule.entity.CrawlingSeed;
-import datastreams_knu.bigpicture.schedule.repository.CrawlingInfoRepository;
-import datastreams_knu.bigpicture.schedule.repository.CrawlingSeedRepository;
-import datastreams_knu.bigpicture.schedule.service.dto.RegisterCrawlingDataServiceRequest;
 import datastreams_knu.bigpicture.stock.agent.dto.KoreaStockCrawlingDto;
 import datastreams_knu.bigpicture.stock.agent.dto.USStockCrawlingDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
-@Transactional
 @RequiredArgsConstructor
-@Service
-public class SchedulerService {
+@Component
+public class StockNameValidator {
 
     public static final int YEARS_TO_SUBTRACT = 1;
+
     private final WebClientUtil webClientUtil;
 
     @Value("${korea-stock.api.base-url}")
@@ -40,52 +29,26 @@ public class SchedulerService {
     @Value("${us-stock.api.key}")
     private String usStockApiKey;
 
-    private final CrawlingInfoRepository crawlingInfoRepository;
-    private final CrawlingSeedRepository crawlingSeedRepository;
-
-    private final TickerParser tickerParser;
-
-    public RegisterCrawlingDataResponse registerCrawlingData(RegisterCrawlingDataServiceRequest request) {
-        // 이미 존재하는 크롤링 정보
-        Optional<CrawlingInfo> findCrawlingInfo = crawlingInfoRepository.findByStockName(request.getStockName());
-        if (findCrawlingInfo.isPresent()) {
-            return RegisterCrawlingDataResponse.from(findCrawlingInfo.get());
-        }
-
-        String crawlingKeyword = request.getStockName();
-        if (request.getStockType().equals("us")) {
-            crawlingKeyword = tickerParser.parseTicker(request.getStockName());
-        }
-
-        // 실제 있는 stock인지 확인 필요
-        if (isInvalidStockName(request)) {
-            throw new IllegalArgumentException("유효하지 않은 stockName 입니다.");
-        }
-
-        CrawlingSeed crawlingSeed = CrawlingSeed.of(request.getStockType(), request.getStockName(), crawlingKeyword);
-
-        return RegisterCrawlingDataResponse.from(crawlingSeedRepository.save(crawlingSeed));
+    public boolean isInvalidStockName(String stockName, String stockType) {
+        return (stockType.equals("korea") && !isExistentKoreaStock(stockName))
+                || (stockType.equals("us") && !isExistentUSStock(stockName));
     }
 
-    private boolean isInvalidStockName(RegisterCrawlingDataServiceRequest request) {
-        return (request.getStockType().equals("korea") && !isExistentKoreaStock(request.getStockName()))
-                || (request.getStockType().equals("us") && !isExistentUSStock(request.getStockName()));
-    }
-
-    public boolean isExistentKoreaStock(String stockName) {
+    private boolean isExistentKoreaStock(String stockName) {
         String encodedStockName = encodeString(stockName);
         DateRangeDto dateRange = getKoreaStockDateRange();
         String url = createKoreaStockUrl(encodedStockName, dateRange);
 
         KoreaStockCrawlingDto result = webClientUtil.get(url, KoreaStockCrawlingDto.class);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         return result.getResponse().getBody().getItems().getItem().size() > 0;
     }
 
-    public boolean isExistentUSStock(String stockName) {
+    private boolean isExistentUSStock(String stockName) {
         DateRangeDto dateRange = getUSStockDateRange();
         String url = createUSStockUrl(stockName, dateRange);
+
+        System.out.println("url = " + url);
 
         USStockCrawlingDto response = webClientUtil.get(url, USStockCrawlingDto.class);
 

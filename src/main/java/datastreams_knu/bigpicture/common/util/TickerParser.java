@@ -1,4 +1,4 @@
-package datastreams_knu.bigpicture.schedule.util;
+package datastreams_knu.bigpicture.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +11,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static datastreams_knu.bigpicture.schedule.util.TickerParserPrompt.TICKER_PARSER_PROMPT;
+import static datastreams_knu.bigpicture.common.util.TickerParserPrompt.TICKER_PARSER_PROMPT;
 
 @RequiredArgsConstructor
 @Service
@@ -27,13 +27,14 @@ public class TickerParser {
         this.model = aiModelConfig.openAiChatModel();
     }
 
-    public RecommendedKeywordDto parseTicker(String ticker) {
+    public String parseTicker(String ticker) {
         try {
             UserMessage prompt = createPrompt(ticker);
 
             String response = model.chat(prompt).aiMessage().text();
 
-            return objectMapper.readValue(response, RecommendedKeywordDto.class);
+            RecommendedKeywordDto recommendedKeywordDto = objectMapper.readValue(response, RecommendedKeywordDto.class);
+            return recommendedKeywordDto.getKeyword();
         } catch (JsonProcessingException e) {
             throw new ObjectMapperException("Json 파싱 중 예외가 발생하였습니다.", e);
         }

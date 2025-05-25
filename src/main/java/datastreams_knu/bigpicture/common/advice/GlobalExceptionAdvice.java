@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.UncheckedIOException;
+
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
 
@@ -15,8 +17,8 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(ObjectMapperException.class)
     public ApiResponse<Object> objectMapperException(ObjectMapperException e) {
         return ApiResponse.of(
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            e.getMessage()
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                e.getMessage()
         );
     }
 
@@ -24,8 +26,8 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(BindException.class)
     public ApiResponse<Object> bindException(BindException e) {
         return ApiResponse.of(
-            HttpStatus.BAD_REQUEST,
-            e.getBindingResult().getAllErrors().get(0).getDefaultMessage()
+                HttpStatus.BAD_REQUEST,
+                e.getBindingResult().getAllErrors().get(0).getDefaultMessage()
         );
     }
 
@@ -33,8 +35,17 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(IllegalArgumentException.class)
     public ApiResponse<Object> illegalArgumentException(IllegalArgumentException e) {
         return ApiResponse.of(
-            HttpStatus.BAD_REQUEST,
-            e.getMessage()
+                HttpStatus.BAD_REQUEST,
+                e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(UncheckedIOException.class)
+    public ApiResponse<Object> uncheckedIOException(UncheckedIOException e) {
+        return ApiResponse.of(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                e.getMessage()
         );
     }
 }

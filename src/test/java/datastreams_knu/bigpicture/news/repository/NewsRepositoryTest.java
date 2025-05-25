@@ -1,7 +1,6 @@
 package datastreams_knu.bigpicture.news.repository;
 
 import datastreams_knu.bigpicture.news.entity.News;
-import datastreams_knu.bigpicture.news.entity.Reference;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
