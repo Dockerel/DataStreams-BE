@@ -13,9 +13,8 @@ public class NewsAlertScheduler {
 
     private final NewsAlertService newsAlertService;
 
-    @Scheduled(cron = "0 0 6-23 * * *", zone = "Asia/Seoul") // 매시간
+    @Scheduled(cron = "0 0 6-23 * * *", zone = "Asia/Seoul") // 매 시간 (6시 ~ 23시)
     public void sendNewsAlert() {
-        LocalDateTime now = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0).minusHours(1);
-        newsAlertService.sendNewsAlerts(now);
+        newsAlertService.sendNewsAlerts(LocalDateTime.now());
     }
 }

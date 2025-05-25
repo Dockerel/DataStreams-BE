@@ -9,6 +9,7 @@ import datastreams_knu.bigpicture.alert.service.dto.CrawledNewsDto;
 import datastreams_knu.bigpicture.alert.service.dto.SummarizedNewsDto;
 import datastreams_knu.bigpicture.common.config.AiModelConfig;
 import datastreams_knu.bigpicture.common.dto.DateRangeDto;
+import datastreams_knu.bigpicture.common.exception.ObjectMapperException;
 import datastreams_knu.bigpicture.common.util.WebClientUtil;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -50,8 +51,9 @@ public class NewsAlertService {
     }
 
     public void sendNewsAlerts(LocalDateTime localDateTime) {
+        LocalDateTime oneHourBeforeLocalDateTime = localDateTime.withMinute(0).withSecond(0).withNano(0).minusHours(1);
         watchlistRepository.findAll().stream()
-                .forEach(watchlist -> sendNewsAlert(watchlist, localDateTime));
+                .forEach(watchlist -> sendNewsAlert(watchlist, oneHourBeforeLocalDateTime));
     }
 
     private void sendNewsAlert(Watchlist watchlist, LocalDateTime localDateTime) {
@@ -62,11 +64,7 @@ public class NewsAlertService {
                     watchlist.getMemberWatchlists().stream()
                             .forEach(memberWatchlist -> {
                                 String fcmToken = memberWatchlist.getMember().getFcmToken();
-                                try {
-                                    fcmService.sendMessageTo(fcmToken, "뉴스 알림", newsMessage);
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
+                                fcmService.sendMessageTo(fcmToken, "뉴스 알림", newsMessage);
                             });
                 });
     }
@@ -75,7 +73,7 @@ public class NewsAlertService {
         try {
             return objectMapper.writeValueAsString(alertNewsResponse);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new ObjectMapperException("직렬화 중 예외가 발생하였습니다.", e);
         }
     }
 
@@ -86,7 +84,9 @@ public class NewsAlertService {
 
         CrawledNewsDto response = webClientUtil.get(url, CrawledNewsDto.class);
 
-        return response.getYIB_KR_A().getResult().stream()
+        List<Result> crawledNewsResults = response.getYIB_KR_A().getResult();
+
+        return crawledNewsResults.stream()
                 .filter(result -> {
                     String dateStr = result.getDATETIME();
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
