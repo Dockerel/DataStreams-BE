@@ -31,7 +31,7 @@ public class TestController {
     @GetMapping("/python")
     @Operation(summary = "테스트 엔드포인트 - python server", description = "파이썬 서버 테스트용 엔드포인트")
     public ApiResponse<String> getTestPython() {
-        PythonTestDto res = webClientUtil.get("http://localhost:8000", PythonTestDto.class);
+        PythonTestDto res = webClientUtil.get(pythonServerUrl, PythonTestDto.class);
         return ApiResponse.ok(res.getStatus());
     }
 
