@@ -34,6 +34,7 @@ jobs:
           fred.api.key=${{ secrets.FRED_API_KEY }}
           korea-stock.api.key=${{ secrets.KOREA_STOCK_API_KEY }}
           us-stock.api.key=${{ secrets.US_STOCK_API_KEY }}
+          python.server.url=${{ secrets.PYTHON_SERVER_URL }}
           EOF
 
       - name: 📄 Generate firebase_service_key.json
@@ -58,6 +59,7 @@ jobs:
           fred.api.key=${{ secrets.FRED_API_KEY }}
           korea-stock.api.key=${{ secrets.KOREA_STOCK_API_KEY }}
           us-stock.api.key=${{ secrets.US_STOCK_API_KEY }}
+          python.server.url=${{ secrets.PYTHON_SERVER_URL }}
           EOF
 
       - name: 🛠️ Set up Gradle
