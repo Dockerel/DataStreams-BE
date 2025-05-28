@@ -14,14 +14,14 @@ public class WebClientConfig {
     @Bean
     public WebClient webClient() {
         HttpClient option = HttpClient.create()
-            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 20000);
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 20000);
 
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
         factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
 
         return WebClient.builder()
-            .clientConnector(new ReactorClientHttpConnector(option))
-            .uriBuilderFactory(factory)
-            .build();
+                .clientConnector(new ReactorClientHttpConnector(option))
+                .uriBuilderFactory(factory)
+                .build();
     }
 }

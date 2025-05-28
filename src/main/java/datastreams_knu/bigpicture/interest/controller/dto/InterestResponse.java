@@ -22,9 +22,9 @@ public class InterestResponse {
 
     public static InterestResponse of(LocalDate interestDate, double interestRate) {
         return InterestResponse.builder()
-            .interestDate(interestDate)
-            .interestRate(interestRate)
-            .build();
+                .interestDate(interestDate)
+                .interestRate(interestRate)
+                .build();
     }
 
     public static InterestResponse from(KoreaInterest interest) {

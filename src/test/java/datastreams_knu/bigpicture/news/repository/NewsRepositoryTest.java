@@ -28,9 +28,9 @@ class NewsRepositoryTest {
         LocalDate now = LocalDate.now();
 
         List<News> newss = List.of(
-            News.of(now, "keyword3", "content3"),
-            News.of(now.minusDays(8), "keyword2", "content2"),
-            News.of(now.minusDays(8), "keyword2", "content2")
+                News.of(now, "keyword3", "content3"),
+                News.of(now.minusDays(8), "keyword2", "content2"),
+                News.of(now.minusDays(8), "keyword2", "content2")
         );
         newsRepository.saveAll(newss);
 

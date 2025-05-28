@@ -16,7 +16,7 @@ public class ReferenceDto {
 
     public static ReferenceDto of(String url) {
         return ReferenceDto.builder()
-            .url(url)
-            .build();
+                .url(url)
+                .build();
     }
 }

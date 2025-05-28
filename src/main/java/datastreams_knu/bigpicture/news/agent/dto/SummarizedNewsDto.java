@@ -23,10 +23,10 @@ public class SummarizedNewsDto {
 
     public static SummarizedNewsDto of(String url, String content, String date) {
         return SummarizedNewsDto.builder()
-            .url(url)
-            .content(content)
-            .date(date)
-            .build();
+                .url(url)
+                .content(content)
+                .date(date)
+                .build();
     }
 
     public void setContent(String summarizeNewsContent) {

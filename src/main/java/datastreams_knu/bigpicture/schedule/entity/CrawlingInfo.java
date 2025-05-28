@@ -31,9 +31,9 @@ public class CrawlingInfo {
 
     public static CrawlingInfo of(String stockType, String stockName, String newsKeyword) {
         return CrawlingInfo.builder()
-            .stockType(stockType)
-            .stockName(stockName)
-            .stockKeyword(newsKeyword)
-            .build();
+                .stockType(stockType)
+                .stockName(stockName)
+                .stockKeyword(newsKeyword)
+                .build();
     }
 }

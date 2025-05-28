@@ -24,9 +24,9 @@ class ExchangeRepositoryTest {
     void deleteAllByExchangeDateBeforeTest() {
         // given
         List<Exchange> exchanges = List.of(
-            Exchange.of(LocalDate.now(), 0.01),
-            Exchange.of(LocalDate.now().minusMonths(2), 0.02),
-            Exchange.of(LocalDate.now().minusMonths(2), 0.03)
+                Exchange.of(LocalDate.now(), 0.01),
+                Exchange.of(LocalDate.now().minusMonths(2), 0.02),
+                Exchange.of(LocalDate.now().minusMonths(2), 0.03)
         );
         exchangeRepository.saveAll(exchanges);
 

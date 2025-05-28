@@ -26,9 +26,9 @@ class StockInfoRepositoryTest {
         LocalDate now = LocalDate.now();
 
         List<StockInfo> stockInfos = List.of(
-            StockInfo.of(0.01,now),
-            StockInfo.of(0.02,now.minusDays(2)),
-            StockInfo.of(0.03,now.minusDays(2))
+                StockInfo.of(0.01, now),
+                StockInfo.of(0.02, now.minusDays(2)),
+                StockInfo.of(0.03, now.minusDays(2))
         );
         stockInfoRepository.saveAll(stockInfos);
 

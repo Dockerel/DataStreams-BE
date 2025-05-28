@@ -30,8 +30,8 @@ public class Exchange {
 
     public static Exchange of(LocalDate exchangeDate, double exchangeRate) {
         return Exchange.builder()
-            .exchangeDate(exchangeDate)
-            .exchangeRate(exchangeRate)
-            .build();
+                .exchangeDate(exchangeDate)
+                .exchangeRate(exchangeRate)
+                .build();
     }
 }

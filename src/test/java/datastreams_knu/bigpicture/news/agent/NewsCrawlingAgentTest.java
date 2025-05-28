@@ -32,9 +32,9 @@ public class NewsCrawlingAgentTest {
         String keyword = "keyword";
 
         List<ReferenceDto> referenceDtos = List.of(
-            ReferenceDto.of("url1"),
-            ReferenceDto.of("url2"),
-            ReferenceDto.of("url3")
+                ReferenceDto.of("url1"),
+                ReferenceDto.of("url2"),
+                ReferenceDto.of("url3")
         );
 
         SummarizedMultipleNewsDto summarizedMultipleNewsDto = SummarizedMultipleNewsDto.of("summary", referenceDtos);

@@ -43,8 +43,8 @@ public class Stock {
 
     public static Stock of(String stockName, StockType stockType) {
         return Stock.builder()
-            .stockName(stockName)
-            .stockType(stockType)
-            .build();
+                .stockName(stockName)
+                .stockType(stockType)
+                .build();
     }
 }

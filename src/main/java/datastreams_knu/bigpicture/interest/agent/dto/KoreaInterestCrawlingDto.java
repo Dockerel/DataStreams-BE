@@ -38,10 +38,10 @@ public class KoreaInterestCrawlingDto {
 
     public static KoreaInterestCrawlingDto of(List<StatisticRow> rows) {
         StatisticSearch statisticSearch = StatisticSearch.builder()
-            .row(rows)
-            .build();
+                .row(rows)
+                .build();
         return KoreaInterestCrawlingDto.builder()
-            .statisticSearch(statisticSearch)
-            .build();
+                .statisticSearch(statisticSearch)
+                .build();
     }
 }

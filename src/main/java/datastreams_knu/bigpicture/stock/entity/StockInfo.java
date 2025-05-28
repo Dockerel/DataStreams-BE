@@ -37,8 +37,8 @@ public class StockInfo {
 
     public static StockInfo of(double stockPrice, LocalDate stockDate) {
         return StockInfo.builder()
-            .stockPrice(stockPrice)
-            .stockDate(stockDate)
-            .build();
+                .stockPrice(stockPrice)
+                .stockDate(stockDate)
+                .build();
     }
 }

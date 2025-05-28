@@ -30,9 +30,9 @@ public class CrawlingSeed {
 
     public static CrawlingSeed of(String stockType, String stockName, String newsKeyword) {
         return CrawlingSeed.builder()
-            .stockType(stockType)
-            .stockName(stockName)
-            .stockKeyword(newsKeyword)
-            .build();
+                .stockType(stockType)
+                .stockName(stockName)
+                .stockKeyword(newsKeyword)
+                .build();
     }
 }

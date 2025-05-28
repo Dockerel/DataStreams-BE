@@ -15,7 +15,6 @@ import java.util.List;
 import static datastreams_knu.bigpicture.exchange.agent.dto.ExchangeCrawlingDto.Data;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -31,22 +30,22 @@ class ExchangeCrawlingAgentMockTest {
     void ExchangeDataRequestTest() {
         // given
         List<Data> exchangeCrawlingData = List.of(
-            new Data("2025-01-01", "0.01"),
-            new Data("2025-01-02", "0.02"),
-            new Data("2025-01-03", "0.03")
+                new Data("2025-01-01", "0.01"),
+                new Data("2025-01-02", "0.02"),
+                new Data("2025-01-03", "0.03")
         );
         ExchangeCrawlingDto exchangeCrawlingDto = ExchangeCrawlingDto.of(exchangeCrawlingData);
 
         // when
         when(webClientUtil.get(any(), any()))
-            .thenReturn(exchangeCrawlingDto);
+                .thenReturn(exchangeCrawlingDto);
 
         // then
         List<ExchangeInfoDto> result = exchangeCrawlingAgent.crawlingExchangeRate();
         assertThat(result).hasSize(3)
-            .allSatisfy(data -> {
-                assertThat(data.getDate()).isInstanceOf(LocalDate.class);
-                assertThat(data.getRate()).isInstanceOf(Double.class);
-            });
+                .allSatisfy(data -> {
+                    assertThat(data.getDate()).isInstanceOf(LocalDate.class);
+                    assertThat(data.getRate()).isInstanceOf(Double.class);
+                });
     }
 }

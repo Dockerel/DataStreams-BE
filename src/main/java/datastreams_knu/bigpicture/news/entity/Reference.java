@@ -27,8 +27,8 @@ public class Reference {
 
     public static Reference of(String url) {
         return Reference.builder()
-            .url(url)
-            .build();
+                .url(url)
+                .build();
     }
 
     protected void setNews(News news) {

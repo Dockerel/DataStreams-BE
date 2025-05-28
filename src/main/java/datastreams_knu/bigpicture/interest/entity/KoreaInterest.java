@@ -31,8 +31,8 @@ public class KoreaInterest {
 
     public static KoreaInterest of(LocalDate interestDate, double interestRate) {
         return KoreaInterest.builder()
-            .interestDate(interestDate)
-            .interestRate(interestRate)
-            .build();
+                .interestDate(interestDate)
+                .interestRate(interestRate)
+                .build();
     }
 }

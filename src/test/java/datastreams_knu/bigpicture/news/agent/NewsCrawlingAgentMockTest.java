@@ -43,10 +43,10 @@ class NewsCrawlingAgentMockTest {
     @BeforeEach
     void setUp() {
         newsCrawlingAgent = new NewsCrawlingAgent(
-            webClientUtil,
-            aiModelConfig,
-            objectMapper,
-            newsRepository
+                webClientUtil,
+                aiModelConfig,
+                objectMapper,
+                newsRepository
         );
         spyNewsCrawlingAgent = Mockito.spy(newsCrawlingAgent);
 
@@ -54,10 +54,10 @@ class NewsCrawlingAgentMockTest {
         CrawledNewsDto crawledNewsDto = CrawledNewsDto.of(ids);
 
         when(webClientUtil.get(any(), any()))
-            .thenReturn(crawledNewsDto);
+                .thenReturn(crawledNewsDto);
 
         doReturn(SummarizedNewsDto.of("url", "content", "date"))
-            .when(spyNewsCrawlingAgent).getSummarizedNews(anyString(), anyString());
+                .when(spyNewsCrawlingAgent).getSummarizedNews(anyString(), anyString());
     }
 
     @DisplayName("keyword를 기반으로 관련 뉴스 기사를 수집합니다.")

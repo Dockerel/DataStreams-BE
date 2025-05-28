@@ -42,10 +42,10 @@ public class News {
 
     public static News of(LocalDate newsCrawlingDate, String keyword, String content) {
         return News.builder()
-            .newsCrawlingDate(newsCrawlingDate)
-            .keyword(keyword)
-            .content(content)
-            .build();
+                .newsCrawlingDate(newsCrawlingDate)
+                .keyword(keyword)
+                .content(content)
+                .build();
     }
 
     public void setContent(String content) {

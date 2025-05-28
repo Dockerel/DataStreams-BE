@@ -32,20 +32,20 @@ public class ExchangeCrawlingAgent {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return response.getData().stream()
-            .map(data -> {
-                LocalDate exchangeDate = LocalDate.parse(data.getDate(), formatter);
-                double exchangeRate = Double.parseDouble(data.getRate());
-                return ExchangeInfoDto.of(exchangeDate, exchangeRate);
-            })
-            .collect(Collectors.toList());
+                .map(data -> {
+                    LocalDate exchangeDate = LocalDate.parse(data.getDate(), formatter);
+                    double exchangeRate = Double.parseDouble(data.getRate());
+                    return ExchangeInfoDto.of(exchangeDate, exchangeRate);
+                })
+                .collect(Collectors.toList());
     }
 
     @Tool("수집된 환율 데이터의 평균값을 DB에 저장합니다.")
     public CrawlingResultDto saveExchange(List<ExchangeInfoDto> infos) {
         double averageExchangeRate = infos.stream()
-            .mapToDouble(ExchangeInfoDto::getRate)
-            .average()
-            .orElse(0.0);
+                .mapToDouble(ExchangeInfoDto::getRate)
+                .average()
+                .orElse(0.0);
         double roundAverageExchangeRate = Math.round(averageExchangeRate * 100) / 100.0;
         exchangeRepository.save(Exchange.of(LocalDate.now(), roundAverageExchangeRate));
         return CrawlingResultDto.of(true, "환율 크롤링 성공");

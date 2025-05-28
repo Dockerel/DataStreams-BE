@@ -48,8 +48,8 @@ public class CrawlingScheduler {
     }
 
     // 새로운 키워드 크롤링(뉴스 + 주가)
-    @Scheduled(cron="0 0 4 * * *", zone = "Asia/Seoul") // 매일 오전 4시
-    public void runCrawlingSeedCrawling(){
+    @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul") // 매일 오전 4시
+    public void runCrawlingSeedCrawling() {
         crawlingSchedulerService.crawlingSeedCrawling();
     }
 }

@@ -1,6 +1,7 @@
 package datastreams_knu.bigpicture.board.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor

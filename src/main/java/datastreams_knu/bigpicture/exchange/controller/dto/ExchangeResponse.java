@@ -21,9 +21,9 @@ public class ExchangeResponse {
 
     public static ExchangeResponse of(LocalDate date, double exchangeRate) {
         return ExchangeResponse.builder()
-            .exchangeDate(date)
-            .exchangeRate(exchangeRate)
-            .build();
+                .exchangeDate(date)
+                .exchangeRate(exchangeRate)
+                .build();
     }
 
     public static ExchangeResponse from(Exchange exchange) {

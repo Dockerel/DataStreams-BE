@@ -31,9 +31,9 @@ class InterestCrawlingAgentTest {
     void KoreaInterestDataSaveTest() {
         // given
         List<StatisticRow> statisticRows = List.of(
-            new StatisticRow("2025-01-01", "0.01"),
-            new StatisticRow("2025-01-02", "0.02"),
-            new StatisticRow("2025-01-03", "0.03")
+                new StatisticRow("2025-01-01", "0.01"),
+                new StatisticRow("2025-01-02", "0.02"),
+                new StatisticRow("2025-01-03", "0.03")
         );
 
         KoreaInterestCrawlingDto koreaInterestData = of(statisticRows);
@@ -46,9 +46,9 @@ class InterestCrawlingAgentTest {
         assertThat(result.getResult()).isEqualTo(true);
         assertThat(result.getMessage()).isEqualTo("한국 금리 크롤링 성공");
         assertThat(findKoreaInterest).hasSize(3)
-            .allSatisfy(interest -> {
-                assertThat(interest.getInterestDate()).isInstanceOf(LocalDate.class);
-                assertThat(interest.getInterestRate()).isInstanceOf(Double.class);
-            });
+                .allSatisfy(interest -> {
+                    assertThat(interest.getInterestDate()).isInstanceOf(LocalDate.class);
+                    assertThat(interest.getInterestRate()).isInstanceOf(Double.class);
+                });
     }
 }

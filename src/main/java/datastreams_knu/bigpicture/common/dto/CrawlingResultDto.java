@@ -17,8 +17,8 @@ public class CrawlingResultDto {
 
     public static CrawlingResultDto of(Boolean result, String message) {
         return CrawlingResultDto.builder()
-            .result(result)
-            .message(message)
-            .build();
+                .result(result)
+                .message(message)
+                .build();
     }
 }

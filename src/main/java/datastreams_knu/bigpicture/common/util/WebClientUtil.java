@@ -15,10 +15,10 @@ public class WebClientUtil {
 
     public <T> T get(String url, Class<T> clazz) {
         return webClientConfig.webClient().get()
-            .uri(url)
-            .retrieve()
-            .bodyToMono(clazz)
-            .retryWhen(Retry.backoff(3, Duration.ofSeconds(2)))
-            .block();
+                .uri(url)
+                .retrieve()
+                .bodyToMono(clazz)
+                .retryWhen(Retry.backoff(3, Duration.ofSeconds(2)))
+                .block();
     }
 }

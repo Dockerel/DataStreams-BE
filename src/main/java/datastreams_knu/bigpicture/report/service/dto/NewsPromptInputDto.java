@@ -21,8 +21,8 @@ public class NewsPromptInputDto {
 
     public static NewsPromptInputDto from(News news) {
         return NewsPromptInputDto.builder()
-            .newsDate(news.getNewsCrawlingDate())
-            .content(news.getContent())
-            .build();
+                .newsDate(news.getNewsCrawlingDate())
+                .content(news.getContent())
+                .build();
     }
 }

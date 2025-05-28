@@ -23,18 +23,18 @@ public class AiModelConfig {
     @Bean
     public ChatLanguageModel openAiChatModel() {
         return OpenAiChatModel.builder()
-            .apiKey(OPENAI_API_KEY)
-            .modelName(GPT_4_O_MINI)
-            .timeout(Duration.ofSeconds(120))
-            .strictTools(true)
-            .build();
+                .apiKey(OPENAI_API_KEY)
+                .modelName(GPT_4_O_MINI)
+                .timeout(Duration.ofSeconds(120))
+                .strictTools(true)
+                .build();
     }
 
     @Bean
     public ChatLanguageModel geminiChatModel() {
         return GoogleAiGeminiChatModel.builder()
-            .apiKey(GEMINI_API_KEY)
-            .modelName("gemini-2.0-flash")
-            .build();
+                .apiKey(GEMINI_API_KEY)
+                .modelName("gemini-2.0-flash")
+                .build();
     }
 }

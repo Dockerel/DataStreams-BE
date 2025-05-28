@@ -24,9 +24,9 @@ class KoreaInterestRepositoryTest {
     void deleteAllByInterestDateBeforeTest() {
         // given
         List<KoreaInterest> koreaInterests = List.of(
-            KoreaInterest.of(LocalDate.now(), 0.01),
-            KoreaInterest.of(LocalDate.now().minusMonths(2), 0.02),
-            KoreaInterest.of(LocalDate.now().minusMonths(2), 0.03)
+                KoreaInterest.of(LocalDate.now(), 0.01),
+                KoreaInterest.of(LocalDate.now().minusMonths(2), 0.02),
+                KoreaInterest.of(LocalDate.now().minusMonths(2), 0.03)
         );
         koreaInterestRepository.saveAll(koreaInterests);
 

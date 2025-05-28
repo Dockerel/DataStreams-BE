@@ -6,12 +6,12 @@ import datastreams_knu.bigpicture.common.config.AiModelConfig;
 import datastreams_knu.bigpicture.common.dto.CrawlingResultDto;
 import datastreams_knu.bigpicture.common.dto.DateRangeDto;
 import datastreams_knu.bigpicture.common.util.WebClientUtil;
-import datastreams_knu.bigpicture.news.config.NewsCrawlingConfig;
 import datastreams_knu.bigpicture.news.agent.NewsCrawlingAssistant;
 import datastreams_knu.bigpicture.news.agent.dto.CrawledNewsDto;
 import datastreams_knu.bigpicture.news.agent.dto.StringSummaryDto;
 import datastreams_knu.bigpicture.news.agent.dto.SummarizedMultipleNewsDto;
 import datastreams_knu.bigpicture.news.agent.dto.SummarizedNewsDto;
+import datastreams_knu.bigpicture.news.config.NewsCrawlingConfig;
 import datastreams_knu.bigpicture.news.entity.News;
 import datastreams_knu.bigpicture.news.entity.Reference;
 import datastreams_knu.bigpicture.news.exception.NewsCrawlingException;
@@ -75,8 +75,8 @@ public class NewsCrawlingService {
         List<String> newsIds = getNewsIds(newsInfoResponse);
 
         List<SummarizedNewsDto> summarizedNewsList = newsIds.stream()
-            .map(id -> getSummarizedNews(keyword, id))
-            .collect(Collectors.toList());
+                .map(id -> getSummarizedNews(keyword, id))
+                .collect(Collectors.toList());
 
         String promptText = SUMMARIZE_MULTIPLE_NEWS_PROMPT;
 
@@ -102,7 +102,7 @@ public class NewsCrawlingService {
     private static String createUrl(Map<String, String> params) {
         // 뉴스 기사 최대 20개 크롤링 (연합뉴스)
         String baseUrl = "https://ars.yna.co.kr/api/v2/search.basic"
-            + "?page_no=1&page_size=20&scope=all&sort=weight&channel=basic_kr&cattr=A";
+                + "?page_no=1&page_size=20&scope=all&sort=weight&channel=basic_kr&cattr=A";
 
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -115,10 +115,10 @@ public class NewsCrawlingService {
 
         DateRangeDto range = getDateRange();
         stringBuilder
-            .append("&from=")
-            .append(range.getFromDate())
-            .append("&to=")
-            .append(range.getToDate());
+                .append("&from=")
+                .append(range.getFromDate())
+                .append("&to=")
+                .append(range.getToDate());
 
         return stringBuilder.toString();
     }
@@ -135,8 +135,8 @@ public class NewsCrawlingService {
     private static List<String> getNewsIds(CrawledNewsDto response) {
         CrawledNewsDto.YibKrA yibKrA = response.getYIB_KR_A();
         return yibKrA.getResult().stream()
-            .map(result -> result.getCID())
-            .collect(Collectors.toList());
+                .map(result -> result.getCID())
+                .collect(Collectors.toList());
     }
 
     protected SummarizedNewsDto getSummarizedNews(String keyword, String id) {
@@ -155,10 +155,10 @@ public class NewsCrawlingService {
             Elements contentElements = doc.select(".story-news p");
 
             String content = contentElements.stream()
-                .map(Element::text)
-                .map(String::trim)
-                .filter(text -> !text.isEmpty())
-                .collect(Collectors.joining(" "));
+                    .map(Element::text)
+                    .map(String::trim)
+                    .filter(text -> !text.isEmpty())
+                    .collect(Collectors.joining(" "));
 
             Element dateElement = doc.selectFirst(".txt-time01");
             String date = dateElement.text().split(" ")[0].replaceAll("[^\\d-]", "").trim();
@@ -172,7 +172,7 @@ public class NewsCrawlingService {
     public String summarizeNews(String content, String keyword) {
         try {
             String promptText = keyword.equals("keyword")
-                ? SUMMARIZE_NEWS_BY_KEYWORD_PROMPT : SUMMARIZE_GENERAL_NEWS_PROMPT;
+                    ? SUMMARIZE_NEWS_BY_KEYWORD_PROMPT : SUMMARIZE_GENERAL_NEWS_PROMPT;
 
             List<String> vars = List.of(content, keyword);
 
@@ -221,8 +221,8 @@ public class NewsCrawlingService {
         News news = News.of(LocalDate.now(), keyword, result.getSummary());
 
         result.getSources().stream()
-            .map(info -> Reference.of(info.getUrl()))
-            .forEach(news::addReference);
+                .map(info -> Reference.of(info.getUrl()))
+                .forEach(news::addReference);
 
         return news;
     }

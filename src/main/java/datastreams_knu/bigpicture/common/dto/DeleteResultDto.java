@@ -17,8 +17,8 @@ public class DeleteResultDto {
 
     public static DeleteResultDto of(int deleteCount, String message) {
         return DeleteResultDto.builder()
-            .deleteCount(deleteCount)
-            .message(message)
-            .build();
+                .deleteCount(deleteCount)
+                .message(message)
+                .build();
     }
 }

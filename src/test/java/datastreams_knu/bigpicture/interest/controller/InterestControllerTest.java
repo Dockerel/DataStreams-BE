@@ -30,18 +30,18 @@ class InterestControllerTest {
     void getKoreaInterests() throws Exception {
         // given // when
         when(interestService.getKoreaInterests())
-            .thenReturn(Collections.emptyList());
+                .thenReturn(Collections.emptyList());
 
         // then
         mockMvc.perform(
-                get("/api/v1/interests/korea")
-            )
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code").value("200"))
-            .andExpect(jsonPath("$.status").value("OK"))
-            .andExpect(jsonPath("$.message").value("OK"));
+                        get("/api/v1/interests/korea")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.status").value("OK"))
+                .andExpect(jsonPath("$.message").value("OK"));
     }
 
     @DisplayName("모든 미국 금리 데이터들을 가져온다.")
@@ -49,18 +49,18 @@ class InterestControllerTest {
     void getUSInterests() throws Exception {
         // given // when
         when(interestService.getUSInterests())
-            .thenReturn(Collections.emptyList());
+                .thenReturn(Collections.emptyList());
 
         // then
         mockMvc.perform(
-                get("/api/v1/interests/us")
-            )
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code").value("200"))
-            .andExpect(jsonPath("$.status").value("OK"))
-            .andExpect(jsonPath("$.message").value("OK"));
+                        get("/api/v1/interests/us")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.status").value("OK"))
+                .andExpect(jsonPath("$.message").value("OK"));
     }
 
 }

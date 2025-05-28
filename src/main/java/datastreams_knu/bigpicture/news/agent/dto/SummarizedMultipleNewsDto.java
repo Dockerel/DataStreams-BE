@@ -20,8 +20,8 @@ public class SummarizedMultipleNewsDto {
 
     public static SummarizedMultipleNewsDto of(String summary, List<ReferenceDto> sources) {
         return SummarizedMultipleNewsDto.builder()
-            .summary(summary)
-            .sources(sources)
-            .build();
+                .summary(summary)
+                .sources(sources)
+                .build();
     }
 }

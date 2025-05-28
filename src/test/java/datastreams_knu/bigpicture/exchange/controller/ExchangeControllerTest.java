@@ -30,16 +30,16 @@ class ExchangeControllerTest {
     void getExchanges() throws Exception {
         // given // when
         when(exchangeService.getExchanges())
-            .thenReturn(Collections.emptyList());
+                .thenReturn(Collections.emptyList());
 
         // then
         mockMvc.perform(
-                get("/api/v1/exchanges")
-            )
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code").value("200"))
-            .andExpect(jsonPath("$.status").value("OK"))
-            .andExpect(jsonPath("$.message").value("OK"));
+                        get("/api/v1/exchanges")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.status").value("OK"))
+                .andExpect(jsonPath("$.message").value("OK"));
     }
 }

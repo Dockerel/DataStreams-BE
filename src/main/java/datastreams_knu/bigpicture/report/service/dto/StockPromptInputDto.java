@@ -21,8 +21,8 @@ public class StockPromptInputDto {
 
     public static StockPromptInputDto from(StockInfo stockInfo) {
         return StockPromptInputDto.builder()
-            .stockDate(stockInfo.getStockDate())
-            .stockRate(stockInfo.getStockPrice())
-            .build();
+                .stockDate(stockInfo.getStockDate())
+                .stockRate(stockInfo.getStockPrice())
+                .build();
     }
 }
