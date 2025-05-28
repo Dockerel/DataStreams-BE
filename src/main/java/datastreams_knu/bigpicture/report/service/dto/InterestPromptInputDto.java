@@ -22,15 +22,15 @@ public class InterestPromptInputDto {
 
     public static InterestPromptInputDto from(KoreaInterest interest) {
         return InterestPromptInputDto.builder()
-            .interestDate(interest.getInterestDate())
-            .interestRate(interest.getInterestRate())
-            .build();
+                .interestDate(interest.getInterestDate())
+                .interestRate(interest.getInterestRate())
+                .build();
     }
 
     public static InterestPromptInputDto from(USInterest interest) {
         return InterestPromptInputDto.builder()
-            .interestDate(interest.getInterestDate())
-            .interestRate(interest.getInterestRate())
-            .build();
+                .interestDate(interest.getInterestDate())
+                .interestRate(interest.getInterestRate())
+                .build();
     }
 }

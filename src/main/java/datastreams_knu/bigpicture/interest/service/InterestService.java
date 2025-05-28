@@ -20,13 +20,13 @@ public class InterestService {
 
     public List<InterestResponse> getKoreaInterests() {
         return koreaInterestRepository.findAll().stream()
-            .map(interest -> InterestResponse.from(interest))
-            .collect(Collectors.toList());
+                .map(interest -> InterestResponse.from(interest))
+                .collect(Collectors.toList());
     }
 
     public List<InterestResponse> getUSInterests() {
         return usInterestRepository.findAll().stream()
-            .map(interest -> InterestResponse.from(interest))
-            .collect(Collectors.toList());
+                .map(interest -> InterestResponse.from(interest))
+                .collect(Collectors.toList());
     }
 }

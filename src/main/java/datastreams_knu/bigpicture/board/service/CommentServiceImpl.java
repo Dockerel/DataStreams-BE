@@ -2,8 +2,8 @@ package datastreams_knu.bigpicture.board.service;
 
 import datastreams_knu.bigpicture.board.entity.Board;
 import datastreams_knu.bigpicture.board.entity.Comment;
-import datastreams_knu.bigpicture.board.repository.CommentRepository;
 import datastreams_knu.bigpicture.board.repository.BoardRepository;
+import datastreams_knu.bigpicture.board.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +27,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public Comment createComment(Long boardIdx, Comment comment){
+    public Comment createComment(Long boardIdx, Comment comment) {
         Board board = boardRepository.findById(boardIdx)
                 .orElseThrow(() -> new NoSuchElementException("Board not found with ID: " + boardIdx));
 
@@ -45,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comment> getCommentsByBoardIdx(Long boardIdx){
+    public List<Comment> getCommentsByBoardIdx(Long boardIdx) {
         if (!boardRepository.existsById(boardIdx)) {
             throw new NoSuchElementException("Board not found with ID: " + boardIdx);
         }
@@ -54,14 +54,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Comment getCommentById(Long commentIdx){
+    public Comment getCommentById(Long commentIdx) {
         return commentRepository.findById(commentIdx)
                 .orElseThrow(() -> new NoSuchElementException("Comment not found with ID: " + commentIdx));
     }
 
     @Override
     @Transactional
-    public Comment updateComment(Long commentIdx, Comment commentDetails){
+    public Comment updateComment(Long commentIdx, Comment commentDetails) {
         Comment existingComment = getCommentById(commentIdx);
 
         if (!StringUtils.hasText(commentDetails.getCommentPassword())) {
@@ -79,7 +79,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void deleteComment(Long commentIdx, String password){
+    public void deleteComment(Long commentIdx, String password) {
         Comment commentToDelete = getCommentById(commentIdx);
 
         if (!StringUtils.hasText(password)) {

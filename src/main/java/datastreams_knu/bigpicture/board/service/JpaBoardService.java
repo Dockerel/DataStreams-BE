@@ -1,9 +1,9 @@
 package datastreams_knu.bigpicture.board.service;
 
-import java.util.List;
-
 import datastreams_knu.bigpicture.board.dto.BoardUpdateRequestDto;
 import datastreams_knu.bigpicture.board.entity.Board;
+
+import java.util.List;
 
 public interface JpaBoardService {
     List<Board> selectBoardList();

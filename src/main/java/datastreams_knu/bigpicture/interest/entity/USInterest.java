@@ -29,8 +29,8 @@ public class USInterest {
 
     public static USInterest of(LocalDate interestDate, double interestRate) {
         return USInterest.builder()
-            .interestDate(interestDate)
-            .interestRate(interestRate)
-            .build();
+                .interestDate(interestDate)
+                .interestRate(interestRate)
+                .build();
     }
 }

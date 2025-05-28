@@ -29,9 +29,9 @@ class ExchangeCrawlingAgentTest {
     void ExchangeDataSaveTest() {
         // given
         List<ExchangeInfoDto> exchangeData = List.of(
-            ExchangeInfoDto.of(LocalDate.now(), 0.01),
-            ExchangeInfoDto.of(LocalDate.now(), 0.02),
-            ExchangeInfoDto.of(LocalDate.now(), 0.03)
+                ExchangeInfoDto.of(LocalDate.now(), 0.01),
+                ExchangeInfoDto.of(LocalDate.now(), 0.02),
+                ExchangeInfoDto.of(LocalDate.now(), 0.03)
         );
 
         // when

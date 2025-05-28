@@ -31,18 +31,18 @@ class StockControllerTest {
     void getStocks() throws Exception {
         // given // when
         when(stockService.getStocks(any()))
-            .thenReturn(Collections.emptyList());
+                .thenReturn(Collections.emptyList());
 
         // then
         mockMvc.perform(
-                get("/api/v1/stocks/all")
-                    .param("stockName", "test")
-            )
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code").value("200"))
-            .andExpect(jsonPath("$.status").value("OK"))
-            .andExpect(jsonPath("$.message").value("OK"));
+                        get("/api/v1/stocks/all")
+                                .param("stockName", "test")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.status").value("OK"))
+                .andExpect(jsonPath("$.message").value("OK"));
     }
 
     @DisplayName("오늘 주가 데이터들을 가져온다.")

@@ -11,9 +11,9 @@ import datastreams_knu.bigpicture.news.agent.dto.StringSummaryDto;
 import datastreams_knu.bigpicture.news.agent.dto.SummarizedMultipleNewsDto;
 import datastreams_knu.bigpicture.news.agent.dto.SummarizedNewsDto;
 import datastreams_knu.bigpicture.news.entity.News;
+import datastreams_knu.bigpicture.news.entity.Reference;
 import datastreams_knu.bigpicture.news.exception.NewsCrawlingException;
 import datastreams_knu.bigpicture.news.repository.NewsRepository;
-import datastreams_knu.bigpicture.news.entity.Reference;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -63,8 +63,8 @@ public class NewsCrawlingAgent {
         List<String> newsIds = getNewsIds(response);
 
         List<SummarizedNewsDto> summarizedNewsList = newsIds.stream()
-            .map(id -> getSummarizedNews(keyword, id))
-            .collect(Collectors.toList());
+                .map(id -> getSummarizedNews(keyword, id))
+                .collect(Collectors.toList());
 
         return summarizedNewsList;
     }
@@ -80,8 +80,8 @@ public class NewsCrawlingAgent {
         List<String> newsIds = getNewsIds(response);
 
         List<SummarizedNewsDto> summarizedNewsList = newsIds.stream()
-            .map(id -> getSummarizedNews(keyword, id))
-            .collect(Collectors.toList());
+                .map(id -> getSummarizedNews(keyword, id))
+                .collect(Collectors.toList());
 
         return summarizedNewsList;
     }
@@ -109,7 +109,7 @@ public class NewsCrawlingAgent {
     private static String createUrl(Map<String, String> params) {
         // 뉴스 기사 최대 20개 크롤링 (연합뉴스)
         String baseUrl = "https://ars.yna.co.kr/api/v2/search.basic"
-            + "?page_no=1&page_size=20&scope=all&sort=weight&channel=basic_kr&cattr=A";
+                + "?page_no=1&page_size=20&scope=all&sort=weight&channel=basic_kr&cattr=A";
 
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -122,10 +122,10 @@ public class NewsCrawlingAgent {
 
         DateRangeDto range = getDateRange();
         stringBuilder
-            .append("&from=")
-            .append(range.getFromDate())
-            .append("&to=")
-            .append(range.getToDate());
+                .append("&from=")
+                .append(range.getFromDate())
+                .append("&to=")
+                .append(range.getToDate());
 
         return stringBuilder.toString();
     }
@@ -142,8 +142,8 @@ public class NewsCrawlingAgent {
     private static List<String> getNewsIds(CrawledNewsDto response) {
         CrawledNewsDto.YibKrA yibKrA = response.getYIB_KR_A();
         return yibKrA.getResult().stream()
-            .map(result -> result.getCID())
-            .collect(Collectors.toList());
+                .map(result -> result.getCID())
+                .collect(Collectors.toList());
     }
 
     public SummarizedNewsDto getSummarizedNews(String keyword, String id) {
@@ -162,10 +162,10 @@ public class NewsCrawlingAgent {
             Elements contentElements = doc.select(".story-news p");
 
             String content = contentElements.stream()
-                .map(Element::text)
-                .map(String::trim)
-                .filter(text -> !text.isEmpty())
-                .collect(Collectors.joining(" "));
+                    .map(Element::text)
+                    .map(String::trim)
+                    .filter(text -> !text.isEmpty())
+                    .collect(Collectors.joining(" "));
 
             Element dateElement = doc.selectFirst(".txt-time01");
             String date = dateElement.text().split(" ")[0].replaceAll("[^\\d-]", "").trim();
@@ -179,7 +179,7 @@ public class NewsCrawlingAgent {
     public String summarizeNews(String content, String keyword) {
         try {
             String promptText = keyword.equals("keyword")
-                ? SUMMARIZE_NEWS_BY_KEYWORD_PROMPT : SUMMARIZE_GENERAL_NEWS_PROMPT;
+                    ? SUMMARIZE_NEWS_BY_KEYWORD_PROMPT : SUMMARIZE_GENERAL_NEWS_PROMPT;
 
             List<String> vars = List.of(content, keyword);
 
@@ -223,8 +223,8 @@ public class NewsCrawlingAgent {
         News news = News.of(LocalDate.now(), keyword, result.getSummary());
 
         result.getSources().stream()
-            .map(info -> Reference.of(info.getUrl()))
-            .forEach(news::addReference);
+                .map(info -> Reference.of(info.getUrl()))
+                .forEach(news::addReference);
 
         return news;
     }

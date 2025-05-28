@@ -1,7 +1,6 @@
 package datastreams_knu.bigpicture.alert.repository;
 
 import datastreams_knu.bigpicture.alert.entity.Member;
-import datastreams_knu.bigpicture.alert.entity.MemberWatchlist;
 import datastreams_knu.bigpicture.alert.service.AlertService;
 import datastreams_knu.bigpicture.alert.service.dto.RegisterWatchlistServiceRequest;
 import jakarta.persistence.EntityManager;
@@ -11,10 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest

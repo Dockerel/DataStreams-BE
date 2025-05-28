@@ -9,8 +9,8 @@ import datastreams_knu.bigpicture.alert.service.dto.DeleteWatchlistServiceReques
 import datastreams_knu.bigpicture.alert.service.dto.GetMyWatchlistServiceRequest;
 import datastreams_knu.bigpicture.alert.service.dto.RegisterFcmTokenServiceRequest;
 import datastreams_knu.bigpicture.alert.service.dto.RegisterWatchlistServiceRequest;
-import datastreams_knu.bigpicture.common.util.StockNameValidator;
 import datastreams_knu.bigpicture.common.util.StockKeywordResolver;
+import datastreams_knu.bigpicture.common.util.StockNameValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -30,7 +30,7 @@ public class ExchangeCrawlingDto {
 
     public static ExchangeCrawlingDto of(List<Data> data) {
         return ExchangeCrawlingDto.builder()
-            .data(data)
-            .build();
+                .data(data)
+                .build();
     }
 }

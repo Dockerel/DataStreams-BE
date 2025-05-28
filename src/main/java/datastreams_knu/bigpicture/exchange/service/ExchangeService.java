@@ -18,7 +18,7 @@ public class ExchangeService {
 
     public List<ExchangeResponse> getExchanges() {
         return exchangeRepository.findAll().stream()
-            .map(exchange -> ExchangeResponse.from(exchange))
-            .collect(Collectors.toList());
+                .map(exchange -> ExchangeResponse.from(exchange))
+                .collect(Collectors.toList());
     }
 }

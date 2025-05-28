@@ -17,9 +17,9 @@ public class DateRangeDto {
 
     public static DateRangeDto of(String fromDate, String toDate) {
         return DateRangeDto.builder()
-            .fromDate(fromDate)
-            .toDate(toDate)
-            .build();
+                .fromDate(fromDate)
+                .toDate(toDate)
+                .build();
     }
 
     public static DateRangeDto of(String date) {

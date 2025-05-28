@@ -35,11 +35,11 @@ public class CrawledNewsDto {
 
     public static CrawledNewsDto of(List<String> ids) {
         List<Result> results = ids.stream()
-            .map(id -> Result.of(id))
-            .collect(Collectors.toList());
+                .map(id -> Result.of(id))
+                .collect(Collectors.toList());
         YibKrA yibKrA = new YibKrA(results);
         return CrawledNewsDto.builder()
-            .YIB_KR_A(yibKrA)
-            .build();
+                .YIB_KR_A(yibKrA)
+                .build();
     }
 }

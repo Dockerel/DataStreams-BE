@@ -18,8 +18,8 @@ public class StockDto {
 
     public static StockDto of(String name, StockType stockType) {
         return StockDto.builder()
-            .name(name)
-            .stockType(stockType)
-            .build();
+                .name(name)
+                .stockType(stockType)
+                .build();
     }
 }

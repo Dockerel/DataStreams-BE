@@ -49,9 +49,9 @@ public class KoreaStockCrawlingDto {
 
         public static Item of(String basDt, String clpr) {
             return Item.builder()
-                .basDt(basDt)
-                .clpr(clpr)
-                .build();
+                    .basDt(basDt)
+                    .clpr(clpr)
+                    .build();
         }
     }
 
@@ -61,7 +61,7 @@ public class KoreaStockCrawlingDto {
         Response response = new Response(body);
 
         return KoreaStockCrawlingDto.builder()
-            .response(response)
-            .build();
+                .response(response)
+                .build();
     }
 }

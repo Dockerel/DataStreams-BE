@@ -32,9 +32,9 @@ class InterestServiceTest {
         LocalDate now = LocalDate.now();
 
         List<KoreaInterest> koreaInterests = List.of(
-            KoreaInterest.of(now, 0.01),
-            KoreaInterest.of(now, 0.02),
-            KoreaInterest.of(now, 0.03)
+                KoreaInterest.of(now, 0.01),
+                KoreaInterest.of(now, 0.02),
+                KoreaInterest.of(now, 0.03)
         );
 
         koreaInterestRepository.saveAll(koreaInterests);
@@ -54,9 +54,9 @@ class InterestServiceTest {
         LocalDate now = LocalDate.now();
 
         List<USInterest> usInterests = List.of(
-            USInterest.of(now, 0.01),
-            USInterest.of(now, 0.02),
-            USInterest.of(now, 0.03)
+                USInterest.of(now, 0.01),
+                USInterest.of(now, 0.02),
+                USInterest.of(now, 0.03)
         );
 
         usInterestRepository.saveAll(usInterests);

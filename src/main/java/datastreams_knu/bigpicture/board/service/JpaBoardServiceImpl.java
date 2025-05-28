@@ -1,15 +1,15 @@
 package datastreams_knu.bigpicture.board.service;
 
+import datastreams_knu.bigpicture.board.dto.BoardUpdateRequestDto;
+import datastreams_knu.bigpicture.board.entity.Board;
+import datastreams_knu.bigpicture.board.repository.BoardRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import datastreams_knu.bigpicture.board.dto.BoardUpdateRequestDto;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import datastreams_knu.bigpicture.board.entity.Board;
-import datastreams_knu.bigpicture.board.repository.BoardRepository;
-import org.springframework.util.StringUtils;
 
 @Service
 public class JpaBoardServiceImpl implements JpaBoardService {
@@ -21,14 +21,14 @@ public class JpaBoardServiceImpl implements JpaBoardService {
     }
 
     @Override
-    @Transactional(readOnly=true)
-    public List<Board> selectBoardList(){
+    @Transactional(readOnly = true)
+    public List<Board> selectBoardList() {
         return boardRepository.findAllByOrderByBoardIdxDesc();
     }
 
     @Override
     @Transactional
-    public Board saveBoard(Board board){
+    public Board saveBoard(Board board) {
         if (board.getBoardIdx() == 0) {
             if (!StringUtils.hasText(board.getBoardPassword())) {
                 throw new IllegalArgumentException("Password is required.");
@@ -76,7 +76,7 @@ public class JpaBoardServiceImpl implements JpaBoardService {
 
     @Override
     @Transactional
-    public void deleteBoard(long boardIdx, String password){
+    public void deleteBoard(long boardIdx, String password) {
         Board boardToDelete = boardRepository.findById(boardIdx)
                 .orElseThrow(() -> new NoSuchElementException("Board not found with id: " + boardIdx + " for deletion."));
 

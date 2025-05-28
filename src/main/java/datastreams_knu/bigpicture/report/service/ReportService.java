@@ -66,50 +66,50 @@ public class ReportService {
         String reportType = request.getReportType();
 
         String reportInputText = """
-            1. 환율 데이터
-            %s
+                1. 환율 데이터
+                %s
 
-            2. 한국 금리 데이터
-            %s
+                2. 한국 금리 데이터
+                %s
 
-            3. 미국 금리 데이터
-            %s
+                3. 미국 금리 데이터
+                %s
 
-            4. 뉴스 데이터
-            %s
-            """;
+                4. 뉴스 데이터
+                %s
+                """;
 
         String stockInputText = """
 
-            5. 주가 데이터
-            %s
-            """;
+                5. 주가 데이터
+                %s
+                """;
 
         List<ExchangePromptInputDto> exchanges = exchangeRepository.findAll().stream()
-            .map(exchange -> ExchangePromptInputDto.from(exchange))
-            .collect(Collectors.toList());
+                .map(exchange -> ExchangePromptInputDto.from(exchange))
+                .collect(Collectors.toList());
         String exchangesData = parseToString(exchanges);
 
         List<InterestPromptInputDto> koreaInterests = koreaInterestRepository.findAll().stream()
-            .map(interest -> InterestPromptInputDto.from(interest))
-            .collect(Collectors.toList());
+                .map(interest -> InterestPromptInputDto.from(interest))
+                .collect(Collectors.toList());
         String koreaInterestsData = parseToString(koreaInterests);
 
         List<InterestPromptInputDto> usInterests = usInterestRepository.findAll().stream()
-            .map(interest -> InterestPromptInputDto.from(interest))
-            .collect(Collectors.toList());
+                .map(interest -> InterestPromptInputDto.from(interest))
+                .collect(Collectors.toList());
         String usInterestsData = parseToString(usInterests);
 
         String newsData = "";
         if (reportType.equals("economy")) {
             List<NewsPromptInputDto> koreaNewsList = newsRepository.findAllByKeyword("국내").stream()
-                .map(news -> NewsPromptInputDto.from(news))
-                .collect(Collectors.toList());
+                    .map(news -> NewsPromptInputDto.from(news))
+                    .collect(Collectors.toList());
             String koreaNewsListData = parseToString(koreaNewsList);
 
             List<NewsPromptInputDto> worldNewsList = newsRepository.findAllByKeyword("해외").stream()
-                .map(news -> NewsPromptInputDto.from(news))
-                .collect(Collectors.toList());
+                    .map(news -> NewsPromptInputDto.from(news))
+                    .collect(Collectors.toList());
             String worldNewsListData = parseToString(worldNewsList);
 
             newsData = koreaNewsListData + worldNewsListData;
@@ -117,19 +117,19 @@ public class ReportService {
         if (reportType.equals("stock")) {
             String stockName = request.getStockName();
             CrawlingInfo crawlingInfo = crawlingInfoRepository.findByStockName(stockName)
-                .orElseThrow(IllegalArgumentException::new);
+                    .orElseThrow(IllegalArgumentException::new);
             String keyword = crawlingInfo.getStockKeyword();
 
             List<NewsPromptInputDto> newsList = newsRepository.findAllByKeyword(keyword).stream()
-                .map(news -> NewsPromptInputDto.from(news))
-                .collect(Collectors.toList());
+                    .map(news -> NewsPromptInputDto.from(news))
+                    .collect(Collectors.toList());
             String newsListData = parseToString(newsList);
 
             Stock stock = stockRepository.findByStockName(stockName)
-                .orElseThrow(IllegalArgumentException::new);
+                    .orElseThrow(IllegalArgumentException::new);
             List<StockPromptInputDto> stockInfos = stock.getStockInfos().stream()
-                .map(stockInfo -> StockPromptInputDto.from(stockInfo))
-                .collect(Collectors.toList());
+                    .map(stockInfo -> StockPromptInputDto.from(stockInfo))
+                    .collect(Collectors.toList());
             String stockInfosData = parseToString(stockInfos);
 
             newsData = newsListData;
@@ -142,7 +142,7 @@ public class ReportService {
         String fullInputTest = reportInputText + (reportType.equals("stock") ? stockInputText : "");
 
         String fullPrompt = reportType.equals("economy") ? ECONOMY_REPORT_GENERATION_PROMPT.formatted(request.getRiskTolerance(), request.getReportDifficultyLevel(), parseToString(request.getInterestAreas()), fullInputTest)
-            : STOCK_REPORT_GENERATION_PROMPT.formatted(request.getRiskTolerance(), request.getReportDifficultyLevel(), parseToString(request.getInterestAreas()), fullInputTest);
+                : STOCK_REPORT_GENERATION_PROMPT.formatted(request.getRiskTolerance(), request.getReportDifficultyLevel(), parseToString(request.getInterestAreas()), fullInputTest);
 
         UserMessage prompt = new UserMessage(fullPrompt);
         String response = model.chat(prompt).aiMessage().text();

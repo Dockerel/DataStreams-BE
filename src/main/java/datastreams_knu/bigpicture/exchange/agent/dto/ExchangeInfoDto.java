@@ -18,8 +18,8 @@ public class ExchangeInfoDto {
 
     public static ExchangeInfoDto of(LocalDate date, double rate) {
         return ExchangeInfoDto.builder()
-            .date(date)
-            .rate(rate)
-            .build();
+                .date(date)
+                .rate(rate)
+                .build();
     }
 }

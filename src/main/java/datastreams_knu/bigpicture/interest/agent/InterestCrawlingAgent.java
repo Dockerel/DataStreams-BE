@@ -94,27 +94,27 @@ public class InterestCrawlingAgent {
     private String createKoreaInterestUrl(DateRangeDto dateRange) {
         StringBuilder sb = new StringBuilder();
         sb.append(ecosBaseUrl)
-            .append(ecosApiKey)
-            .append("/json/kr/1/1000/722Y001/M/")
-            .append(dateRange.getStartYear())
-            .append("/")
-            .append(dateRange.getEndYear())
-            .append("/0101000");
+                .append(ecosApiKey)
+                .append("/json/kr/1/1000/722Y001/M/")
+                .append(dateRange.getStartYear())
+                .append("/")
+                .append(dateRange.getEndYear())
+                .append("/0101000");
         return sb.toString();
     }
 
     private String createUSInterestUrl(DateRangeDto dateRange) {
         StringBuilder sb = new StringBuilder();
         sb.append(fredBaseUrl)
-            .append("?series_id=FEDFUNDS")
-            .append("&api_key=")
-            .append(fredApiKey)
-            .append("&file_type=json")
-            .append("&frequency=m")
-            .append("&observation_start=")
-            .append(dateRange.getStartYear())
-            .append("&observation_end=")
-            .append(dateRange.getEndYear());
+                .append("?series_id=FEDFUNDS")
+                .append("&api_key=")
+                .append(fredApiKey)
+                .append("&file_type=json")
+                .append("&frequency=m")
+                .append("&observation_start=")
+                .append(dateRange.getStartYear())
+                .append("&observation_end=")
+                .append(dateRange.getEndYear());
         return sb.toString();
     }
 
@@ -124,18 +124,18 @@ public class InterestCrawlingAgent {
         YearMonth monthsAgoYearMonth = yearMonth.minusMonths(month);
         String formattedYearMonthMonthsAgo = formatYearMonth(monthsAgoYearMonth);
         return DateRangeDto.builder()
-            .startYear(formattedYearMonthMonthsAgo)
-            .endYear(formattedYearMonth)
-            .build();
+                .startYear(formattedYearMonthMonthsAgo)
+                .endYear(formattedYearMonth)
+                .build();
     }
 
     private static DateRangeDto getUSDateRange(int month) {
         LocalDate todayLocalDate = LocalDate.now();
         LocalDate yearsAgoLocalDate = todayLocalDate.minusMonths(month);
         return DateRangeDto.builder()
-            .startYear(yearsAgoLocalDate.toString())
-            .endYear(todayLocalDate.toString())
-            .build();
+                .startYear(yearsAgoLocalDate.toString())
+                .endYear(todayLocalDate.toString())
+                .build();
     }
 
     private static String formatYearMonth(YearMonth yearMonth) {

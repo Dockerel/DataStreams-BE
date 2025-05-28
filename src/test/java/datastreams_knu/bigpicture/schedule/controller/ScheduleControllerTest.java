@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,18 +42,18 @@ class ScheduleControllerTest {
 
         // when
         when(schedulerService.registerCrawlingData(any()))
-            .thenReturn(response);
+                .thenReturn(response);
 
         // then
         mockMvc.perform(
-                post("/api/v1/schedule/register")
-                    .content(objectMapper.writeValueAsString(request))
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code").value("200"))
-            .andExpect(jsonPath("$.status").value("OK"))
-            .andExpect(jsonPath("$.message").value("OK"));
+                        post("/api/v1/schedule/register")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.status").value("OK"))
+                .andExpect(jsonPath("$.message").value("OK"));
     }
 
     @DisplayName("크롤링을 위한 데이터를 등록할 떄 stockType은 필수이다.")
@@ -65,17 +64,17 @@ class ScheduleControllerTest {
 
         // when
         when(schedulerService.registerCrawlingData(any()))
-            .thenReturn(new RegisterCrawlingDataResponse());
+                .thenReturn(new RegisterCrawlingDataResponse());
 
         // then
         mockMvc.perform(
-                post("/api/v1/schedule/register")
-                    .content(objectMapper.writeValueAsString(request))
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.code").value("400"))
-            .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
+                        post("/api/v1/schedule/register")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
     }
 
     @DisplayName("크롤링을 위한 데이터를 등록할 떄 stockName은 필수이다.")
@@ -86,17 +85,17 @@ class ScheduleControllerTest {
 
         // when
         when(schedulerService.registerCrawlingData(any()))
-            .thenReturn(new RegisterCrawlingDataResponse());
+                .thenReturn(new RegisterCrawlingDataResponse());
 
         // then
         mockMvc.perform(
-                post("/api/v1/schedule/register")
-                    .content(objectMapper.writeValueAsString(request))
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.code").value("400"))
-            .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
+                        post("/api/v1/schedule/register")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
     }
 
     @DisplayName("크롤링을 위한 데이터를 등록할 떄 stockType은 'korea' 혹은 'us'만 허용된다.")
@@ -104,28 +103,28 @@ class ScheduleControllerTest {
     void registerCrawlingDataStockTypeTest() throws Exception {
         // given
         String[] wrongStockTypes = {
-            "usa",
-            "koree",
-            "",
-            "u-s",
-            "ko"
+                "usa",
+                "koree",
+                "",
+                "u-s",
+                "ko"
         };
 
         // when
         when(schedulerService.registerCrawlingData(any()))
-            .thenReturn(new RegisterCrawlingDataResponse());
+                .thenReturn(new RegisterCrawlingDataResponse());
 
         // then
         for (String wrongStockType : wrongStockTypes) {
             RegisterCrawlingDataRequest request = RegisterCrawlingDataRequest.of(wrongStockType, "testStockName");
             mockMvc.perform(
-                    post("/api/v1/schedule/register")
-                        .content(objectMapper.writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("400"))
-                .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
+                            post("/api/v1/schedule/register")
+                                    .content(objectMapper.writeValueAsString(request))
+                                    .contentType(MediaType.APPLICATION_JSON)
+                    )
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value("400"))
+                    .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
         }
     }
 }

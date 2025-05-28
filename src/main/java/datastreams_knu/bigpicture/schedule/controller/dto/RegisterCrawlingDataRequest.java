@@ -29,8 +29,8 @@ public class RegisterCrawlingDataRequest {
 
     public static RegisterCrawlingDataRequest of(String stockType, String stockName) {
         return RegisterCrawlingDataRequest.builder()
-            .stockType(stockType)
-            .stockName(stockName)
-            .build();
+                .stockType(stockType)
+                .stockName(stockName)
+                .build();
     }
 }

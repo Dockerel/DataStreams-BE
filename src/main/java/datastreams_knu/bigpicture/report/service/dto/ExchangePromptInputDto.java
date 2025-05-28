@@ -21,8 +21,8 @@ public class ExchangePromptInputDto {
 
     public static ExchangePromptInputDto from(Exchange exchange) {
         return ExchangePromptInputDto.builder()
-            .exchangeDate(exchange.getExchangeDate())
-            .exchangeRate(exchange.getExchangeRate())
-            .build();
+                .exchangeDate(exchange.getExchangeDate())
+                .exchangeRate(exchange.getExchangeRate())
+                .build();
     }
 }

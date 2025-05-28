@@ -32,11 +32,11 @@ public class CreateReportRequest {
 
     public CreateReportServiceRequest toServiceRequest() {
         return CreateReportServiceRequest.builder()
-            .reportType(reportType)
-            .stockName(stockName)
-            .riskTolerance(riskTolerance)
-            .reportDifficultyLevel(reportDifficultyLevel)
-            .interestAreas(interestAreas)
-            .build();
+                .reportType(reportType)
+                .stockName(stockName)
+                .riskTolerance(riskTolerance)
+                .reportDifficultyLevel(reportDifficultyLevel)
+                .interestAreas(interestAreas)
+                .build();
     }
 }

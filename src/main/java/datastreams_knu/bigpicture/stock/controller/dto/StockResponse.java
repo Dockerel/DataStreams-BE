@@ -21,9 +21,9 @@ public class StockResponse {
 
     public static StockResponse of(LocalDate stockDate, double stockPrice) {
         return StockResponse.builder()
-            .stockDate(stockDate)
-            .stockPrice(stockPrice)
-            .build();
+                .stockDate(stockDate)
+                .stockPrice(stockPrice)
+                .build();
     }
 
     public static StockResponse from(StockInfo stockInfo) {

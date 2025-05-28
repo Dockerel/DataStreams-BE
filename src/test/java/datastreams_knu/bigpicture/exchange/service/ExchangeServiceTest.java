@@ -28,9 +28,9 @@ class ExchangeServiceTest {
         LocalDate now = LocalDate.now();
 
         List<Exchange> exchanges = List.of(
-            Exchange.of(now, 0.01),
-            Exchange.of(now, 0.02),
-            Exchange.of(now, 0.03)
+                Exchange.of(now, 0.01),
+                Exchange.of(now, 0.02),
+                Exchange.of(now, 0.03)
         );
 
         exchangeRepository.saveAll(exchanges);

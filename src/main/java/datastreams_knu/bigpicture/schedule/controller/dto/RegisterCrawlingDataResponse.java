@@ -23,17 +23,17 @@ public class RegisterCrawlingDataResponse {
 
     public static RegisterCrawlingDataResponse from(CrawlingInfo crawlingInfo) {
         return RegisterCrawlingDataResponse.builder()
-            .stockType(crawlingInfo.getStockType())
-            .stockName(crawlingInfo.getStockName())
-            .stockKeyword(crawlingInfo.getStockKeyword())
-            .build();
+                .stockType(crawlingInfo.getStockType())
+                .stockName(crawlingInfo.getStockName())
+                .stockKeyword(crawlingInfo.getStockKeyword())
+                .build();
     }
 
     public static RegisterCrawlingDataResponse from(CrawlingSeed crawlingSeed) {
         return RegisterCrawlingDataResponse.builder()
-            .stockType(crawlingSeed.getStockType())
-            .stockName(crawlingSeed.getStockName())
-            .stockKeyword(crawlingSeed.getStockKeyword())
-            .build();
+                .stockType(crawlingSeed.getStockType())
+                .stockName(crawlingSeed.getStockName())
+                .stockKeyword(crawlingSeed.getStockKeyword())
+                .build();
     }
 }

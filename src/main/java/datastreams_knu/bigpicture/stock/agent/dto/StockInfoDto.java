@@ -2,7 +2,6 @@ package datastreams_knu.bigpicture.stock.agent.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDate;
 
@@ -19,8 +18,8 @@ public class StockInfoDto {
 
     public static StockInfoDto of(LocalDate stockDate, double stockPrice) {
         return StockInfoDto.builder()
-            .stockDate(stockDate)
-            .stockPrice(stockPrice)
-            .build();
+                .stockDate(stockDate)
+                .stockPrice(stockPrice)
+                .build();
     }
 }

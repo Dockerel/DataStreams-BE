@@ -18,8 +18,8 @@ public class InterestCrawlingConfig {
     @Bean
     public InterestCrawlingAssistant interestCrawlingAssistant() {
         return AiServices.builder(InterestCrawlingAssistant.class)
-            .chatLanguageModel(aiModelConfig.openAiChatModel())
-            .tools(interestCrawlingAgent)
-            .build();
+                .chatLanguageModel(aiModelConfig.openAiChatModel())
+                .tools(interestCrawlingAgent)
+                .build();
     }
 }
