@@ -32,4 +32,10 @@ public class StockController {
     public ApiResponse<List<StockResponse>> getStockInfos(@RequestParam("stockName") String stockName) {
         return ApiResponse.ok(stockService.getStocks(stockName));
     }
+
+    @GetMapping("/check-ticker")
+    @Operation(summary = "티커 체크", description = "주식 티커 체크")
+    public ApiResponse<Boolean> checkTicker(@RequestParam("ticker") String ticker) {
+        return ApiResponse.ok(stockService.checkTicker(ticker));
+    }
 }
