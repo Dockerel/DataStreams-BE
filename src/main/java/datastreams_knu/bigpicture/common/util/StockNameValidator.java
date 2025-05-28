@@ -1,8 +1,8 @@
 package datastreams_knu.bigpicture.common.util;
 
 import datastreams_knu.bigpicture.common.dto.DateRangeDto;
+import datastreams_knu.bigpicture.common.dto.UsStockCheckDto;
 import datastreams_knu.bigpicture.stock.agent.dto.KoreaStockCrawlingDto;
-import datastreams_knu.bigpicture.stock.agent.dto.USStockCrawlingDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -24,10 +24,8 @@ public class StockNameValidator {
     @Value("${korea-stock.api.key}")
     private String koreaStockApiKey;
 
-    @Value("${us-stock.api.base-url}")
-    private String usStockBaseUrl;
-    @Value("${us-stock.api.key}")
-    private String usStockApiKey;
+    @Value("${python.server.url}")
+    private String pythonServerUrl;
 
     public boolean isInvalidStockName(String stockName, String stockType) {
         return (stockType.equals("korea") && !isExistentKoreaStock(stockName))
@@ -44,15 +42,12 @@ public class StockNameValidator {
         return result.getResponse().getBody().getItems().getItem().size() > 0;
     }
 
-    private boolean isExistentUSStock(String stockName) {
-        DateRangeDto dateRange = getUSStockDateRange();
-        String url = createUSStockUrl(stockName, dateRange);
+    public boolean isExistentUSStock(String stockName) {
+        String url = pythonServerUrl + "/api/v1/stocks/check/" + stockName;
 
-        System.out.println("url = " + url);
+        UsStockCheckDto response = webClientUtil.get(url, UsStockCheckDto.class);
 
-        USStockCrawlingDto response = webClientUtil.get(url, USStockCrawlingDto.class);
-
-        return response.getResults() != null;
+        return response.getData();
     }
 
     private String createKoreaStockUrl(String stockName, DateRangeDto dateRange) {
@@ -72,32 +67,11 @@ public class StockNameValidator {
         return sb.toString();
     }
 
-    private String createUSStockUrl(String stockName, DateRangeDto dateRange) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(usStockBaseUrl);
-        sb.append("ticker/").append(stockName);
-        sb.append("/range/1/day")
-                .append("/" + dateRange.getFromDate())
-                .append("/" + dateRange.getToDate());
-        sb.append("?apiKey=")
-                .append(usStockApiKey);
-        sb.append("&limit=1");
-        return sb.toString();
-    }
-
     private DateRangeDto getKoreaStockDateRange() {
         LocalDate now = LocalDate.now();
         LocalDate past = now.minusYears(YEARS_TO_SUBTRACT);
         String nowDate = parseDate(now);
         String pastDate = parseDate(past);
-        return DateRangeDto.of(pastDate, nowDate);
-    }
-
-    private DateRangeDto getUSStockDateRange() {
-        LocalDate now = LocalDate.now();
-        LocalDate past = now.minusYears(YEARS_TO_SUBTRACT);
-        String pastDate = past.toString();
-        String nowDate = now.toString();
         return DateRangeDto.of(pastDate, nowDate);
     }
 

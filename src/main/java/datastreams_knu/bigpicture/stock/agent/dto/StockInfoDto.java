@@ -2,6 +2,7 @@ package datastreams_knu.bigpicture.stock.agent.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 

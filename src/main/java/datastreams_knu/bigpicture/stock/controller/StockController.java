@@ -21,9 +21,15 @@ public class StockController {
 
     private final StockService stockService;
 
-    @GetMapping
-    @Operation(summary = "주가 데이터 조회", description = "모든 주가 데이터 조회")
-    public ApiResponse<List<StockResponse>> getStocks(@RequestParam("stockName") String stockName) {
+    @GetMapping("/today")
+    @Operation(summary = "오늘 주가 데이터 조회", description = "오늘 주가 데이터 조회")
+    public ApiResponse<StockResponse> getTodayStockInfo(@RequestParam("stockName") String stockName) {
+        return ApiResponse.ok(stockService.getTodayStockInfo(stockName));
+    }
+
+    @GetMapping("/all")
+    @Operation(summary = "세달 동안의 주가 데이터 조회", description = "세달 동안의 주가 데이터 조회")
+    public ApiResponse<List<StockResponse>> getStockInfos(@RequestParam("stockName") String stockName) {
         return ApiResponse.ok(stockService.getStocks(stockName));
     }
 }

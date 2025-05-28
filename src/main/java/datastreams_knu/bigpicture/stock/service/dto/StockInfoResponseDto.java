@@ -1,4 +1,4 @@
-package datastreams_knu.bigpicture.stock.agent.dto;
+package datastreams_knu.bigpicture.stock.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class USStockCrawlingDto {
+public class StockInfoResponseDto {
     private String status;
     private List<Data> data;
 
@@ -17,20 +17,11 @@ public class USStockCrawlingDto {
     @AllArgsConstructor
     @Builder
     @NoArgsConstructor
+    @ToString
     public static class Data {
         @JsonProperty("Date")
         private String date;
         @JsonProperty("Close")
         private double closePrice;
-
-        public static Data of(String date, double closePrice) {
-            return new Data(date, closePrice);
-        }
-    }
-
-    public static USStockCrawlingDto of(List<Data> data) {
-        return USStockCrawlingDto.builder()
-                .data(data)
-                .build();
     }
 }

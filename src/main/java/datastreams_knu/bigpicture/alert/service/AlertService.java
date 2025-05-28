@@ -10,7 +10,7 @@ import datastreams_knu.bigpicture.alert.service.dto.GetMyWatchlistServiceRequest
 import datastreams_knu.bigpicture.alert.service.dto.RegisterFcmTokenServiceRequest;
 import datastreams_knu.bigpicture.alert.service.dto.RegisterWatchlistServiceRequest;
 import datastreams_knu.bigpicture.common.util.StockNameValidator;
-import datastreams_knu.bigpicture.common.util.TickerParser;
+import datastreams_knu.bigpicture.common.util.StockKeywordResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,7 @@ public class AlertService {
     private final MemberWatchlistRepository memberWatchlistRepository;
 
     private final StockNameValidator stockNameValidator;
-    private final TickerParser tickerParser;
+    private final StockKeywordResolver stockKeywordResolver;
 
     @Transactional
     public String registerFcmToken(RegisterFcmTokenServiceRequest request) {
@@ -82,7 +82,7 @@ public class AlertService {
                         throw new IllegalArgumentException("유효하지 않은 stockName 입니다.");
                     }
 
-                    String stockKeyword = stockType.equals("korea") ? stockName : tickerParser.parseTicker(stockName);
+                    String stockKeyword = stockType.equals("korea") ? stockName : stockKeywordResolver.resolve(stockName);
                     Watchlist newWatchlist = Watchlist.of(stockName, stockKeyword);
                     return watchlistRepository.save(newWatchlist);
                 });
