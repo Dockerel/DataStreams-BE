@@ -17,11 +17,8 @@ import org.springframework.stereotype.Component;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,10 +37,8 @@ public class StockCrawlingAgent {
     @Value("${korea-stock.api.key}")
     private String koreaStockApiKey;
 
-    @Value("${us-stock.api.base-url}")
-    private String usStockBaseUrl;
-    @Value("${us-stock.api.key}")
-    private String usStockApiKey;
+    @Value("${python.server.url}")
+    private String pythonServerUrl;
 
     @Tool("주어진 'stockName'에 해당하는 한국 주식의 주가 데이터를 수집합니다.")
     public List<StockInfoDto> crawlingKoreaStockByName(String stockName) {
@@ -55,43 +50,38 @@ public class StockCrawlingAgent {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         return result.getResponse().getBody().getItems().getItem().stream()
-            .map(item -> {
-                LocalDate stockDate = LocalDate.parse(item.getBasDt(), formatter);
-                double stockPrice = Double.parseDouble(item.getClpr());
-                return StockInfoDto.of(stockDate, stockPrice);
-            })
-            .sorted(Comparator.comparing(StockInfoDto::getStockDate))
-            .collect(Collectors.toList());
+                .map(item -> {
+                    LocalDate stockDate = LocalDate.parse(item.getBasDt(), formatter);
+                    double stockPrice = Double.parseDouble(item.getClpr());
+                    return StockInfoDto.of(stockDate, stockPrice);
+                })
+                .sorted(Comparator.comparing(StockInfoDto::getStockDate))
+                .collect(Collectors.toList());
     }
 
     @Tool("주어진 'stockName'에 해당하는 미국 주식의 주가 데이터를 수집합니다.")
     public List<StockInfoDto> crawlingUSStockByTicker(String stockName) {
-        DateRangeDto dateRange = getUSStockDateRange();
-        String url = createUSStockUrl(stockName, dateRange);
+        String url = pythonServerUrl + "/api/v1/stocks/" + stockName;
 
         USStockCrawlingDto response = webClientUtil.get(url, USStockCrawlingDto.class);
 
-        if (response.getResults() == null) {
-            return Collections.emptyList();
-        }
-
-        return response.getResults().stream()
-            .map(result -> {
-                Instant stockInstant = Instant.ofEpochMilli(result.getT());
-                LocalDate stockDate = stockInstant.atZone(ZoneId.of("Asia/Seoul")).toLocalDate();
-                return StockInfoDto.of(stockDate, result.getC());
-            })
-            .collect(Collectors.toList());
+        return response.getData().stream()
+                .map(data -> {
+                    LocalDate stockDate = LocalDate.parse(data.getDate().split("T")[0]);
+                    double stockPrice = Math.round(data.getClosePrice() * 100.0) / 100.0;
+                    return StockInfoDto.of(stockDate, stockPrice);
+                })
+                .collect(Collectors.toList());
     }
 
     @Tool("크롤링 된 주가 데이터를 주식의 'type'과 'stockName'과 함께 DB에 저장하고 처리 성공 여부를 반환합니다.")
     public CrawlingResultDto saveStock(String type, String stockName, List<StockInfoDto> stockInfos) {
         Stock stock = stockRepository.findByStockName(stockName)
-            .orElse(Stock.of(stockName, getStockType(type)));
+                .orElse(Stock.of(stockName, getStockType(type)));
 
         stockInfos.stream()
-            .map(info -> StockInfo.of(info.getStockPrice(), info.getStockDate()))
-            .forEach(stock::addStockInfo);
+                .map(info -> StockInfo.of(info.getStockPrice(), info.getStockDate()))
+                .forEach(stock::addStockInfo);
 
         stockRepository.save(stock);
 
@@ -106,28 +96,16 @@ public class StockCrawlingAgent {
         StringBuilder sb = new StringBuilder();
         sb.append(koreaStockBaseUrl);
         sb.append("?serviceKey=")
-            .append(koreaStockApiKey);
+                .append(koreaStockApiKey);
         sb.append("&itmsNm=")
-            .append(stockName);
+                .append(stockName);
         sb.append("&beginBasDt=")
-            .append(dateRange.getFromDate());
+                .append(dateRange.getFromDate());
         sb.append("&endBasDt=")
-            .append(dateRange.getToDate());
+                .append(dateRange.getToDate());
         sb.append("&resultType=json")
-            .append("&numOfRows=50");
+                .append("&numOfRows=50");
 
-        return sb.toString();
-    }
-
-    private String createUSStockUrl(String stockName, DateRangeDto dateRange) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(usStockBaseUrl);
-        sb.append("ticker/").append(stockName);
-        sb.append("/range/1/day")
-            .append("/" + dateRange.getFromDate())
-            .append("/" + dateRange.getToDate());
-        sb.append("?apiKey=")
-            .append(usStockApiKey);
         return sb.toString();
     }
 
