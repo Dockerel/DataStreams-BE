@@ -52,7 +52,6 @@ public class StockService {
     public Boolean checkTicker(String ticker) {
         String url = pythonServerUrl + "/api/v1/stocks/check/" + ticker;
         CheckTickerResponseDto response = webClientUtil.get(url, CheckTickerResponseDto.class);
-        System.out.println("status = " + response.getStatus());
         return response.getIsValidTicker();
     }
 
