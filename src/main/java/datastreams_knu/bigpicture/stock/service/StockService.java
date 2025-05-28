@@ -3,6 +3,7 @@ package datastreams_knu.bigpicture.stock.service;
 import datastreams_knu.bigpicture.common.util.StockKeywordResolver;
 import datastreams_knu.bigpicture.common.util.WebClientUtil;
 import datastreams_knu.bigpicture.stock.controller.dto.StockResponse;
+import datastreams_knu.bigpicture.stock.service.dto.CheckTickerResponseDto;
 import datastreams_knu.bigpicture.stock.service.dto.StockInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +47,12 @@ public class StockService {
         Data data = response.getData().get(0);
         LocalDate date = LocalDate.parse(data.getDate().split("T")[0]);
         return StockResponse.of(date, data.getClosePrice());
+    }
+
+    public Boolean checkTicker(String ticker) {
+        String url = pythonServerUrl + "/api/v1/stocks/check/" + ticker;
+        CheckTickerResponseDto response = webClientUtil.get(url, CheckTickerResponseDto.class);
+        return response.getIsValidTicker();
     }
 
     private static String getDateRange() {
