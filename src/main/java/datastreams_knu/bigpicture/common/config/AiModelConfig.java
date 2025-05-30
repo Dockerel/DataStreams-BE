@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.Duration;
 
+import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O;
 import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 
 @Configuration
@@ -24,7 +25,7 @@ public class AiModelConfig {
     public ChatLanguageModel openAiChatModel() {
         return OpenAiChatModel.builder()
                 .apiKey(OPENAI_API_KEY)
-                .modelName(GPT_4_O_MINI)
+                .modelName(GPT_4_O)
                 .timeout(Duration.ofSeconds(120))
                 .strictTools(true)
                 .build();
