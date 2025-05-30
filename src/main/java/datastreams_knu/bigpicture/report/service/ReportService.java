@@ -28,7 +28,7 @@ import static datastreams_knu.bigpicture.report.util.ReportPrompt.STOCK_REPORT_G
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-@Service
+@Service("oldReportService")
 public class ReportService {
 
     private final ExchangeRepository exchangeRepository;
