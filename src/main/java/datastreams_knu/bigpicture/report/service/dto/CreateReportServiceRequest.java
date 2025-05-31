@@ -2,16 +2,14 @@ package datastreams_knu.bigpicture.report.service.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
-@ToString
 public class CreateReportServiceRequest {
+    // economy, stock
     String reportType;
+    // reportType이 economy인 경우는 "", stock인 경우는 stockName(주식명 or 티커)
     String stockName;
 
     // 위험 수용 성향

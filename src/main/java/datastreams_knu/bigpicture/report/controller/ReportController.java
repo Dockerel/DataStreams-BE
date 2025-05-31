@@ -3,7 +3,7 @@ package datastreams_knu.bigpicture.report.controller;
 import datastreams_knu.bigpicture.common.domain.ApiResponse;
 import datastreams_knu.bigpicture.report.controller.dto.CreateReportRequest;
 import datastreams_knu.bigpicture.report.service.ReportService;
-import datastreams_knu.bigpicture.report.service.dto.ReportDto;
+import datastreams_knu.bigpicture.report.service.dto.CreateReportResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class ReportController {
 
     @PostMapping
     @Operation(summary = "레포트 생성", description = "레포트 생성")
-    public ApiResponse<ReportDto> createReport(@RequestBody CreateReportRequest request) {
+    public ApiResponse<CreateReportResponse> createReport(@RequestBody CreateReportRequest request) {
         return ApiResponse.ok(reportService.createReport(request.toServiceRequest()));
     }
 }
