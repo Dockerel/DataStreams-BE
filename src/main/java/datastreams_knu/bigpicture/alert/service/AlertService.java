@@ -1,20 +1,21 @@
 package datastreams_knu.bigpicture.alert.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import datastreams_knu.bigpicture.alert.entity.Member;
 import datastreams_knu.bigpicture.alert.entity.Watchlist;
 import datastreams_knu.bigpicture.alert.repository.MemberRepository;
 import datastreams_knu.bigpicture.alert.repository.MemberWatchlistRepository;
 import datastreams_knu.bigpicture.alert.repository.WatchlistRepository;
-import datastreams_knu.bigpicture.alert.service.dto.DeleteWatchlistServiceRequest;
-import datastreams_knu.bigpicture.alert.service.dto.GetMyWatchlistServiceRequest;
-import datastreams_knu.bigpicture.alert.service.dto.RegisterFcmTokenServiceRequest;
-import datastreams_knu.bigpicture.alert.service.dto.RegisterWatchlistServiceRequest;
+import datastreams_knu.bigpicture.alert.service.dto.*;
+import datastreams_knu.bigpicture.common.exception.ObjectMapperException;
 import datastreams_knu.bigpicture.common.util.StockKeywordResolver;
 import datastreams_knu.bigpicture.common.util.StockNameValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,9 @@ public class AlertService {
 
     private final StockNameValidator stockNameValidator;
     private final StockKeywordResolver stockKeywordResolver;
+
+    private final FcmService fcmService;
+    private final ObjectMapper objectMapper;
 
     @Transactional
     public String registerFcmToken(RegisterFcmTokenServiceRequest request) {
@@ -92,5 +96,27 @@ public class AlertService {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 uuid 입니다."));
         return member;
+    }
+
+    public String sendTestFcmRequest() {
+        List<Member> members = memberRepository.findAll();
+        members.stream()
+                .forEach(member -> {
+                    String fcmToken = member.getFcmToken();
+                    AlertNewsResponse body = AlertNewsResponse.of(
+                            LocalDateTime.now(),
+                            "https://www.yna.co.kr/view/AKR20250523021800017",
+                            "삼성전자",
+                            "초슬림형 '갤S25 엣지' 국내 출시…\"사전판매서 젊은 세대 관심\""
+                    );
+                    String bodyString = null;
+                    try {
+                        bodyString = objectMapper.writeValueAsString(body);
+                    } catch (JsonProcessingException e) {
+                        throw new ObjectMapperException("직렬화 중 예외가 발생하였습니다.", e);
+                    }
+                    fcmService.sendMessageTo(fcmToken, "Test Notification", bodyString);
+                });
+        return "test fcm requested";
     }
 }

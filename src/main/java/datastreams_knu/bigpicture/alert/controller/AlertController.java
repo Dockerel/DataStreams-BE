@@ -37,4 +37,9 @@ public class AlertController {
     public ApiResponse<String> deleteWatchlist(@RequestBody DeleteWatchlistRequest request) {
         return ApiResponse.ok(alertService.deleteWatchlist(request.toServiceRequest()));
     }
+
+    @GetMapping("/test")
+    public ApiResponse<String> testFcm() {
+        return ApiResponse.ok(alertService.sendTestFcmRequest());
+    }
 }

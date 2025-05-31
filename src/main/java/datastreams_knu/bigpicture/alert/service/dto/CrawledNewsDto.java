@@ -28,9 +28,6 @@ public class CrawledNewsDto {
         public String DATETIME;
         public String CID;
         public String KEYWORD;
-        public String BODY;
         public String EDIT_TITLE;
-        public String WRITER_NAME;
-        public String THUMBNAIL;
     }
 }

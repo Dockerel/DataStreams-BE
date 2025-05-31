@@ -17,40 +17,37 @@ public class AlertNewsResponse {
     public LocalDateTime newsLocalDateTime;
     public String url;
     public String keyword;
-    public String content;
     public String title;
-    public String writer;
-    public String thumbnailUrl;
 
     @Builder
-    public AlertNewsResponse(LocalDateTime newsLocalDateTime, String url, String keyword, String content, String title, String writer, String thumbnailUrl) {
+    public AlertNewsResponse(LocalDateTime newsLocalDateTime, String url, String keyword, String title) {
         this.newsLocalDateTime = newsLocalDateTime;
         this.url = url;
         this.keyword = keyword;
-        this.content = content;
         this.title = title;
-        this.writer = writer;
-        this.thumbnailUrl = thumbnailUrl;
     }
 
-    public static AlertNewsResponse from(Result result, String summarizedContent) {
+    public static AlertNewsResponse of(LocalDateTime newsLocalDateTime, String url, String keyword, String title) {
+        return AlertNewsResponse.builder()
+                .newsLocalDateTime(newsLocalDateTime)
+                .url(url)
+                .keyword(keyword)
+                .title(title)
+                .build();
+    }
+
+    public static AlertNewsResponse from(Result result) {
         String dateStr = result.getDATETIME();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
 
         String url = "https://www.yna.co.kr/view/" + result.getCID();
 
-        String thumbnailBaseUrl = "https://img4.yna.co.kr";
-        String thumbnailUrl = thumbnailBaseUrl + result.getTHUMBNAIL().replace("T.jpg", "P4.jpg");
-
-        return AlertNewsResponse.builder()
-                .newsLocalDateTime(dateTime)
-                .url(url)
-                .keyword(result.getKEYWORD().replace("\r\n", ", "))
-                .content(summarizedContent)
-                .title(result.getEDIT_TITLE())
-                .writer(result.getWRITER_NAME())
-                .thumbnailUrl(thumbnailUrl)
-                .build();
+        return AlertNewsResponse.of(
+                dateTime,
+                url,
+                result.getKEYWORD().replace("\r\n", ", "),
+                result.getEDIT_TITLE()
+        );
     }
 }
