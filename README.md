@@ -17,3 +17,6 @@
 
 ## 웹 서버 아키텍처
 ![웹서버 아키텍처](./images/architecture.png)
+
+## 레포트 생성 아키텍처
+![웹서버 아키텍처](./images/report_generation_architecture.jpg)
