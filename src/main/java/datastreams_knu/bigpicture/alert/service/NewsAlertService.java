@@ -6,12 +6,10 @@ import datastreams_knu.bigpicture.alert.entity.Watchlist;
 import datastreams_knu.bigpicture.alert.repository.WatchlistRepository;
 import datastreams_knu.bigpicture.alert.service.dto.AlertNewsResponse;
 import datastreams_knu.bigpicture.alert.service.dto.CrawledNewsDto;
-import datastreams_knu.bigpicture.alert.service.dto.SummarizedNewsDto;
 import datastreams_knu.bigpicture.common.config.AiModelConfig;
 import datastreams_knu.bigpicture.common.dto.DateRangeDto;
 import datastreams_knu.bigpicture.common.exception.ObjectMapperException;
 import datastreams_knu.bigpicture.common.util.WebClientUtil;
-import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +25,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static datastreams_knu.bigpicture.alert.service.dto.CrawledNewsDto.Result;
-import static datastreams_knu.bigpicture.alert.service.prompt.AlertPrompt.ALERT_NEWS_PROMPT;
 
 @RequiredArgsConstructor
 @Service
@@ -63,7 +60,7 @@ public class NewsAlertService {
                     watchlist.getMemberWatchlists().stream()
                             .forEach(memberWatchlist -> {
                                 String fcmToken = memberWatchlist.getMember().getFcmToken();
-                                fcmService.sendMessageTo(fcmToken, "뉴스 알림", newsMessage);
+                                fcmService.sendMessageTo(fcmToken, "News Notification", newsMessage);
                             });
                 });
     }
@@ -93,34 +90,9 @@ public class NewsAlertService {
                     return dateTime.isAfter(targetLocalDateTime);
                 })
                 .map(result -> {
-                    String summarizedContent = summarizeNews(result);
-                    return AlertNewsResponse.from(result, summarizedContent);
+                    return AlertNewsResponse.from(result);
                 })
                 .collect(Collectors.toList());
-    }
-
-    public String summarizeNews(Result result) {
-        try {
-            String promptText = ALERT_NEWS_PROMPT;
-
-            List<String> var = List.of(result.getKEYWORD(), result.getEDIT_TITLE(), result.getBODY());
-
-            UserMessage prompt = createPrompt(promptText, var);
-
-            String response = model.chat(prompt).aiMessage().text();
-
-            SummarizedNewsDto summarizedNewsDto = objectMapper.readValue(response, SummarizedNewsDto.class);
-
-            return summarizedNewsDto.getSummary();
-        } catch (JsonProcessingException e) {
-            return result.getBODY();
-        }
-    }
-
-    private UserMessage createPrompt(String promptText, List<String> var) {
-        String prompt = promptText.formatted(var.toArray());
-        UserMessage userMessage = new UserMessage(prompt);
-        return userMessage;
     }
 
     private static String createUrl(Map<String, String> params) {
