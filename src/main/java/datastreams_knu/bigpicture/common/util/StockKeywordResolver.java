@@ -21,6 +21,9 @@ public class StockKeywordResolver {
         String encodedStockKeyword = URLEncoder.encode(stockKeyword, StandardCharsets.UTF_8);
         String url = pythonServerUrl + "/api/v1/stocks/resolve-keyword/" + encodedStockKeyword;
         StockKeywordResolverResponseDto response = webClientUtil.get(url, StockKeywordResolverResponseDto.class);
+        if (response.getStatus().equals("400")) {
+            throw new IllegalArgumentException("유효하지 않은 stockKeyword입니다.");
+        }
         return response.getStockName();
     }
 }
