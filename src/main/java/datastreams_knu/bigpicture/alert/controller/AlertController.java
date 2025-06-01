@@ -1,7 +1,6 @@
 package datastreams_knu.bigpicture.alert.controller;
 
 import datastreams_knu.bigpicture.alert.controller.dto.DeleteWatchlistRequest;
-import datastreams_knu.bigpicture.alert.controller.dto.GetMyWatchlistRequest;
 import datastreams_knu.bigpicture.alert.controller.dto.RegisterFcmTokenRequest;
 import datastreams_knu.bigpicture.alert.controller.dto.RegisterWatchlistRequest;
 import datastreams_knu.bigpicture.alert.service.AlertService;
@@ -24,8 +23,8 @@ public class AlertController {
     }
 
     @GetMapping
-    public ApiResponse<List<String>> getMyWatchlist(@RequestBody GetMyWatchlistRequest request) {
-        return ApiResponse.ok(alertService.getMyWatchlist(request.toServiceRequest()));
+    public ApiResponse<List<String>> getMyWatchlist(@RequestParam("uuid") String uuid) {
+        return ApiResponse.ok(alertService.getMyWatchlist(uuid));
     }
 
     @PostMapping

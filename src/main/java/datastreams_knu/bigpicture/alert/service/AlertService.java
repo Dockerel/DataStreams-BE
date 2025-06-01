@@ -44,8 +44,8 @@ public class AlertService {
         return "FCM 토큰이 등록되었습니다.";
     }
 
-    public List<String> getMyWatchlist(GetMyWatchlistServiceRequest request) {
-        Member member = memberRepository.findWithWatchlistsById(request.getUuid())
+    public List<String> getMyWatchlist(String uuid) {
+        Member member = memberRepository.findWithWatchlistsById(uuid)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 uuid 입니다."));
 
         return member.getMemberWatchlists().stream()
