@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,7 +52,8 @@ public class StockService {
     }
 
     public Boolean checkTicker(String ticker) {
-        String url = pythonServerUrl + "/api/v1/stocks/check/" + ticker;
+        String encodedTicker = URLEncoder.encode(ticker, StandardCharsets.UTF_8);
+        String url = pythonServerUrl + "/api/v1/stocks/check/" + encodedTicker;
         CheckTickerResponseDto response = webClientUtil.get(url, CheckTickerResponseDto.class);
         return response.getIsValidTicker();
     }
