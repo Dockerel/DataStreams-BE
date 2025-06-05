@@ -71,7 +71,7 @@ public class ReportService {
         // : 경제 레포트 생성 요청이면 [6] 으로 이동
         String reportType = request.getReportType();
         String stockReport = "";
-        String stockInfosString = null;
+        String stockInfosString = "";
         if (reportType.equals("stock")) {
             String stockName = request.getStockName();
             summaryKeyword = stockName;
