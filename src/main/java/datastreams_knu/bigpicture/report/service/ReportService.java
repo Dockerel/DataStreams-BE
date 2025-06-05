@@ -71,13 +71,14 @@ public class ReportService {
         // : 경제 레포트 생성 요청이면 [6] 으로 이동
         String reportType = request.getReportType();
         String stockReport = "";
+        String stockInfosString = null;
         if (reportType.equals("stock")) {
             String stockName = request.getStockName();
             summaryKeyword = stockName;
             // 3. 주가, 주식 뉴스 불러오기
             String keyword = getStockKeyword(stockName);
             String stockNewsString = getStockNews(keyword);
-            String stockInfosString = getStockInfosData(stockName);
+            stockInfosString = getStockInfosData(stockName);
             // 4. (경제 레포트 + 주가 + 주식 뉴스)로 주식 레포트 생성 및 평가
             stockReport = createAndEvaluateStockReport(stockReport, stockName, economyReport, stockInfosString, stockNewsString, paramString);
             // 5. 두 레포트(경제 레포트, 주식 레포트) 수합
@@ -88,7 +89,7 @@ public class ReportService {
         // 7. 요약 레포트로 제목 생성 및 평가
         String reportTitle = createAndEvaluateReportTitle(summaryReport, paramString);
         // 8. 제목, 요약 레포트, 경제 레포트, 주식 레포트 결과로 반환
-        return CreateReportResponse.of(reportTitle, summaryReport, economyReport, stockReport);
+        return CreateReportResponse.of(reportTitle, summaryReport, economyReport, stockReport, exchangesString, koreaInterestsString, usInterestsString, stockInfosString);
     }
 
     private String createAndEvaluateSummaryReport(String summaryKeyword, String fullReport, String paramString) {
