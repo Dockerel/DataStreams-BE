@@ -7,10 +7,7 @@ import com.google.common.net.HttpHeaders;
 import datastreams_knu.bigpicture.alert.service.dto.FcmRequest;
 import datastreams_knu.bigpicture.common.exception.ObjectMapperException;
 import lombok.RequiredArgsConstructor;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
+import okhttp3.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -40,8 +37,10 @@ public class FcmService {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MEDIA_TYPE)
                 .build();
 
-        try {
-            client.newCall(request).execute();
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("FCM 요청 실패: " + response.code() + " - " + response.message());
+            }
         } catch (IOException e) {
             throw new UncheckedIOException("FCM 메시지 전송 중 I/O 오류가 발생했습니다", e);
         }
