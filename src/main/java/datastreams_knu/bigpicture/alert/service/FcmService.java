@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.net.HttpHeaders;
+import datastreams_knu.bigpicture.alert.repository.MemberRepository;
 import datastreams_knu.bigpicture.alert.service.dto.FcmRequest;
 import datastreams_knu.bigpicture.common.exception.ObjectMapperException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class FcmService {
@@ -22,6 +25,7 @@ public class FcmService {
     public final String MEDIA_TYPE = "application/json; charset=utf-8";
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/bigpicture-c2798/messages:send";
 
+    private final MemberRepository memberRepository;
     private final ObjectMapper objectMapper;
 
     public void sendMessageTo(String fcmToken, String title, String body) {
@@ -42,7 +46,8 @@ public class FcmService {
                 throw new IOException("FCM 요청 실패: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new UncheckedIOException("FCM 메시지 전송 중 I/O 오류가 발생했습니다", e);
+            log.warn("FCM Error Log | fcmToken: {} | message: {}", fcmToken, e.getMessage());
+            memberRepository.deleteByFcmToken(fcmToken);
         }
     }
 

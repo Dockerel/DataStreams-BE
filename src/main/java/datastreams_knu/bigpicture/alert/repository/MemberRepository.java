@@ -18,4 +18,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             WHERE m.id = :id
             """)
     Optional<Member> findWithWatchlistsById(@Param("id") String id);
+
+    void deleteByFcmToken(String fcmToken);
 }
