@@ -26,4 +26,6 @@ public class StockKeywordResolver {
         }
         return response.getStockName();
     }
+
+
 }

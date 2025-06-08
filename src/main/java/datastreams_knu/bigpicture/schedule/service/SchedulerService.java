@@ -1,7 +1,7 @@
 package datastreams_knu.bigpicture.schedule.service;
 
-import datastreams_knu.bigpicture.common.util.StockKeywordResolver;
 import datastreams_knu.bigpicture.common.util.StockNameValidator;
+import datastreams_knu.bigpicture.common.util.TickerParser;
 import datastreams_knu.bigpicture.common.util.WebClientUtil;
 import datastreams_knu.bigpicture.schedule.controller.dto.RegisterCrawlingDataResponse;
 import datastreams_knu.bigpicture.schedule.entity.CrawlingInfo;
@@ -35,8 +35,8 @@ public class SchedulerService {
     private final CrawlingInfoRepository crawlingInfoRepository;
     private final CrawlingSeedRepository crawlingSeedRepository;
 
-    private final StockKeywordResolver stockKeywordResolver;
     private final StockNameValidator stockNameValidator;
+    private final TickerParser tickerParser;
 
     public RegisterCrawlingDataResponse registerCrawlingData(RegisterCrawlingDataServiceRequest request) {
         // 이미 존재하는 크롤링 정보
@@ -47,7 +47,7 @@ public class SchedulerService {
 
         String crawlingKeyword = request.getStockName();
         if (request.getStockType().equals("us")) {
-            crawlingKeyword = stockKeywordResolver.resolve(request.getStockName());
+            crawlingKeyword = tickerParser.parseTicker(request.getStockName());
         }
 
         // 실제 있는 stock인지 확인 필요

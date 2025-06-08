@@ -7,10 +7,13 @@ import datastreams_knu.bigpicture.alert.entity.Watchlist;
 import datastreams_knu.bigpicture.alert.repository.MemberRepository;
 import datastreams_knu.bigpicture.alert.repository.MemberWatchlistRepository;
 import datastreams_knu.bigpicture.alert.repository.WatchlistRepository;
-import datastreams_knu.bigpicture.alert.service.dto.*;
+import datastreams_knu.bigpicture.alert.service.dto.AlertNewsResponse;
+import datastreams_knu.bigpicture.alert.service.dto.DeleteWatchlistServiceRequest;
+import datastreams_knu.bigpicture.alert.service.dto.RegisterFcmTokenServiceRequest;
+import datastreams_knu.bigpicture.alert.service.dto.RegisterWatchlistServiceRequest;
 import datastreams_knu.bigpicture.common.exception.ObjectMapperException;
-import datastreams_knu.bigpicture.common.util.StockKeywordResolver;
 import datastreams_knu.bigpicture.common.util.StockNameValidator;
+import datastreams_knu.bigpicture.common.util.TickerParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +32,7 @@ public class AlertService {
     private final MemberWatchlistRepository memberWatchlistRepository;
 
     private final StockNameValidator stockNameValidator;
-    private final StockKeywordResolver stockKeywordResolver;
+    private final TickerParser tickerParser;
 
     private final FcmService fcmService;
     private final ObjectMapper objectMapper;
@@ -86,7 +89,8 @@ public class AlertService {
                         throw new IllegalArgumentException("유효하지 않은 stockName 입니다.");
                     }
 
-                    String stockKeyword = stockType.equals("korea") ? stockName : stockKeywordResolver.resolve(stockName);
+                    String stockKeyword = stockType.equals("korea") ? stockName : tickerParser.parseTicker(stockName);
+                    ;
                     Watchlist newWatchlist = Watchlist.of(stockName, stockKeyword);
                     return watchlistRepository.save(newWatchlist);
                 });
