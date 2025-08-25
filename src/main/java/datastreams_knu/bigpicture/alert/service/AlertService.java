@@ -111,7 +111,8 @@ public class AlertService {
                             LocalDateTime.now(),
                             "https://www.yna.co.kr/view/AKR20250523021800017",
                             "삼성전자",
-                            "초슬림형 '갤S25 엣지' 국내 출시…\"사전판매서 젊은 세대 관심\""
+                            "초슬림형 '갤S25 엣지' 국내 출시…\"사전판매서 젊은 세대 관심\"",
+                            "CID"
                     );
                     String bodyString = null;
                     try {

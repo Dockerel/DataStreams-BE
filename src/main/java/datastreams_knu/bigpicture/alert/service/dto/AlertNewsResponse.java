@@ -18,21 +18,24 @@ public class AlertNewsResponse {
     public String url;
     public String keyword;
     public String title;
+    public String newsId;
 
     @Builder
-    public AlertNewsResponse(LocalDateTime newsLocalDateTime, String url, String keyword, String title) {
+    public AlertNewsResponse(LocalDateTime newsLocalDateTime, String url, String keyword, String title, String newsId) {
         this.newsLocalDateTime = newsLocalDateTime;
         this.url = url;
         this.keyword = keyword;
         this.title = title;
+        this.newsId = newsId;
     }
 
-    public static AlertNewsResponse of(LocalDateTime newsLocalDateTime, String url, String keyword, String title) {
+    public static AlertNewsResponse of(LocalDateTime newsLocalDateTime, String url, String keyword, String title, String newsId) {
         return AlertNewsResponse.builder()
                 .newsLocalDateTime(newsLocalDateTime)
                 .url(url)
                 .keyword(keyword)
                 .title(title)
+                .newsId(newsId)
                 .build();
     }
 
@@ -47,7 +50,8 @@ public class AlertNewsResponse {
                 dateTime,
                 url,
                 result.getKEYWORD().replace("\r\n", ", "),
-                result.getEDIT_TITLE()
+                result.getEDIT_TITLE(),
+                result.getCID()
         );
     }
 }
