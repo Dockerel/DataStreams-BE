@@ -21,7 +21,7 @@ public class RetryExecutor {
                     return;
                 }
             } catch (Exception e) {
-                log.warn("{}: {}번째 시도 중 예외 발생 - {}", taskName, i + 1, message);
+                log.warn("{}: {}번째 시도 중 예외 발생 - {}", taskName, i + 1, e.getMessage());
             }
         }
     }

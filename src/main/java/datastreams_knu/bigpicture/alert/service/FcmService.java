@@ -10,6 +10,7 @@ import datastreams_knu.bigpicture.common.exception.ObjectMapperException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ import java.util.List;
 @Service
 public class FcmService {
 
-    public final String MEDIA_TYPE = "application/json; charset=utf-8";
+    private final String MEDIA_TYPE = "application/json; charset=utf-8";
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/bigpicture-c2798/messages:send";
 
     private final MemberRepository memberRepository;
@@ -32,15 +33,25 @@ public class FcmService {
         String message = makeMessage(fcmToken, title, body);
 
         OkHttpClient client = new OkHttpClient();
+
         RequestBody requestBody = RequestBody.create(message,
                 MediaType.get(MEDIA_TYPE));
+        Request request = makeRequest(requestBody);
+
+        sendMessage(fcmToken, client, request);
+    }
+
+    private Request makeRequest(RequestBody requestBody) {
         Request request = new Request.Builder()
                 .url(API_URL)
                 .post(requestBody)
                 .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
                 .addHeader(HttpHeaders.CONTENT_TYPE, MEDIA_TYPE)
                 .build();
+        return request;
+    }
 
+    private void sendMessage(String fcmToken, OkHttpClient client, Request request) {
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
                 throw new IOException("FCM 요청 실패: " + response.code() + " - " + response.message());

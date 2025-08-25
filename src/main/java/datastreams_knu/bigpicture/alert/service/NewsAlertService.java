@@ -73,6 +73,7 @@ public class NewsAlertService {
         }
     }
 
+    // todo : filter 기준 하나 더 넣어서 개선, notnull 검사, 감성 분석(진짜 관련 있는 뉴스인지 llm으로 판단)
     public List<AlertNewsResponse> crawlingNews(String keyword, LocalDateTime targetLocalDateTime) {
         Map<String, String> params = Map.of("&query=", URLEncoder.encode(keyword, StandardCharsets.UTF_8));
 
@@ -89,9 +90,7 @@ public class NewsAlertService {
                     LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
                     return dateTime.isAfter(targetLocalDateTime);
                 })
-                .map(result -> {
-                    return AlertNewsResponse.from(result);
-                })
+                .map(result -> AlertNewsResponse.from(result))
                 .collect(Collectors.toList());
     }
 

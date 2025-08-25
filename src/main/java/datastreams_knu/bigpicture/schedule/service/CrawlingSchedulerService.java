@@ -10,6 +10,7 @@ import datastreams_knu.bigpicture.schedule.repository.CrawlingSeedRepository;
 import datastreams_knu.bigpicture.schedule.util.RetryExecutor;
 import datastreams_knu.bigpicture.stock.service.StockCrawlingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.List;
 @Service
 public class CrawlingSchedulerService {
 
+    private final static int RETRY_COUNT = 3;
     public static final int INTEREST_DATA_TARGET_MONTH = 1;
 
     private final ExchangeCrawlingService exchangeCrawlingService;
@@ -31,6 +33,14 @@ public class CrawlingSchedulerService {
 
     public void exchangeCrawling() {
         RetryExecutor.execute(() -> exchangeCrawlingService.crawling(), "ExchangeCrawlingService");
+    }
+
+    @Retryable(
+            retryFor = Exception.class,
+            maxAttempts = RETRY_COUNT
+    )
+    public void newExchangeCrawling() {
+        exchangeCrawlingService.crawling();
     }
 
     public void interestCrawling() {
