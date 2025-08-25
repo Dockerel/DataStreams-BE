@@ -95,8 +95,8 @@ public class NewsAlertService {
 
         return crawledNewsResults.stream()
                 .filter(Objects::nonNull)
-                .filter(result -> analysisNewsSentiment(result))
                 .filter(result -> findRecentNews(targetLocalDateTime, result))
+                .filter(result -> analysisNewsSentiment(result))
                 .map(result -> AlertNewsResponse.from(result))
                 .collect(Collectors.toList());
     }
