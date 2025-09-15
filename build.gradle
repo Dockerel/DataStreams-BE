@@ -40,9 +40,9 @@ dependencies {
     // Database
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    // AI / LangChain
-    implementation 'dev.langchain4j:langchain4j:1.0.0-beta1'
-    implementation 'dev.langchain4j:langchain4j-google-ai-gemini:1.0.0-beta1'
+    // AI
+    implementation 'dev.langchain4j:langchain4j-open-ai:1.4.0'
+    implementation 'dev.langchain4j:langchain4j:1.4.0'
 
     // Web Scraping
     implementation 'org.jsoup:jsoup:1.15.3'

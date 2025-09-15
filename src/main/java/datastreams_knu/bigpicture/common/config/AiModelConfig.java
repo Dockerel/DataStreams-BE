@@ -1,7 +1,7 @@
 package datastreams_knu.bigpicture.common.config;
 
-import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.openai.OpenAiChatModelName;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,14 +9,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AiModelConfig {
 
-    @Value("${gemini.api.key}")
-    public String GEMINI_API_KEY;
+    @Value("${openai.api.key}")
+    private String OPENAI_API_KEY;
 
     @Bean
-    public ChatLanguageModel geminiChatModel() {
-        return GoogleAiGeminiChatModel.builder()
-                .apiKey(GEMINI_API_KEY)
-                .modelName("gemini-2.0-flash")
+    public OpenAiChatModel openAiChatModel() {
+        return OpenAiChatModel.builder()
+                .apiKey(OPENAI_API_KEY)
+                .modelName(OpenAiChatModelName.GPT_4_O_MINI)
                 .build();
     }
 }

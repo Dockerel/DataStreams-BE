@@ -14,7 +14,7 @@ import datastreams_knu.bigpicture.schedule.repository.CrawlingInfoRepository;
 import datastreams_knu.bigpicture.stock.entity.Stock;
 import datastreams_knu.bigpicture.stock.repository.StockRepository;
 import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,11 +44,11 @@ public class ReportService {
 
     private final AiModelConfig aiModelConfig;
 
-    private ChatLanguageModel model;
+    private ChatModel model;
 
     @PostConstruct
     public void init() {
-        this.model = aiModelConfig.geminiChatModel();
+        this.model = aiModelConfig.openAiChatModel();
     }
 
     // 개인화된 파라미터를 없애고 reportType, stockName으로만 리포트 생성

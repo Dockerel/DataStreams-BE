@@ -13,7 +13,7 @@ import datastreams_knu.bigpicture.common.exception.ObjectMapperException;
 import datastreams_knu.bigpicture.common.util.WebClientUtil;
 import datastreams_knu.bigpicture.news.exception.NewsCrawlingException;
 import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -50,11 +50,11 @@ public class NewsAlertService {
     private final AiModelConfig aiModelConfig;
     private final ObjectMapper objectMapper;
 
-    private ChatLanguageModel model;
+    private ChatModel model;
 
     @PostConstruct
     public void init() {
-        this.model = aiModelConfig.geminiChatModel();
+        this.model = aiModelConfig.openAiChatModel();
     }
 
     public void sendNewsAlerts(LocalDateTime localDateTime) {
