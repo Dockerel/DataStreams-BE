@@ -2,6 +2,7 @@ package datastreams_knu.bigpicture.schedule.scheduler;
 
 import datastreams_knu.bigpicture.schedule.service.CrawlingSchedulerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 public class CrawlingScheduler {
 
     private final CrawlingSchedulerService crawlingSchedulerService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     // 달러 환율 크롤링
     @Scheduled(cron = "0 10 23 * * SUN", zone = "Asia/Seoul") // 매주 일요일 오후 11시 10분
@@ -51,5 +53,11 @@ public class CrawlingScheduler {
     @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul") // 매일 오전 4시
     public void runCrawlingSeedCrawling() {
         crawlingSchedulerService.crawlingSeedCrawling();
+    }
+
+    // 리포트 캐시 초기화
+    @Scheduled(cron = "0 0 6 * * *", zone = "Asia/Seoul") // 매일 오전 6시
+    public void resetReportCache() {
+        redisTemplate.getConnectionFactory().getConnection().flushAll();
     }
 }

@@ -17,7 +17,7 @@ import datastreams_knu.bigpicture.news.entity.Reference;
 import datastreams_knu.bigpicture.news.exception.NewsCrawlingException;
 import datastreams_knu.bigpicture.news.repository.NewsRepository;
 import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +51,7 @@ public class NewsCrawlingService {
     private final NewsRepository newsRepository;
 
     private NewsCrawlingAssistant newsCrawlingAssistant;
-    private ChatLanguageModel model;
+    private ChatModel model;
 
     @PostConstruct
     public void init() {

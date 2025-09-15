@@ -18,7 +18,7 @@ public class NewsCrawlingConfig {
     @Bean
     public NewsCrawlingAssistant newsCrawlingAssistant() {
         return AiServices.builder(NewsCrawlingAssistant.class)
-                .chatLanguageModel(aiModelConfig.openAiChatModel())
+                .chatModel(aiModelConfig.openAiChatModel())
                 .tools(newsCrawlingAgent)
                 .build();
     }
