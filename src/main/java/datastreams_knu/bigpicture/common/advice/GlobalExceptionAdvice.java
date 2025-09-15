@@ -2,6 +2,7 @@ package datastreams_knu.bigpicture.common.advice;
 
 import datastreams_knu.bigpicture.common.domain.ApiResponse;
 import datastreams_knu.bigpicture.common.exception.ObjectMapperException;
+import dev.langchain4j.exception.InternalServerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,6 +44,15 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(UncheckedIOException.class)
     public ApiResponse<Object> uncheckedIOException(UncheckedIOException e) {
+        return ApiResponse.of(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(InternalServerException.class)
+    public ApiResponse<Object> internalServerExceptionException(InternalServerException e) {
         return ApiResponse.of(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 e.getMessage()
