@@ -48,14 +48,15 @@ public class ReportService {
 
     @PostConstruct
     public void init() {
-        this.model = aiModelConfig.openAiChatModel();
+        this.model = aiModelConfig.geminiChatModel();
     }
 
+    // 개인화된 파라미터를 없애고 reportType, stockName으로만 리포트 생성
     @Transactional(readOnly = true)
     public CreateReportResponse createReport(CreateReportServiceRequest request) {
         String fullReport = "";
         String summaryKeyword = "경제";
-        String paramString = createParamString(request);
+
         // 1. 환율, 금리, 경제 뉴스 불러오기
         // 환율
         String exchangesString = getExchangeData();
@@ -65,8 +66,9 @@ public class ReportService {
         String usInterestsString = getUsInterestData();
         // 경제 뉴스
         String economyNewsString = getEconomyNewsData();
+
         // 2. (환율 + 금리 + 경제 뉴스)로 경제 레포트 생성 및 평가
-        String economyReport = createAndEvaluateEconomyReport(exchangesString, koreaInterestsString, usInterestsString, economyNewsString, paramString);
+        String economyReport = createAndEvaluateEconomyReport(exchangesString, koreaInterestsString, usInterestsString, economyNewsString);
         fullReport += economyReport + "\n\n";
         // : 경제 레포트 생성 요청이면 [6] 으로 이동
         String reportType = request.getReportType();
@@ -75,33 +77,39 @@ public class ReportService {
         if (reportType.equals("stock")) {
             String stockName = request.getStockName();
             summaryKeyword = stockName;
+
             // 3. 주가, 주식 뉴스 불러오기
             String keyword = getStockKeyword(stockName);
             String stockNewsString = getStockNews(keyword);
             stockInfosString = getStockInfosData(stockName);
+
             // 4. (경제 레포트 + 주가 + 주식 뉴스)로 주식 레포트 생성 및 평가
-            stockReport = createAndEvaluateStockReport(stockReport, stockName, economyReport, stockInfosString, stockNewsString, paramString);
+            stockReport = createAndEvaluateStockReport(stockReport, stockName, economyReport, stockInfosString, stockNewsString);
+
             // 5. 두 레포트(경제 레포트, 주식 레포트) 수합
             fullReport += stockReport + "\n\n";
         }
+
         // 6. (만들어진 레포트)로 요약 레포트 생성 및 평가
-        String summaryReport = createAndEvaluateSummaryReport(summaryKeyword, fullReport, paramString);
+        String summaryReport = createAndEvaluateSummaryReport(summaryKeyword, fullReport);
+
         // 7. 요약 레포트로 제목 생성 및 평가
-        String reportTitle = createAndEvaluateReportTitle(summaryReport, paramString);
+        String reportTitle = createAndEvaluateReportTitle(summaryReport);
+
         // 8. 제목, 요약 레포트, 경제 레포트, 주식 레포트 결과로 반환
         return CreateReportResponse.of(reportTitle, summaryReport, economyReport, stockReport, exchangesString, koreaInterestsString, usInterestsString, stockInfosString);
     }
 
-    private String createAndEvaluateSummaryReport(String summaryKeyword, String fullReport, String paramString) {
+    private String createAndEvaluateSummaryReport(String summaryKeyword, String fullReport) {
         String summaryReport = "";
         String targetPrompt = summaryKeyword.equals("경제") ? SUMMARY_REPORT_GENERATION_PROMPT : SUMMARY_STOCK_REPORT_GENERATION_PROMPT;
-        String summaryReportGenerationPrompt = String.format(targetPrompt, summaryKeyword, fullReport, paramString);
+        String summaryReportGenerationPrompt = String.format(targetPrompt, summaryKeyword, fullReport);
         UserMessage summaryReportGenerationUserMessage = new UserMessage(summaryReportGenerationPrompt);
         for (int i = 0; i < MAX_REPS; i++) {
             try {
                 summaryReport = model.chat(summaryReportGenerationUserMessage).aiMessage().text();
 
-                String summaryReportEvaluationPrompt = String.format(SUMMARY_REPORT_EVALUATION_PROMPT, summaryReport, fullReport, paramString);
+                String summaryReportEvaluationPrompt = String.format(SUMMARY_REPORT_EVALUATION_PROMPT, summaryReport, fullReport);
                 UserMessage summaryReportEvaluationUserMessage = new UserMessage(summaryReportEvaluationPrompt);
                 String summaryReportEvaluationResultString = model.chat(summaryReportEvaluationUserMessage).aiMessage().text();
 
@@ -117,15 +125,14 @@ public class ReportService {
         return summaryReport;
     }
 
-    private String createAndEvaluateStockReport(String stockReport, String stockName, String economyReport, String stockInfosString, String stockNewsString, String paramString) {
-        stockReport = stockReport;
-        String stockReportGenerationPrompt = String.format(STOCK_REPORT_GENERATION_PROMPT, stockName, economyReport, stockInfosString, stockNewsString, paramString);
+    private String createAndEvaluateStockReport(String stockReport, String stockName, String economyReport, String stockInfosString, String stockNewsString) {
+        String stockReportGenerationPrompt = String.format(STOCK_REPORT_GENERATION_PROMPT, stockName, economyReport, stockInfosString, stockNewsString);
         UserMessage stockReportGenerationUserMessage = new UserMessage(stockReportGenerationPrompt);
         for (int i = 0; i < MAX_REPS; i++) {
             try {
                 stockReport = model.chat(stockReportGenerationUserMessage).aiMessage().text();
 
-                String stockReportEvaluationPrompt = String.format(STOCK_REPORT_EVALUATION_PROMPT, stockReport, economyReport, stockInfosString, stockNewsString, paramString);
+                String stockReportEvaluationPrompt = String.format(STOCK_REPORT_EVALUATION_PROMPT, stockReport, economyReport, stockInfosString, stockNewsString);
                 UserMessage stockReportEvaluationUserMessage = new UserMessage(stockReportEvaluationPrompt);
                 String stockReportEvaluationResultString = model.chat(stockReportEvaluationUserMessage).aiMessage().text();
 
@@ -171,15 +178,15 @@ public class ReportService {
         return keyword;
     }
 
-    private String createAndEvaluateEconomyReport(String exchangesString, String koreaInterestsString, String usInterestsString, String economyNewsString, String paramString) {
-        String economyReportGenerationPrompt = String.format(ECONOMY_REPORT_GENERATION_PROMPT, exchangesString, koreaInterestsString, usInterestsString, economyNewsString, paramString);
+    private String createAndEvaluateEconomyReport(String exchangesString, String koreaInterestsString, String usInterestsString, String economyNewsString) {
+        String economyReportGenerationPrompt = String.format(ECONOMY_REPORT_GENERATION_PROMPT, exchangesString, koreaInterestsString, usInterestsString, economyNewsString);
         UserMessage economyReportGenerationUserMessage = new UserMessage(economyReportGenerationPrompt);
         String economyReport = "";
         for (int i = 0; i < MAX_REPS; i++) {
             try {
                 economyReport = model.chat(economyReportGenerationUserMessage).aiMessage().text();
 
-                String economyReportEvaluationPrompt = String.format(ECONOMY_REPORT_EVALUATION_PROMPT, economyReport, exchangesString, koreaInterestsString, usInterestsString, economyNewsString, paramString);
+                String economyReportEvaluationPrompt = String.format(ECONOMY_REPORT_EVALUATION_PROMPT, economyReport, exchangesString, koreaInterestsString, usInterestsString, economyNewsString);
                 UserMessage economyReportEvaluationUserMessage = new UserMessage(economyReportEvaluationPrompt);
                 String economyReportEvaluationResultString = model.chat(economyReportEvaluationUserMessage).aiMessage().text();
 
@@ -235,15 +242,15 @@ public class ReportService {
         return exchangesString;
     }
 
-    private String createAndEvaluateReportTitle(String summaryReport, String paramString) {
+    private String createAndEvaluateReportTitle(String summaryReport) {
         String reportTitle = "";
-        String reportTitleGenerationPrompt = String.format(REPORT_TITLE_GENERATION_PROMPT, summaryReport, paramString);
+        String reportTitleGenerationPrompt = String.format(REPORT_TITLE_GENERATION_PROMPT, summaryReport);
         UserMessage reportTitleGenerationUserMessage = new UserMessage(reportTitleGenerationPrompt);
         for (int i = 0; i < MAX_REPS; i++) {
             try {
                 reportTitle = model.chat(reportTitleGenerationUserMessage).aiMessage().text();
 
-                String reportTitleEvaluationPrompt = String.format(REPORT_TITLE_EVALUATION_PROMPT, reportTitle, summaryReport, paramString);
+                String reportTitleEvaluationPrompt = String.format(REPORT_TITLE_EVALUATION_PROMPT, reportTitle, summaryReport);
                 UserMessage reportTitleEvaluationUserMessage = new UserMessage(reportTitleEvaluationPrompt);
                 String reportTitleEvaluationResultString = model.chat(reportTitleEvaluationUserMessage).aiMessage().text();
 
@@ -257,15 +264,6 @@ public class ReportService {
             }
         }
         return reportTitle;
-    }
-
-    private String createParamString(CreateReportServiceRequest params) {
-        return """
-                [레포트의 성향]
-                위험 수용 성향 : %s
-                레포트 난이도 : %s
-                관심 분야 : %s
-                """.formatted(params.getRiskTolerance(), params.getReportDifficultyLevel(), params.getInterestAreas(), parseToString(params.getInterestAreas()));
     }
 
     private String parseToString(Object object) {

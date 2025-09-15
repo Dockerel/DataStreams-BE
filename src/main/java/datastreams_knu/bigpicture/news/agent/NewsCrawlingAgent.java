@@ -50,7 +50,7 @@ public class NewsCrawlingAgent {
 
     @PostConstruct
     public void init() {
-        this.model = aiModelConfig.openAiChatModel();
+        this.model = aiModelConfig.geminiChatModel();
     }
 
     @Tool("keyword를 기반으로 keyword 관련 뉴스 기사를 검색합니다.")

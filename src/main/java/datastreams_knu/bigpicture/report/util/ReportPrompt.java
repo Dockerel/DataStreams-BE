@@ -40,8 +40,6 @@ public abstract class ReportPrompt {
             - 미국 금리 정보: {%s}
             - 경제 뉴스: {%s}
                         
-            %s
-                        
             [출력 형식]
             아래 형식의 레포트만 반환하세요. 다른 텍스트나 설명은 절대 포함하지 마세요.
                        
@@ -94,8 +92,6 @@ public abstract class ReportPrompt {
             - 한국 금리 정보: {%s}
             - 미국 금리 정보: {%s}
             - 경제 뉴스: {%s}
-                        
-            %s
 
             [출력 형식]
             아래 형식의 **순수한 JSON만 반환하세요.** 다른 텍스트나 설명은 절대 포함하지 마세요.
@@ -168,8 +164,6 @@ public abstract class ReportPrompt {
             - 주가 정보: {%s}
             - 주식 뉴스: {%s}
                         
-            %s
-                        
             [출력 형식]
             아래 형식의 레포트만 반환하세요. 다른 텍스트나 설명은 절대 포함하지 마세요.
                         
@@ -237,8 +231,6 @@ public abstract class ReportPrompt {
             - 경제 레포트: {%s}
             - 주가 정보: {%s}
             - 주식 뉴스: {%s}
-                        
-            %s
 
             [출력 형식]
             아래 형식의 **순수한 JSON만 반환하세요.** 다른 텍스트나 설명은 절대 포함하지 마세요.
@@ -301,8 +293,6 @@ public abstract class ReportPrompt {
             [입력 데이터]
             - 레포트: {%s}
                         
-            %s
-                        
             [출력 형식]
             아래 형식의 레포트만 반환하세요. 다른 텍스트나 설명은 절대 포함하지 마세요.
                         
@@ -362,8 +352,6 @@ public abstract class ReportPrompt {
             [입력 데이터]
             - 레포트: {%s}
                         
-            %s
-                        
             [출력 형식]
             아래 형식의 레포트만 반환하세요. 다른 텍스트나 설명은 절대 포함하지 마세요.
                         
@@ -416,8 +404,6 @@ public abstract class ReportPrompt {
             [입력 데이터]
             - 경제/주식 요약 레포트: {%s}
             - 레포트: {%s}
-                        
-            %s
 
             [출력 형식]
             아래 형식의 **순수한 JSON만 반환하세요.** 다른 텍스트나 설명은 절대 포함하지 마세요.
@@ -463,8 +449,6 @@ public abstract class ReportPrompt {
             [입력 데이터]
             - 레포트: {%s}
 
-            %s
-
             [출력 형식]
             제목 문자열만 반환하세요. 다른 텍스트나 설명은 절대 포함하지 마세요.
 
@@ -500,8 +484,6 @@ public abstract class ReportPrompt {
             [입력 데이터]
             - 제목: {%s}
             - 레포트: {%s}
-
-            %s
 
             [출력 형식]  
             아래 형식의 **순수한 JSON만 반환하세요.** 다른 텍스트나 설명은 절대 포함하지 마세요.

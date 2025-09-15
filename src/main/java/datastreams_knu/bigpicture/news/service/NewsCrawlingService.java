@@ -56,7 +56,7 @@ public class NewsCrawlingService {
     @PostConstruct
     public void init() {
         this.newsCrawlingAssistant = newsCrawlingConfig.newsCrawlingAssistant();
-        this.model = aiModelConfig.openAiChatModel();
+        this.model = aiModelConfig.geminiChatModel();
     }
 
     @Transactional

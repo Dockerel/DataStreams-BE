@@ -54,7 +54,7 @@ public class NewsAlertService {
 
     @PostConstruct
     public void init() {
-        this.model = aiModelConfig.openAiChatModel();
+        this.model = aiModelConfig.geminiChatModel();
     }
 
     public void sendNewsAlerts(LocalDateTime localDateTime) {

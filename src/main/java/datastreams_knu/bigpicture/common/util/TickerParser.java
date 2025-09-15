@@ -24,7 +24,7 @@ public class TickerParser {
 
     @PostConstruct
     public void init() {
-        this.model = aiModelConfig.openAiChatModel();
+        this.model = aiModelConfig.geminiChatModel();
     }
 
     public String parseTicker(String ticker) {

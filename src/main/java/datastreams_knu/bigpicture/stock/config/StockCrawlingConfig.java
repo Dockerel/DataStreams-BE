@@ -18,7 +18,7 @@ public class StockCrawlingConfig {
     @Bean
     public StockCrawlingAssistant stockCrawlingAssistant() {
         return AiServices.builder(StockCrawlingAssistant.class)
-                .chatLanguageModel(aiModelConfig.openAiChatModel())
+                .chatLanguageModel(aiModelConfig.geminiChatModel())
                 .tools(stockCrawlingAgent)
                 .build();
     }

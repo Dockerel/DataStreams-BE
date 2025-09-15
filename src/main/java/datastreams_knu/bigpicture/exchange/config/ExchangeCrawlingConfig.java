@@ -18,7 +18,7 @@ public class ExchangeCrawlingConfig {
     @Bean
     public ExchangeCrawlingAssistant exchangeCrawlingAssistant() {
         return AiServices.builder(ExchangeCrawlingAssistant.class)
-                .chatLanguageModel(aiModelConfig.openAiChatModel())
+                .chatLanguageModel(aiModelConfig.geminiChatModel())
                 .tools(exchangeCrawlingAgent)
                 .build();
     }
