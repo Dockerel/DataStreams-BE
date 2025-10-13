@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
 @ToString
@@ -25,6 +23,13 @@ public class CreateReportRequest {
 
     public CreateReportServiceRequest toServiceRequest() {
         return CreateReportServiceRequest.builder()
+                .reportType(reportType)
+                .stockName(stockName)
+                .build();
+    }
+
+    public static CreateReportRequest of(String reportType, String stockName) {
+        return CreateReportRequest.builder()
                 .reportType(reportType)
                 .stockName(stockName)
                 .build();

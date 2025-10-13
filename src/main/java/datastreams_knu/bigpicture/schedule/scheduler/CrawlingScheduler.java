@@ -50,13 +50,13 @@ public class CrawlingScheduler {
     }
 
     // 새로운 키워드 크롤링(뉴스 + 주가)
-    @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul") // 매일 오전 4시
+    @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul") // 매일 오전 4시
     public void runCrawlingSeedCrawling() {
         crawlingSchedulerService.crawlingSeedCrawling();
     }
 
     // 리포트 캐시 초기화
-    @Scheduled(cron = "0 0 6 * * *", zone = "Asia/Seoul") // 매일 오전 6시
+    @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul") // 매일 오전 6시
     public void resetReportCache() {
         redisTemplate.getConnectionFactory().getConnection().flushAll();
     }
