@@ -1,5 +1,7 @@
-![로고](./images/bigpicture_logo.svg)
-<h1 align="center">BigPicture</h1>
+<div align="center">
+<img alt="image" src="./images/bigpicture_logo.svg" />
+<h1>BigPicture</h1>
+</div>
 
 ## 개요
 AI 기반 거시경제 요약 리포트 서비스
@@ -14,8 +16,25 @@ AI 기반 거시경제 요약 리포트 서비스
 
 ## 1. 자동화 데이터 크롤링 구현
 ### 개요
+* 여러 경제 데이터들을 주기적으로 크롤링
+* 달러 환율, 한국 금리, 미국 금리, 경제 뉴스, 주식 뉴스, 주가 데이터
+* 데이터 업데이트 시점 및 외부 트래픽을 고려하여 스케줄링 시간 고려
+
 ### 문제 및 의사결정 과정
+#### 1. 뉴스 데이터 크롤링 및 저장 방식
+* 하루 기준 20개 내외의 뉴스 크롤링 및 저장해야 함(경제 뉴스 기준)
+* 모든 뉴스 원문을 저장할 경우 LLM 모델 사용 비용 증가, 데이터 품질 저하, 저장 공간 낭비 문제가 발생
+* LLM 기반 MapReduce 방식을 활용
+
+**LLM MapReduce 방식**
+
+<img width="694" height="353" alt="image" src="https://github.com/user-attachments/assets/44138dd1-89d4-4ec1-92b4-84d6f533eb91" />
+
+* 전체 뉴스 데이터를 한번에 LLM에 전달하지 않고, 작은 청크(뉴스 단위)로 분할하여(Map 단계) 각각 요약을 생성
+* 생성된 개별 요약을 다시 합쳐서(Reduce 단계) 최종 요약을 생성
+
 ### 성과
+* LLM 토큰 제한 문제를 해결하고 비용과 품질을 최적화 가능
 
 ## 2. 리포트 생성 파이프라인 설계 및 구현
 ### 개요
