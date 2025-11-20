@@ -77,10 +77,18 @@ AI 기반 거시경제 요약 리포트 서비스
 
 ### 성과
 <img width="1130" height="620" alt="image" src="https://github.com/user-attachments/assets/70fcdadd-2a8b-4f8d-a5a9-ff40346bc3b4" />
+
 * 리포트 생성 API 응답 시간이 p95 기준 29,872ms  190ms로 약 157배 개선됨
 * 리포트 품질 향상 및 반복적인 리포트 생성 비용 절약
 
 ## 3. CI/CD 및 무중단 배포 인프라 구성
 ### 개요
-### 문제 및 의사결정 과정
+* 홈 서버 구축 및 백엔드 서버 배포 인프라 구성
+* Git Actions를 통한 자동 CI/CD 구성
+
 ### 성과
+<img width="368" height="365" alt="image" src="https://github.com/user-attachments/assets/3e9f94df-ad72-4d43-a8dc-79a428355758" />
+
+* 홈서버 구축으로 인스턴스 비용 절약
+* 라즈베리파이 4B (4GB 모델 기준) 전력비용은 연간 몇 천 원 수준
+* 비슷한 사양의 AWS EC2 인스턴스(t4g.micro, ARM 기반, 1vCPU, 1GB RAM)는 월 약 8.5달러
