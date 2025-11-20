@@ -78,7 +78,7 @@ AI 기반 거시경제 요약 리포트 서비스
 ### 성과
 <img width="1130" height="620" alt="image" src="https://github.com/user-attachments/assets/70fcdadd-2a8b-4f8d-a5a9-ff40346bc3b4" />
 
-* 리포트 생성 API 응답 시간이 p95 기준 29,872ms  190ms로 약 157배 개선됨
+* 리포트 생성 API 응답 시간이 p95 기준 29,872ms에서 190ms로 157배 개선
 * 리포트 품질 향상 및 반복적인 리포트 생성 비용 절약
 
 ## 3. CI CD 및 무중단 배포 인프라 구성
