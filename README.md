@@ -6,6 +6,9 @@
 ## 개요
 AI 기반 거시경제 요약 리포트 서비스
 
+## 개발 정보
+* 2025.03 - 2025.06 (4M / 5명) [BE, AI]
+
 ## 기술 스택
 <p dir="auto">
 <img src="https://img.shields.io/badge/-Java-DB6900?logo=Java&amp;logoColor=white&amp;labelColor=DB6900" style="max-width: 100%;">
@@ -27,9 +30,6 @@ AI 기반 거시경제 요약 리포트 서비스
 <img src="https://img.shields.io/badge/-Prometheus-E6522C?logo=Prometheus&amp;logoColor=white&amp;labelColor=E6522C" style="max-width: 100%;">
 <img src="https://img.shields.io/badge/-Grafana-F46800?logo=Grafana&amp;logoColor=white&amp;labelColor=F46800" style="max-width: 100%;">
 </p>
-
-## 개발 정보
-* 2025.03 - 2025.06 (4M / 5명) [BE, AI]
 
 ## 시스템 아키텍처
 ![웹서버 아키텍처](./images/architecture.png)
